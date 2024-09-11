@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Inject BASE_URL
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+        run: |
+          PROCESSED_VALUE=$(echo -n "$BASE_URL" | xxd -p | tr -d '\n')
+          sed -i "s/PLACEHOLDER_STRING/$PROCESSED_VALUE/" index.html
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      
+      - name: Verify CNAME file
+        run: |
+          if [ ! -f CNAME ]; then
+            echo "CNAME file not found. Please create a CNAME file in the root of your repository."
+            exit 1
+          fi
+          echo "CNAME file content:"
+          cat CNAME
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: '.'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
