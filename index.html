@@ -110,7 +110,7 @@
                 退出
             </button>
         </div>
-        <p class="text-sm text-gray-600 -mt-1">只有最后一个/单个可点‘开始’，其他的都点‘添加’</p>
+        <p class="text-sm text-gray-600 -mt-1">只有最后一个/单个可点‘生成’，其他的都点‘添加’</p>
         <form id="pdfForm" class="space-y-4">
             <div class="grid grid-cols-1 gap-4">
                 <div>
@@ -192,7 +192,7 @@
                             <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
                             </svg>
-                            <span>开始</span>
+                            <span>生成</span>
                         </span>
                     </button>
                 </div>
@@ -297,7 +297,7 @@
                     printNowBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
                 } else {
                     addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>添加</span></span>';
-                    printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>开始</span></span>';
+                    printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>生成</span></span>';
                 }
             }
 
