@@ -28,11 +28,21 @@
             padding: 5px;
             position: absolute;
             z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -90px;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 130%;
             opacity: 0;
             transition: opacity 0.3s;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent #4B5563 transparent transparent;
         }
         .tooltip:hover .tooltiptext {
             visibility: visible;
@@ -82,15 +92,6 @@
             margin-top: 0.25rem;
             display: none;
         }
-        .chaojian .side-text-split-container.latin-flow {
-            flex-direction: row-reverse;
-            gap: 0.25mm;
-        }
-        .text-counter {
-            font-size: 0.75rem;
-            color: #6B7280;
-            margin-left: 0.5rem;
-        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
@@ -99,6 +100,7 @@
     </div>
 
     <div id="loginPage" class="w-full max-w-md bg-white rounded-xl shadow-2xl fade-in p-8 space-y-4" style="display: none;">
+        <!-- Login page content remains unchanged -->
         <h2 class="text-3xl font-extrabold text-center text-gray-900">登录</h2>
         <form id="loginForm" class="space-y-4">
             <div>
@@ -165,13 +167,10 @@
                 </div>
                 <div>
                     <label for="textLeft" class="block text-sm font-medium text-gray-700 mb-1">
-                        <span class="flex justify-between items-center">
-                            <span id="leftLabel">左 1 排名字</span>
-                            <span id="leftCounter" class="text-counter">0/12字</span>
-                        </span>
+                        左 1 排名字
                         <span class="tooltip ml-1">
                             <i class="fas fa-info-circle text-gray-500"></i>
-                            <span class="tooltiptext" id="leftTooltip">12字以内</span>
+                            <span class="tooltiptext" id="leftTooltip">祈福牌位: 12字以内</span>
                         </span>
                     </label>
                     <input id="textLeft" name="textLeft" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
@@ -179,13 +178,10 @@
                 </div>
                 <div>
                     <label for="textMiddle" class="block text-sm font-medium text-gray-700 mb-1">
-                        <span class="flex justify-between items-center">
-                            <span id="middleLabel">中间 1-2 排名字</span>
-                            <span id="middleCounter" class="text-counter">0/24字</span>
-                        </span>
+                        中间 1-2 排名字
                         <span class="tooltip ml-1">
                             <i class="fas fa-info-circle text-gray-500"></i>
-                            <span class="tooltiptext" id="middleTooltip">24字以内</span>
+                            <span class="tooltiptext" id="middleTooltip">祈福牌位: 24字以内</span>
                         </span>
                     </label>
                     <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
@@ -193,13 +189,10 @@
                 </div>
                 <div>
                     <label for="textRight" class="block text-sm font-medium text-gray-700 mb-1">
-                        <span class="flex justify-between items-center">
-                            <span id="rightLabel">右 1 排名字</span>
-                            <span id="rightCounter" class="text-counter">0/12字</span>
-                        </span>
+                        右 1 排名字
                         <span class="tooltip ml-1">
                             <i class="fas fa-info-circle text-gray-500"></i>
-                            <span class="tooltiptext" id="rightTooltip">12字以内</span>
+                            <span class="tooltiptext" id="rightTooltip">祈福牌位: 12字以内</span>
                         </span>
                     </label>
                     <input id="textRight" name="textRight" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
@@ -261,14 +254,75 @@
             var textMiddle = document.getElementById('textMiddle');
             var textRight = document.getElementById('textRight');
 
-            function containsChinese(text) {
-                return /[\u4E00-\u9FFF]/.test(text);
+            function updateLabelsAndTooltips(type) {
+                const leftLabel = document.querySelector('label[for="textLeft"]');
+                const middleLabel = document.querySelector('label[for="textMiddle"]');
+                const rightLabel = document.querySelector('label[for="textRight"]');
+
+                if (type === '超荐牌位') {
+                    leftLabel.innerHTML = `
+                        阳上
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext" id="leftTooltip">超荐牌位: 46字以内</span>
+                        </span>
+                    `;
+                    middleLabel.innerHTML = `
+                        回向至
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext" id="middleTooltip">超荐牌位: 12字以内</span>
+                        </span>
+                    `;
+                    rightLabel.innerHTML = `
+                        地址
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext" id="rightTooltip">超荐牌位(中文): 46字以内; 超荐牌位(英文): 160字符以内</span>
+                        </span>
+                    `;
+                    textLeft.placeholder = '请输入阳上';
+                    textMiddle.placeholder = '请输入回向至';
+                    textRight.placeholder = '请输入地址';
+                } else {
+                    leftLabel.innerHTML = `
+                        左 1 排名字
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext" id="leftTooltip">祈福牌位: 12字以内</span>
+                        </span>
+                    `;
+                    middleLabel.innerHTML = `
+                        中间 1-2 排名字
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext" id="middleTooltip">祈福牌位: 24字以内</span>
+                        </span>
+                    `;
+                    rightLabel.innerHTML = `
+                        右 1 排名字
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext" id="rightTooltip">祈福牌位: 12字以内</span>
+                        </span>
+                    `;
+                    textLeft.placeholder = '请输入左 1 排名字';
+                    textMiddle.placeholder = '请输入中间 1-2 排名字';
+                    textRight.placeholder = '请输入右 1 排名字';
+                }
             }
 
-            function updateCharCount(input, maxLength, counterId, unit = '字') {
-                const counter = document.getElementById(counterId);
-                const count = input.value.length;
-                counter.textContent = `${count}/${maxLength}${unit}`;
+            // Update labels on initial load
+            updateLabelsAndTooltips(designType.value);
+
+            // Update labels when design type changes
+            designType.addEventListener('change', function() {
+                updateLabelsAndTooltips(this.value);
+                validateInputs();
+            });
+
+            function containsChinese(text) {
+                return /[\u4E00-\u9FFF]/.test(text);
             }
 
             function validateInputLength(input, maxLength, errorId) {
@@ -285,89 +339,34 @@
                 }
             }
 
-            function updateLabelsAndTooltips(type) {
-                const leftLabel = document.getElementById('leftLabel');
-                const middleLabel = document.getElementById('middleLabel');
-                const rightLabel = document.getElementById('rightLabel');
-                const leftTooltip = document.getElementById('leftTooltip');
-                const middleTooltip = document.getElementById('middleTooltip');
-                const rightTooltip = document.getElementById('rightTooltip');
-
-                if (type === '超荐牌位') {
-                    leftLabel.textContent = '阳上';
-                    middleLabel.textContent = '回向至';
-                    rightLabel.textContent = '地址';
-                    
-                    leftTooltip.textContent = '46字以内';
-                    middleTooltip.textContent = '12字以内';
-                    rightTooltip.textContent = '中文: 46字以内; 英文: 140字符以内';
-
-                    textLeft.placeholder = '请输入阳上';
-                    textMiddle.placeholder = '请输入回向至';
-                    textRight.placeholder = '请输入地址';
-
-                } else {
-                    leftLabel.textContent = '左 1 排名字';
-                    middleLabel.textContent = '中间 1-2 排名字';
-                    rightLabel.textContent = '右 1 排名字';
-                    
-                    leftTooltip.textContent = '12字以内';
-                    middleTooltip.textContent = '24字以内';
-                    rightTooltip.textContent = '12字以内';
-
-                    textLeft.placeholder = '请输入左 1 排名字';
-                    textMiddle.placeholder = '请输入中间 1-2 排名字';
-                    textRight.placeholder = '请输入右 1 排名字';
-                }
-
-                validateInputs();
-            }
-
             function validateInputs() {
                 const type = designType.value;
                 let isValid = true;
 
                 if (type === '超荐牌位') {
                     isValid = validateInputLength(textLeft, 46, 'textLeftError') && isValid;
-                    updateCharCount(textLeft, 46, 'leftCounter');
-
                     isValid = validateInputLength(textMiddle, 12, 'textMiddleError') && isValid;
-                    updateCharCount(textMiddle, 12, 'middleCounter');
-
+                    
                     if (containsChinese(textRight.value)) {
                         isValid = validateInputLength(textRight, 46, 'textRightError') && isValid;
-                        updateCharCount(textRight, 46, 'rightCounter', '字');
                     } else {
-                        isValid = validateInputLength(textRight, 140, 'textRightError') && isValid;
-                        updateCharCount(textRight, 140, 'rightCounter', '字符');
+                        isValid = validateInputLength(textRight, 160, 'textRightError') && isValid;
                     }
                 } else {
                     isValid = validateInputLength(textLeft, 12, 'textLeftError') && isValid;
-                    updateCharCount(textLeft, 12, 'leftCounter');
-
                     isValid = validateInputLength(textMiddle, 24, 'textMiddleError') && isValid;
-                    updateCharCount(textMiddle, 24, 'middleCounter');
-
                     isValid = validateInputLength(textRight, 12, 'textRightError') && isValid;
-                    updateCharCount(textRight, 12, 'rightCounter');
                 }
 
                 return isValid;
             }
 
-            // Add input event listeners for real-time validation and counter updates
+            // Add input event listeners for real-time validation
             [textLeft, textMiddle, textRight].forEach(input => {
                 input.addEventListener('input', () => {
                     validateInputs();
                 });
             });
-
-            designType.addEventListener('change', function() {
-                updateLabelsAndTooltips(this.value);
-            });
-
-            // Initialize labels and counters on page load
-            updateLabelsAndTooltips(designType.value);
 
             function showLoadingOverlay() {
                 loadingOverlay.style.display = 'flex';
@@ -550,8 +549,9 @@
                 document.getElementById('textRight').value = result.textRight || '';
                 if (result.designType) {
                     document.getElementById('designType').value = result.designType;
-                    updateLabelsAndTooltips(result.designType);
                 }
+                // Update labels after filling form
+                updateLabelsAndTooltips(document.getElementById('designType').value);
                 validateInputs();
             }
 
