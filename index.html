@@ -296,12 +296,12 @@
                     leftTooltip.textContent = '46字以内';
                     middleTooltip.textContent = '12字以内';
                     rightTooltip.textContent = containsChinese(textRight.value) ? 
-                        '46字以内' : '160字符以内';
+                        '46字以内' : '140字符以内';
 
                     leftCount.textContent = `${textLeft.value.length}/46`;
                     middleCount.textContent = `${textMiddle.value.length}/12`;
                     rightCount.textContent = containsChinese(textRight.value) ? 
-                        `${textRight.value.length}/46` : `${textRight.value.length}/160`;
+                        `${textRight.value.length}/46` : `${textRight.value.length}/140`;
 
                     textLeft.placeholder = '请输入阳上';
                     textMiddle.placeholder = '请输入回向至';
@@ -344,7 +344,7 @@
             textRight.addEventListener('input', function() {
                 let maxLength;
                 if (designType.value === '超荐牌位') {
-                    maxLength = containsChinese(this.value) ? 46 : 160;
+                    maxLength = containsChinese(this.value) ? 46 : 140;
                 } else {
                     maxLength = 12;
                 }
@@ -389,7 +389,7 @@
                     if (containsChinese(textRight.value)) {
                         isValid = validateInputLength(textRight, 46, 'textRightError', rightCount) && isValid;
                     } else {
-                        isValid = validateInputLength(textRight, 160, 'textRightError', rightCount) && isValid;
+                        isValid = validateInputLength(textRight, 140, 'textRightError', rightCount) && isValid;
                     }
                 } else {
                     isValid = validateInputLength(textLeft, 12, 'textLeftError', leftCount) && isValid;
