@@ -157,7 +157,25 @@
                         <option value="超荐牌位">超荐牌位</option>
                     </select>
                 </div>
-                <div>
+
+                <!-- 祈福牌位-specific field -->
+                <div id="textLeftContainer">
+                    <div class="label-container mb-1">
+                        <div class="label-left">
+                            <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                                <span class="tooltiptext" id="leftTooltip">12字以内</span>
+                            </span>
+                        </div>
+                        <span class="char-count" id="leftCount">0/12</span>
+                    </div>
+                    <input id="textLeft" name="textLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
+                    <div class="error-message" id="textLeftError"></div>
+                </div>
+
+                <!-- 超荐牌位-specific fields -->
+                <div id="yangshang1Container" style="display: none;">
                     <div class="label-container mb-1">
                         <div class="label-left">
                             <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
@@ -171,7 +189,8 @@
                     <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
                     <div class="error-message" id="yangshang1Error"></div>
                 </div>
-                <div>
+
+                <div id="yangshang2Container" style="display: none;">
                     <div class="label-container mb-1">
                         <div class="label-left">
                             <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
@@ -185,32 +204,33 @@
                     <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
                     <div class="error-message" id="yangshang2Error"></div>
                 </div>
+
                 <div>
                     <div class="label-container mb-1">
                         <div class="label-left">
-                            <label for="textMiddle" class="text-sm font-medium text-gray-700">回向至</label>
+                            <label for="textMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
                             <span class="tooltip">
                                 <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="middleTooltip">12字以内</span>
+                                <span class="tooltiptext" id="middleTooltip">24字以内</span>
                             </span>
                         </div>
-                        <span class="char-count" id="middleCount">0/12</span>
+                        <span class="char-count" id="middleCount">0/24</span>
                     </div>
-                    <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
+                    <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
                     <div class="error-message" id="textMiddleError"></div>
                 </div>
                 <div>
                     <div class="label-container mb-1">
                         <div class="label-left">
-                            <label for="textRight" class="text-sm font-medium text-gray-700">地址</label>
+                            <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
                             <span class="tooltip">
                                 <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="rightTooltip">46字以内</span>
+                                <span class="tooltiptext" id="rightTooltip">12字以内</span>
                             </span>
                         </div>
-                        <span class="char-count" id="rightCount">0/46</span>
+                        <span class="char-count" id="rightCount">0/12</span>
                     </div>
-                    <input id="textRight" name="textRight" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址">
+                    <input id="textRight" name="textRight" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
                     <div class="error-message" id="textRightError"></div>
                 </div>
             </div>
@@ -263,10 +283,15 @@
             var logoutBtn = document.getElementById('logoutBtn');
             var loadingOverlay = document.getElementById('loadingOverlay');
             var designType = document.getElementById('designType');
+            var textLeft = document.getElementById('textLeft');
             var yangshang1 = document.getElementById('yangshang1');
             var yangshang2 = document.getElementById('yangshang2');
             var textMiddle = document.getElementById('textMiddle');
             var textRight = document.getElementById('textRight');
+            var textLeftContainer = document.getElementById('textLeftContainer');
+            var yangshang1Container = document.getElementById('yangshang1Container');
+            var yangshang2Container = document.getElementById('yangshang2Container');
+            var leftCount = document.getElementById('leftCount');
             var yangshang1Count = document.getElementById('yangshang1Count');
             var yangshang2Count = document.getElementById('yangshang2Count');
             var middleCount = document.getElementById('middleCount');
@@ -279,33 +304,40 @@
                 const rightTooltip = document.getElementById('rightTooltip');
 
                 if (type === '超荐牌位') {
+                    // Hide 祈福牌位 fields
+                    textLeftContainer.style.display = 'none';
+                    textLeft.required = false;
+                    // Show 超荐牌位 fields
+                    yangshang1Container.style.display = 'block';
+                    yangshang2Container.style.display = 'block';
+                    yangshang1.required = true;
+
                     middleLabel.textContent = '回向至';
                     rightLabel.textContent = '地址';
                     middleTooltip.textContent = '12字以内';
                     rightTooltip.textContent = containsChinese(textRight.value) ? '46字以内' : '180字符以内';
                     middleCount.textContent = `${textMiddle.value.length}/12`;
                     rightCount.textContent = containsChinese(textRight.value) ? `${textRight.value.length}/46` : `${textRight.value.length}/180`;
-                    yangshang1.required = true;
                     textMiddle.placeholder = '请输入回向至';
                     textRight.placeholder = '请输入地址';
                 } else {
+                    // Show 祈福牌位 fields
+                    textLeftContainer.style.display = 'block';
+                    textLeft.required = true;
+                    // Hide 超荐牌位 fields
+                    yangshang1Container.style.display = 'none';
+                    yangshang2Container.style.display = 'none';
+                    yangshang1.required = false;
+
                     middleLabel.textContent = '中间 1-2 排名字';
                     rightLabel.textContent = '右 1 排名字';
                     middleTooltip.textContent = '24字以内';
                     rightTooltip.textContent = '12字以内';
                     middleCount.textContent = `${textMiddle.value.length}/24`;
                     rightCount.textContent = `${textRight.value.length}/12`;
-                    yangshang1.required = false;
-
                     textMiddle.placeholder = '请输入中间 1-2 排名字';
                     textRight.placeholder = '请输入右 1 排名字';
                 }
-                
-                // Update yangshang fields visibility
-                yangshang1.style.display = type === '超荐牌位' ? 'block' : 'none';
-                yangshang2.style.display = type === '超荐牌位' ? 'block' : 'none';
-                document.querySelector('label[for="yangshang1"]').parentElement.parentElement.style.display = type === '超荐牌位' ? 'block' : 'none';
-                document.querySelector('label[for="yangshang2"]').parentElement.parentElement.style.display = type === '超荐牌位' ? 'block' : 'none';
             }
 
             function updateCharCount(input, countElement, maxLength) {
@@ -314,6 +346,10 @@
             }
 
             // Add input event listeners for character count updates
+            textLeft.addEventListener('input', function() {
+                updateCharCount(this, leftCount, 12);
+            });
+
             yangshang1.addEventListener('input', function() {
                 updateCharCount(this, yangshang1Count, 24);
             });
@@ -378,6 +414,7 @@
                         isValid = validateInputLength(textRight, 180, 'textRightError', rightCount) && isValid;
                     }
                 } else {
+                    isValid = validateInputLength(textLeft, 12, 'textLeftError', leftCount) && isValid;
                     isValid = validateInputLength(textMiddle, 24, 'textMiddleError', middleCount) && isValid;
                     isValid = validateInputLength(textRight, 12, 'textRightError', rightCount) && isValid;
                 }
@@ -385,7 +422,7 @@
             }
 
             // Add input event listeners for real-time validation
-            [yangshang1, yangshang2, textMiddle, textRight].forEach(input => {
+            [textLeft, yangshang1, yangshang2, textMiddle, textRight].forEach(input => {
                 input.addEventListener('input', () => {
                     validateInputs();
                 });
@@ -536,6 +573,7 @@
 
             function fillForm(result) {
                 document.getElementById('name').value = result.name || '';
+                document.getElementById('textLeft').value = result.textLeft || '';
                 document.getElementById('yangshang1').value = result.yangshang1 || '';
                 document.getElementById('yangshang2').value = result.yangshang2 || '';
                 document.getElementById('textMiddle').value = result.textMiddle || '';
