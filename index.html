@@ -607,8 +607,8 @@
                     }
 
                     // Update all character counts
-                    updateCharCount(yangshang1, yangshang1Count, 24);
-                    updateCharCount(yangshang2, yangshang2Count, 24);
+                    updateCharCount(yangshang1, yangshang1Count, 29);
+                    updateCharCount(yangshang2, yangshang2Count, 29);
                     updateCharCount(textLeft, leftCount, 12);
                     updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
                     updateCharCount(textRight, rightCount, 
@@ -679,8 +679,8 @@
                         document.getElementById('textRight').value = result.textRight || '';
                         
                         // Update character counts
-                        updateCharCount(document.getElementById('yangshang1'), yangshang1Count, 24);
-                        updateCharCount(document.getElementById('yangshang2'), yangshang2Count, 24);
+                        updateCharCount(document.getElementById('yangshang1'), yangshang1Count, 29);
+                        updateCharCount(document.getElementById('yangshang2'), yangshang2Count, 29);
                         updateCharCount(document.getElementById('textMiddle'), middleCount, 12);
                         updateCharCount(document.getElementById('textRight'), rightCount, 
                             containsChinese(result.textRight || '') ? 46 : 180);
