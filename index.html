@@ -659,7 +659,44 @@
                 var selectedValue = searchResults.value;
                 if (selectedValue) {
                     var result = JSON.parse(selectedValue);
-                    fillForm(result);
+                    
+                    // Update design type first
+                    var designTypeSelect = document.getElementById('designType');
+                    designTypeSelect.value = result.designType || '祈福牌位';
+                    
+                    // Trigger change event for designType
+                    designTypeSelect.dispatchEvent(new Event('change', {
+                        bubbles: true,
+                        cancelable: true
+                    }));
+                    
+                    // Then fill other form fields
+                    document.getElementById('name').value = result.name || '';
+                    
+                    if (result.designType === '超荐牌位') {
+                        document.getElementById('yangshang1').value = result.yangshang1 || '';
+                        document.getElementById('yangshang2').value = result.yangshang2 || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        document.getElementById('textRight').value = result.textRight || '';
+                        
+                        // Update character counts
+                        updateCharCount(document.getElementById('yangshang1'), yangshang1Count, 24);
+                        updateCharCount(document.getElementById('yangshang2'), yangshang2Count, 24);
+                        updateCharCount(document.getElementById('textMiddle'), middleCount, 12);
+                        updateCharCount(document.getElementById('textRight'), rightCount, 
+                            containsChinese(result.textRight || '') ? 46 : 180);
+                    } else {
+                        document.getElementById('textLeft').value = result.textLeft || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        document.getElementById('textRight').value = result.textRight || '';
+                        
+                        // Update character counts
+                        updateCharCount(document.getElementById('textLeft'), leftCount, 12);
+                        updateCharCount(document.getElementById('textMiddle'), middleCount, 24);
+                        updateCharCount(document.getElementById('textRight'), rightCount, 12);
+                    }
+                    
+                    validateInputs();
                 }
             });
         })();
