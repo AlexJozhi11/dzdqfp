@@ -573,16 +573,26 @@
 
             function fillForm(result) {
                 document.getElementById('name').value = result.name || '';
-                document.getElementById('textLeft').value = result.textLeft || '';
-                document.getElementById('yangshang1').value = result.yangshang1 || '';
-                document.getElementById('yangshang2').value = result.yangshang2 || '';
-                document.getElementById('textMiddle').value = result.textMiddle || '';
-                document.getElementById('textRight').value = result.textRight || '';
+                
+                // Set design type first so the fields show/hide correctly
                 if (result.designType) {
                     document.getElementById('designType').value = result.designType;
+                    // Update UI based on design type
+                    updateLabelsAndTooltips(result.designType);
                 }
-                // Update labels after filling form
-                updateLabelsAndTooltips(document.getElementById('designType').value);
+
+                // Then fill in the appropriate fields based on design type
+                if (result.designType === '超荐牌位') {
+                    document.getElementById('yangshang1').value = result.yangshang1 || '';
+                    document.getElementById('yangshang2').value = result.yangshang2 || '';
+                    document.getElementById('textMiddle').value = result.textMiddle || '';
+                    document.getElementById('textRight').value = result.textRight || '';
+                } else {
+                    document.getElementById('textLeft').value = result.textLeft || '';
+                    document.getElementById('textMiddle').value = result.textMiddle || '';
+                    document.getElementById('textRight').value = result.textRight || '';
+                }
+                
                 validateInputs();
             }
 
