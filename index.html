@@ -404,8 +404,8 @@
                 let isValid = true;
 
                 if (type === '超荐牌位') {
-                    isValid = validateInputLength(yangshang1, 28, 'yangshang1Error', yangshang1Count) && isValid;
-                    isValid = validateInputLength(yangshang2, 28, 'yangshang2Error', yangshang2Count) && isValid;
+                    isValid = validateInputLength(yangshang1, 29, 'yangshang1Error', yangshang1Count) && isValid;
+                    isValid = validateInputLength(yangshang2, 29, 'yangshang2Error', yangshang2Count) && isValid;
                     isValid = validateInputLength(textMiddle, 12, 'textMiddleError', middleCount) && isValid;
                     if (containsChinese(textRight.value)) {
                         isValid = validateInputLength(textRight, 46, 'textRightError', rightCount) && isValid;
