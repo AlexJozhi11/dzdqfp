@@ -293,12 +293,12 @@
                     middleLabel.textContent = '回向至';
                     rightLabel.textContent = '地址';
 
-                    leftTooltip.textContent = '46字以内';
+                    leftTooltip.textContent = '48字以内';
                     middleTooltip.textContent = '12字以内';
                     rightTooltip.textContent = containsChinese(textRight.value) ? 
                         '46字以内' : '180字符以内';
 
-                    leftCount.textContent = `${textLeft.value.length}/46`;
+                    leftCount.textContent = `${textLeft.value.length}/48`;
                     middleCount.textContent = `${textMiddle.value.length}/12`;
                     rightCount.textContent = containsChinese(textRight.value) ? 
                         `${textRight.value.length}/46` : `${textRight.value.length}/180`;
@@ -332,7 +332,7 @@
 
             // Add input event listeners for character count updates
             textLeft.addEventListener('input', function() {
-                const maxLength = designType.value === '超荐牌位' ? 46 : 12;
+                const maxLength = designType.value === '超荐牌位' ? 48 : 12;
                 updateCharCount(this, leftCount, maxLength);
             });
 
@@ -383,7 +383,7 @@
                 let isValid = true;
 
                 if (type === '超荐牌位') {
-                    isValid = validateInputLength(textLeft, 46, 'textLeftError', leftCount) && isValid;
+                    isValid = validateInputLength(textLeft, 48, 'textLeftError', leftCount) && isValid;
                     isValid = validateInputLength(textMiddle, 12, 'textMiddleError', middleCount) && isValid;
                     
                     if (containsChinese(textRight.value)) {
