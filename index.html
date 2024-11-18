@@ -181,25 +181,24 @@
                             <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
                             <span class="tooltip">
                                 <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="yangshang1Tooltip">24字以内</span>
+                                <span class="tooltiptext" id="yangshang1Tooltip">28字以内</span>
                             </span>
                         </div>
-                        <span class="char-count" id="yangshang1Count">0/24</span>
+                        <span class="char-count" id="yangshang1Count">0/28</span>
                     </div>
                     <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
                     <div class="error-message" id="yangshang1Error"></div>
                 </div>
-
                 <div id="yangshang2Container" style="display: none;">
                     <div class="label-container mb-1">
                         <div class="label-left">
                             <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
                             <span class="tooltip">
                                 <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="yangshang2Tooltip">24字以内</span>
+                                <span class="tooltiptext" id="yangshang2Tooltip">28字以内</span>
                             </span>
                         </div>
-                        <span class="char-count" id="yangshang2Count">0/24</span>
+                        <span class="char-count" id="yangshang2Count">0/28</span>
                     </div>
                     <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
                     <div class="error-message" id="yangshang2Error"></div>
@@ -405,8 +404,8 @@
                 let isValid = true;
 
                 if (type === '超荐牌位') {
-                    isValid = validateInputLength(yangshang1, 24, 'yangshang1Error', yangshang1Count) && isValid;
-                    isValid = validateInputLength(yangshang2, 24, 'yangshang2Error', yangshang2Count) && isValid;
+                    isValid = validateInputLength(yangshang1, 28, 'yangshang1Error', yangshang1Count) && isValid;
+                    isValid = validateInputLength(yangshang2, 28, 'yangshang2Error', yangshang2Count) && isValid;
                     isValid = validateInputLength(textMiddle, 12, 'textMiddleError', middleCount) && isValid;
                     if (containsChinese(textRight.value)) {
                         isValid = validateInputLength(textRight, 46, 'textRightError', rightCount) && isValid;
