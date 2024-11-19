@@ -83,181 +83,173 @@
         }
         .char-count {
             color: #6B7280;
+            font-size: 0.75rem;
+        }
+        .address-container {
+            display: none;
+            margin-top: 0.5rem;
+        }
+        .address-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .compact-input {
+            height: 2rem;
+            padding: 0.25rem 0.5rem;
             font-size: 0.875rem;
+        }
+        .compact-label {
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-4">
     <div id="loadingOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
     </div>
 
-    <div id="loginPage" class="w-full max-w-md bg-white rounded-xl shadow-2xl fade-in p-8 space-y-4" style="display: none;">
-        <h2 class="text-3xl font-extrabold text-center text-gray-900">登录</h2>
+    <div id="loginPage" class="max-w-md mx-auto bg-white rounded-xl shadow-2xl fade-in p-6 space-y-4" style="display: none;">
+        <h2 class="text-2xl font-bold text-center">登录</h2>
         <form id="loginForm" class="space-y-4">
             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">用户名</label>
-                <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <input type="text" id="username" name="username" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm compact-input" placeholder="用户名">
             </div>
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
-                <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <input type="password" id="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm compact-input" placeholder="密码">
             </div>
-            <div class="space-y-2">
-                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    登录
-                </button>
-                <a href="mailto:softbizalexander@gmail.com" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    联系
-                </a>
-            </div>
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">登录</button>
+            <a href="mailto:softbizalexander@gmail.com" class="block text-center text-sm text-indigo-600 hover:text-indigo-500">联系</a>
         </form>
         <div id="loginMessage" class="text-center text-sm"></div>
     </div>
 
-    <div id="mainPage" class="w-full max-w-lg bg-white rounded-xl shadow-2xl fade-in p-6 space-y-2" style="display: none;">
-        <div class="flex justify-between items-center">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">槟城金刚山祈福牌</h2>
-            <button id="logoutBtn" class="px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">
-                退出
-            </button>
+    <div id="mainPage" class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl fade-in p-4" style="display: none;">
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="text-xl font-bold">槟城金刚山祈福牌</h2>
+            <button id="logoutBtn" class="px-2 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600">退出</button>
         </div>
-        <p class="text-sm text-gray-600 -mt-1">只有最后一个/单个可点'生成'，其他的都点'添加'</p>
-        <form id="pdfForm" class="space-y-4">
-            <div class="grid grid-cols-1 gap-4">
-                <div>
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">搜索</label>
-                    <input id="search" name="search" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入要搜索的名字记录">
-                </div>
-                <div>
-                    <select id="searchResults" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" style="display: none;">
+        <p class="text-xs text-gray-600 mb-2">只有最后一个/单个可点'生成'，其他的都点'添加'</p>
+        
+        <form id="pdfForm" class="space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+                <!-- Search Field -->
+                <div class="col-span-2">
+                    <input id="search" name="search" type="text" class="w-full compact-input border border-gray-300 rounded-md" placeholder="搜索名字记录">
+                    <select id="searchResults" class="w-full mt-1 compact-input border border-gray-300 rounded-md" style="display: none;">
                         <option value="">选择搜索结果</option>
                     </select>
                 </div>
+
+                <!-- Name and Type Fields -->
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                        名字记录
-                        <span class="tooltip ml-1">
-                            <i class="fas fa-info-circle text-gray-500"></i>
-                            <span class="tooltiptext">以后可搜寻现在填写的名字记录</span>
-                        </span>
-                    </label>
-                    <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入名字记录">
+                    <input id="name" name="name" type="text" required class="w-full compact-input border border-gray-300 rounded-md" placeholder="名字记录">
                 </div>
                 <div>
-                    <label for="designType" class="block text-sm font-medium text-gray-700 mb-1">
-                        牌位类型
-                        <span class="tooltip ml-1">
-                            <i class="fas fa-info-circle text-gray-500"></i>
-                            <span class="tooltiptext">选择牌位类型</span>
-                        </span>
-                    </label>
-                    <select id="designType" name="designType" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <select id="designType" name="designType" required class="w-full compact-input border border-gray-300 rounded-md">
                         <option value="祈福牌位">祈福牌位</option>
                         <option value="超荐牌位">超荐牌位</option>
                     </select>
                 </div>
+            </div>
 
-                <!-- 祈福牌位-specific field -->
+            <!-- Text Fields -->
+            <div class="grid grid-cols-3 gap-2">
                 <div id="textLeftContainer">
                     <div class="label-container mb-1">
-                        <div class="label-left">
-                            <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="leftTooltip">12字以内</span>
-                            </span>
-                        </div>
-                        <span class="char-count" id="leftCount">0/12</span>
+                        <label class="compact-label">左 1 排名字 <span id="leftCount" class="char-count">0/12</span></label>
                     </div>
-                    <input id="textLeft" name="textLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
+                    <input id="textLeft" name="textLeft" type="text" class="w-full compact-input border border-gray-300 rounded-md" placeholder="左 1 排名字">
                     <div class="error-message" id="textLeftError"></div>
                 </div>
 
-                <!-- 超荐牌位-specific fields -->
-                <div id="yangshang1Container" style="display: none;">
+                <div>
                     <div class="label-container mb-1">
-                        <div class="label-left">
-                            <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="yangshang1Tooltip">28字以内</span>
-                            </span>
-                        </div>
-                        <span class="char-count" id="yangshang1Count">0/28</span>
+                        <label class="compact-label">中间 1-2 排名字 <span id="middleCount" class="char-count">0/24</span></label>
                     </div>
-                    <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
-                    <div class="error-message" id="yangshang1Error"></div>
-                </div>
-                <div id="yangshang2Container" style="display: none;">
-                    <div class="label-container mb-1">
-                        <div class="label-left">
-                            <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="yangshang2Tooltip">28字以内</span>
-                            </span>
-                        </div>
-                        <span class="char-count" id="yangshang2Count">0/28</span>
-                    </div>
-                    <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
-                    <div class="error-message" id="yangshang2Error"></div>
+                    <input id="textMiddle" name="textMiddle" type="text" required class="w-full compact-input border border-gray-300 rounded-md" placeholder="中间 1-2 排名字">
+                    <div class="error-message" id="textMiddleError"></div>
                 </div>
 
                 <div>
                     <div class="label-container mb-1">
-                        <div class="label-left">
-                            <label for="textMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="middleTooltip">24字以内</span>
-                            </span>
-                        </div>
-                        <span class="char-count" id="middleCount">0/24</span>
+                        <label class="compact-label">右 1 排名字 <span id="rightCount" class="char-count">0/12</span></label>
                     </div>
-                    <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
-                    <div class="error-message" id="textMiddleError"></div>
-                </div>
-                <div>
-                    <div class="label-container mb-1">
-                        <div class="label-left">
-                            <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="rightTooltip">12字以内</span>
-                            </span>
-                        </div>
-                        <span class="char-count" id="rightCount">0/12</span>
-                    </div>
-                    <input id="textRight" name="textRight" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
+                    <input id="textRight" name="textRight" type="text" required class="w-full compact-input border border-gray-300 rounded-md" placeholder="右 1 排名字">
                     <div class="error-message" id="textRightError"></div>
                 </div>
             </div>
-            <div class="flex flex-col space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                    <button type="button" id="addToQueueBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition duration-150 ease-in-out">
-                        <span class="flex items-center">
-                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                            </svg>
-                            <span>添加</span>
-                        </span>
-                    </button>
-                    <button type="button" id="printNowBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out">
-                        <span class="flex items-center">
-                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
-                            </svg>
-                            <span>生成</span>
-                        </span>
-                    </button>
+
+            <!-- Yangshang Fields -->
+            <div class="grid grid-cols-2 gap-2" id="yangshangContainer" style="display: none;">
+                <div>
+                    <div class="label-container mb-1">
+                        <label class="compact-label">阳上1 <span id="yangshang1Count" class="char-count">0/28</span></label>
+                    </div>
+                    <input id="yangshang1" name="yangshang1" type="text" class="w-full compact-input border border-gray-300 rounded-md" placeholder="阳上1">
+                    <div class="error-message" id="yangshang1Error"></div>
                 </div>
-                <a href="mailto:softbizalexander@gmail.com" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition duration-150 ease-in-out">
+                <div>
+                    <div class="label-container mb-1">
+                        <label class="compact-label">阳上2 <span id="yangshang2Count" class="char-count">0/28</span></label>
+                    </div>
+                    <input id="yangshang2" name="yangshang2" type="text" class="w-full compact-input border border-gray-300 rounded-md" placeholder="阳上2">
+                    <div class="error-message" id="yangshang2Error"></div>
+                </div>
+            </div>
+
+            <!-- Address Fields -->
+            <div id="addressContainer" class="grid grid-cols-3 gap-2" style="display: none;">
+                <div>
+                    <div class="label-container mb-1">
+                        <label class="compact-label">地址1 <span id="address1Count" class="char-count">0/46</span></label>
+                    </div>
+                    <input id="address1" name="address1" type="text" class="w-full compact-input border border-gray-300 rounded-md" placeholder="地址1">
+                    <div class="error-message" id="address1Error"></div>
+                </div>
+                <div>
+                    <div class="label-container mb-1">
+                        <label class="compact-label">地址2 <span id="address2Count" class="char-count">0/46</span></label>
+                    </div>
+                    <input id="address2" name="address2" type="text" class="w-full compact-input border border-gray-300 rounded-md" placeholder="地址2">
+                    <div class="error-message" id="address2Error"></div>
+                </div>
+                <div>
+                    <div class="label-container mb-1">
+                        <label class="compact-label">地址3 <span id="address3Count" class="char-count">0/46</span></label>
+                    </div>
+                    <input id="address3" name="address3" type="text" class="w-full compact-input border border-gray-300 rounded-md" placeholder="地址3">
+                    <div class="error-message" id="address3Error"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-2">
+                <button type="button" id="addToQueueBtn" class="flex-1 py-2 text-sm font-medium text-white bg-emerald-500 rounded-md hover:bg-emerald-600">
+                    <span class="flex items-center justify-center">
+                        <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        添加
+                    </span>
+                </button>
+                <button type="button" id="printNowBtn" class="flex-1 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600">
+                    <span class="flex items-center justify-center">
+                        <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+                        </svg>
+                        生成
+                    </span>
+                </button>
+                <a href="mailto:softbizalexander@gmail.com" class="flex-1 flex items-center justify-center py-2 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600">
                     有问题可联系
                 </a>
             </div>
+            
+            <div id="statusMessage" class="text-center text-sm mt-2"></div>
         </form>
-        <div id="statusMessage" class="text-center text-sm"></div>
     </div>
 
     <script>
