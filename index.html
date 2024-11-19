@@ -1,705 +1,704 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>槟城金刚山祈福牌</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .fade-in {
-      animation: fadeIn 0.5s ease-in-out;
-    }
-    
-    .tooltip {
-      position: relative;
-      display: inline-block;
-    }
-    
-    .tooltip .tooltiptext {
-      visibility: hidden;
-      width: 180px;
-      background-color: #4B5563;
-      color: #fff;
-      text-align: center;
-      border-radius: 6px;
-      padding: 5px;
-      position: absolute;
-      z-index: 1;
-      left: 150%;
-      top: 50%;
-      transform: translateY(-50%);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    
-    .tooltip .tooltiptext::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      right: 100%;
-      transform: translateY(-50%);
-      border-width: 5px;
-      border-style: solid;
-      border-color: transparent #4B5563 transparent transparent;
-    }
-    
-    .tooltip:hover .tooltiptext {
-      visibility: visible;
-      opacity: 1;
-    }
-    
-    .loading-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 1em;
-      height: 1em;
-      vertical-align: middle;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .text-container.qifu {
-      top: 40%;
-      left: 49.5%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      width: 70mm;
-      height: 34.5%;
-    }
-    
-    .text-container.chaojian {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    
-    .design-preview {
-      max-width: 150px;
-      margin-top: 5px;
-      border: 1px solid #e5e7eb;
-      border-radius: 4px;
-    }
-    
-    .input-error {
-      border-color: #ef4444 !important;
-    }
-    
-    .error-message {
-      color: #ef4444;
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-      display: none;
-    }
-    
-    .label-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-    
-    .label-left {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    
-    .char-count {
-      color: #6B7280;
-      font-size: 0.875rem;
-    }
-    
-    .yangshang-container {
-      display: none;
-    }
-    
-    .qifu-container {
-      display: block;
-    }
-    
-    [data-design-type="超荐牌位"] .yangshang-container {
-      display: block;
-    }
-    
-    [data-design-type="超荐牌位"] .qifu-container {
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>槟城金刚山祈福牌</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 180px;
+            background-color: #4B5563;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            left: 150%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip .tooltiptext::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            transform: translateY(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent #4B5563 transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .loading-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .input-error {
+            border-color: #ef4444 !important;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        .label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .label-left {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .char-count {
+            color: #6B7280;
+            font-size: 0.875rem;
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
-  <div id="loadingOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-    <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-  </div>
-  
-  <div id="loginPage" class="w-full max-w-md bg-white rounded-xl shadow-2xl fade-in p-8 space-y-4" style="display: none;">
-    <h2 class="text-3xl font-extrabold text-center text-gray-900">登录</h2>
-    <form id="loginForm" class="space-y-4">
-      <div>
-        <label for="username" class="block text-sm font-medium text-gray-700">用户名</label>
-        <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-      </div>
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
-        <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-      </div>
-      <div class="space-y-2">
-        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          登录
-        </button>
-        <a href="mailto:softbizalexander@gmail.com" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          联系
-        </a>
-      </div>
-    </form>
-    <div id="loginMessage" class="text-center text-sm"></div>
-  </div>
-  
-  <div id="mainPage" class="w-full max-w-lg bg-white rounded-xl shadow-2xl fade-in p-6 space-y-2" style="display: none;">
-    <div class="flex justify-between items-center">
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">槟城金刚山祈福牌</h2>
-      <button id="logoutBtn" class="px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">
-        退出
-      </button>
+    <div id="loadingOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-    <p class="text-sm text-gray-600 -mt-1">只有最后一个/单个可点'生成'，其他的都点'添加'</p>
-    
-    <form id="pdfForm" class="space-y-4">
-      <div class="grid grid-cols-1 gap-4">
-        <div>
-          <label for="search" class="block text-sm font-medium text-gray-700 mb-1">搜索</label>
-          <input id="search" name="search" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入要搜索的名字记录">
-        </div>
-        
-        <div>
-          <select id="searchResults" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" style="display: none;">
-            <option value="">选择搜索结果</option>
-          </select>
-        </div>
-        
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-            名字记录
-            <span class="tooltip ml-1">
-              <i class="fas fa-info-circle text-gray-500"></i>
-              <span class="tooltiptext">以后可搜寻现在填写的名字记录</span>
-            </span>
-          </label>
-          <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入名字记录">
-        </div>
-        
-        <div>
-          <label for="designType" class="block text-sm font-medium text-gray-700 mb-1">
-            牌位类型
-            <span class="tooltip ml-1">
-              <i class="fas fa-info-circle text-gray-500"></i>
-              <span class="tooltiptext">选择牌位类型</span>
-            </span>
-          </label>
-          <select id="designType" name="designType" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <option value="祈福牌位">祈福牌位</option>
-            <option value="超荐牌位">超荐牌位</option>
-          </select>
-        </div>
-        
-        <div class="qifu-container">
-          <div>
-            <div class="label-container mb-1">
-              <div class="label-left">
-                <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
-                <span class="tooltip">
-                  <i class="fas fa-info-circle text-gray-500"></i>
-                  <span class="tooltiptext" id="leftTooltip">12字以内</span>
-                </span>
-              </div>
-              <span class="char-count" id="leftCount">0/12</span>
+
+    <div id="loginPage" class="w-full max-w-md bg-white rounded-xl shadow-2xl fade-in p-8 space-y-4" style="display: none;">
+        <h2 class="text-3xl font-extrabold text-center text-gray-900">登录</h2>
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">用户名</label>
+                <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
-            <input id="textLeft" name="textLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
-            <div class="error-message" id="textLeftError"></div>
-          </div>
-        </div>
-        
-        <div class="yangshang-container">
-          <div>
-            <div class="label-container mb-1">
-              <div class="label-left">
-                <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上 1</label>
-                <span class="tooltip">
-                  <i class="fas fa-info-circle text-gray-500"></i>
-                  <span class="tooltiptext" id="yangshang1Tooltip">28字以内</span>
-                </span>
-              </div>
-              <span class="char-count" id="yangshang1Count">0/28</span>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
+                <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
-            <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上 1">
-            <div class="error-message" id="yangshang1Error"></div>
-          </div>
-          
-          <div class="mt-4">
-            <div class="label-container mb-1">
-              <div class="label-left">
-                <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上 2</label>
-                <span class="tooltip">
-                  <i class="fas fa-info-circle text-gray-500"></i>
-                  <span class="tooltiptext" id="yangshang2Tooltip">28字以内</span>
-                </span>
-              </div>
-              <span class="char-count" id="yangshang2Count">0/28</span>
+            <div class="space-y-2">
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    登录
+                </button>
+                <a href="mailto:softbizalexander@gmail.com" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    联系
+                </a>
             </div>
-            <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上 2">
-            <div class="error-message" id="yangshang2Error"></div>
-          </div>
+        </form>
+        <div id="loginMessage" class="text-center text-sm"></div>
+    </div>
+
+    <div id="mainPage" class="w-full max-w-lg bg-white rounded-xl shadow-2xl fade-in p-6 space-y-2" style="display: none;">
+        <div class="flex justify-between items-center">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">槟城金刚山祈福牌</h2>
+            <button id="logoutBtn" class="px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">
+                退出
+            </button>
         </div>
-        
-        <div>
-          <div class="label-container mb-1">
-            <div class="label-left">
-              <label for="textMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
-              <span class="tooltip">
-                <i class="fas fa-info-circle text-gray-500"></i>
-                <span class="tooltiptext" id="middleTooltip">24字以内</span>
-              </span>
+        <p class="text-sm text-gray-600 -mt-1">只有最后一个/单个可点'生成'，其他的都点'添加'</p>
+        <form id="pdfForm" class="space-y-4">
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">搜索</label>
+                    <input id="search" name="search" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入要搜索的名字记录">
+                </div>
+                <div>
+                    <select id="searchResults" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" style="display: none;">
+                        <option value="">选择搜索结果</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                        名字记录
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext">以后可搜寻现在填写的名字记录</span>
+                        </span>
+                    </label>
+                    <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入名字记录">
+                </div>
+                <div>
+                    <label for="designType" class="block text-sm font-medium text-gray-700 mb-1">
+                        牌位类型
+                        <span class="tooltip ml-1">
+                            <i class="fas fa-info-circle text-gray-500"></i>
+                            <span class="tooltiptext">选择牌位类型</span>
+                        </span>
+                    </label>
+                    <select id="designType" name="designType" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="祈福牌位">祈福牌位</option>
+                        <option value="超荐牌位">超荐牌位</option>
+                    </select>
+                </div>
+
+                <!-- 祈福牌位-specific field -->
+                <div id="textLeftContainer">
+                    <div class="label-container mb-1">
+                        <div class="label-left">
+                            <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                                <span class="tooltiptext" id="leftTooltip">12字以内</span>
+                            </span>
+                        </div>
+                        <span class="char-count" id="leftCount">0/12</span>
+                    </div>
+                    <input id="textLeft" name="textLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
+                    <div class="error-message" id="textLeftError"></div>
+                </div>
+
+                <!-- 超荐牌位-specific fields -->
+                <div id="yangshang1Container" style="display: none;">
+                    <div class="label-container mb-1">
+                        <div class="label-left">
+                            <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                                <span class="tooltiptext" id="yangshang1Tooltip">29字以内</span>
+                            </span>
+                        </div>
+                        <span class="char-count" id="yangshang1Count">0/29</span>
+                    </div>
+                    <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
+                    <div class="error-message" id="yangshang1Error"></div>
+                </div>
+                <div id="yangshang2Container" style="display: none;">
+                    <div class="label-container mb-1">
+                        <div class="label-left">
+                            <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                                <span class="tooltiptext" id="yangshang2Tooltip">29字以内</span>
+                            </span>
+                        </div>
+                        <span class="char-count" id="yangshang2Count">0/29</span>
+                    </div>
+                    <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
+                    <div class="error-message" id="yangshang2Error"></div>
+                </div>
+
+                <div>
+                    <div class="label-container mb-1">
+                        <div class="label-left">
+                            <label for="textMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                                <span class="tooltiptext" id="middleTooltip">24字以内</span>
+                            </span>
+                        </div>
+                        <span class="char-count" id="middleCount">0/24</span>
+                    </div>
+                    <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
+                    <div class="error-message" id="textMiddleError"></div>
+                </div>
+                <div>
+                    <div class="label-container mb-1">
+                        <div class="label-left">
+                            <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                                <span class="tooltiptext" id="rightTooltip">12字以内</span>
+                            </span>
+                        </div>
+                        <span class="char-count" id="rightCount">0/12</span>
+                    </div>
+                    <input id="textRight" name="textRight" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
+                    <div class="error-message" id="textRightError"></div>
+                </div>
             </div>
-            <span class="char-count" id="middleCount">0/24</span>
-          </div>
-          <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
-          <div class="error-message" id="textMiddleError"></div>
-        </div>
-        
-        <div>
-          <div class="label-container mb-1">
-            <div class="label-left">
-              <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
-              <span class="tooltip">
-                <i class="fas fa-info-circle text-gray-500"></i>
-                <span class="tooltiptext" id="rightTooltip">12字以内</span>
-            </span>
-          </div>
-          <span class="char-count" id="rightCount">0/12</span>
-        </div>
-        <input id="textRight" name="textRight" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
-        <div class="error-message" id="textRightError"></div>
-      </div>
-      
-      <div class="flex flex-col space-y-3">
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" id="addToQueueBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition duration-150 ease-in-out">
-            <span class="flex items-center">
-              <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
-              <span>添加</span>
-            </span>
-          </button>
-          <button type="button" id="printNowBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out">
-            <span class="flex items-center">
-              <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
-              </svg>
-              <span>生成</span>
-            </span>
-          </button>
-        </div>
-        <a href="mailto:softbizalexander@gmail.com" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition duration-150 ease-in-out">
-          有问题可联系
-        </a>
-      </div>
-    </form>
-    <div id="statusMessage" class="text-center text-sm"></div>
-  </div>
-  
-  <script>
-    (function() {
-      var _0x5f4e3d = "PLACEHOLDER_STRING";
-      var _0x2a1b = function(s) {
-        return String.fromCharCode.apply(null, s.match(/.{1,2}/g).map(function(c) {
-          return parseInt(c, 16);
-        }));
-      };
-      var _0x3c4d = _0x2a1b(_0x5f4e3d);
-      
-      var loginForm = document.getElementById('loginForm');
-      var loginMessage = document.getElementById('loginMessage');
-      var loginPage = document.getElementById('loginPage');
-      var mainPage = document.getElementById('mainPage');
-      var form = document.getElementById('pdfForm');
-      var statusMessage = document.getElementById('statusMessage');
-      var addToQueueBtn = document.getElementById('addToQueueBtn');
-      var printNowBtn = document.getElementById('printNowBtn');
-      var searchInput = document.getElementById('search');
-      var searchResults = document.getElementById('searchResults');
-      var logoutBtn = document.getElementById('logoutBtn');
-      var loadingOverlay = document.getElementById('loadingOverlay');
-      var designType = document.getElementById('designType');
-      var textLeft = document.getElementById('textLeft');
-      var yangshang1 = document.getElementById('yangshang1');
-      var yangshang2 = document.getElementById('yangshang2');
-      var textMiddle = document.getElementById('textMiddle');
-      var textRight = document.getElementById('textRight');
-      var leftCount = document.getElementById('leftCount');
-      var yangshang1Count = document.getElementById('yangshang1Count');
-      var yangshang2Count = document.getElementById('yangshang2Count');
-      var middleCount = document.getElementById('middleCount');
-      var rightCount = document.getElementById('rightCount');
-      
-      function updateLabelsAndTooltips(type) {
-        const middleLabel = document.querySelector('label[for="textMiddle"]');
-        const rightLabel = document.querySelector('label[for="textRight"]');
-        const middleTooltip = document.getElementById('middleTooltip');
-        const rightTooltip = document.getElementById('rightTooltip');
-        
-        form.dataset.designType = type;
-        
-        if (type === '超荐牌位') {
-          middleLabel.textContent = '回向至';
-          rightLabel.textContent = '地址';
-          middleTooltip.textContent = '12字以内';
-          rightTooltip.textContent = containsChinese(textRight.value) ? '46字以内' : '180字符以内';
-          middleCount.textContent = `${textMiddle.value.length}/12`;
-          rightCount.textContent = containsChinese(textRight.value) ? `${textRight.value.length}/46` : `${textRight.value.length}/180`;
-          textMiddle.placeholder = '请输入回向至';
-          textRight.placeholder = '请输入地址';
-        } else {
-          middleLabel.textContent = '中间 1-2 排名字';
-          rightLabel.textContent = '右 1 排名字';
-          middleTooltip.textContent = '24字以内';
-          rightTooltip.textContent = '12字以内';
-          middleCount.textContent = `${textMiddle.value.length}/24`;
-          rightCount.textContent = `${textRight.value.length}/12`;
-          textMiddle.placeholder = '请输入中间 1-2 排名字';
-          textRight.placeholder = '请输入右 1 排名字';
-        }
-      }
-      
-      function updateCharCount(input, countElement, maxLength) {
-        const currentLength = input.value.length;
-        countElement.textContent = `${currentLength}/${maxLength}`;
-      }
-      
-      // Add input event listeners for character count updates
-      textLeft.addEventListener('input', function() {
-        const maxLength = 12;
-        updateCharCount(this, leftCount, maxLength);
-      });
-      
-      yangshang1.addEventListener('input', function() {
-        const maxLength = 28;
-        updateCharCount(this, yangshang1Count, maxLength);
-      });
-      
-      yangshang2.addEventListener('input', function() {
-        const maxLength = 28;
-        updateCharCount(this, yangshang2Count, maxLength);
-      });
-      
-      textMiddle.addEventListener('input', function() {
-        const maxLength = designType.value === '超荐牌位' ? 12 : 24;
-        updateCharCount(this, middleCount, maxLength);
-      });
-      
-      textRight.addEventListener('input', function() {
-        let maxLength;
-        if (designType.value === '超荐牌位') {
-          maxLength = containsChinese(this.value) ? 46 : 180;
-        } else {
-          maxLength = 12;
-        }
-        updateCharCount(this, rightCount, maxLength);
-      });
-      
-      // Update labels on initial load
-      updateLabelsAndTooltips(designType.value);
-      
-      // Update labels when design type changes
-      designType.addEventListener('change', function() {
-        updateLabelsAndTooltips(this.value);
-        validateInputs();
-      });
-      
-      function containsChinese(text) {
-        return /[\u4E00-\u9FFF]/.test(text);
-      }
-      
-      function validateInputLength(input, maxLength, errorId, countElement) {
-        const errorDiv = document.getElementById(errorId);
-        if (input.value.length > maxLength) {
-          input.classList.add('input-error');
-          errorDiv.style.display = 'block';
-          errorDiv.textContent = `超出最大字数限制 (${maxLength})`;
-          return false;
-        } else {
-          input.classList.remove('input-error');
-          errorDiv.style.display = 'none';
-          return true;
-        }
-      }
-      
-      function validateInputs() {
-        const type = designType.value;
-        let isValid = true;
-        
-        if (type === '超荐牌位') {
-          if (yangshang1.value.trim() !== '') {
-            isValid = validateInputLength(yangshang1, 28, 'yangshang1Error', yangshang1Count) && isValid;
-          }
-          if (yangshang2.value.trim() !== '') {
-            isValid = validateInputLength(yangshang2, 28, 'yangshang2Error', yangshang2Count) && isValid;
-          }
-          isValid = validateInputLength(textMiddle, 12, 'textMiddleError', middleCount) && isValid;
-          if (containsChinese(textRight.value)) {
-            isValid = validateInputLength(textRight, 46, 'textRightError', rightCount) && isValid;
-          } else {
-            isValid = validateInputLength(textRight, 180, 'textRightError', rightCount) && isValid;
-          }
-        } else {
-          isValid = validateInputLength(textLeft, 12, 'textLeftError', leftCount) && isValid;
-          isValid = validateInputLength(textMiddle, 24, 'textMiddleError', middleCount) && isValid;
-          isValid = validateInputLength(textRight, 12, 'textRightError', rightCount) && isValid;
-        }
-        
-        return isValid;
-      }
-      
-      // Add input event listeners for real-time validation
-      [textLeft, yangshang1, yangshang2, textMiddle, textRight].forEach(input => {
-        if (input) {
-          input.addEventListener('input', () => {
-            validateInputs();
-          });
-        }
-      });
-      
-      function showLoadingOverlay() {
-        loadingOverlay.style.display = 'flex';
-      }
-      
-      function hideLoadingOverlay() {
-        loadingOverlay.style.display = 'none';
-      }
-      
-      function showLoginPage() {
-        hideLoadingOverlay();
-        loginPage.style.display = 'block';
-        mainPage.style.display = 'none';
-      }
-      
-      function showMainPage() {
-        hideLoadingOverlay();
-        loginPage.style.display = 'none';
-        mainPage.style.display = 'block';
-      }
-      
-      var token = localStorage.getItem('token');
-      if (token) {
-        showLoadingOverlay();
-        validateToken(token);
-      } else {
-        showLoginPage();
-      }
-      
-      function validateToken(token) {
-        jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
-          if (response.success) {
-            showMainPage();
-          } else {
-            localStorage.removeItem('token');
-            showLoginPage();
-          }
-        });
-      }
-      
-      loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var username = document.getElementById('username').value;
-        var password = document.getElementById('password').value;
-        jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-          if (response.success) {
-            localStorage.setItem('token', response.token);
-            showMainPage();
-          } else {
-            loginMessage.textContent = '登录失败: ' + response.error;
-            loginMessage.className = 'text-center text-sm text-red-600';
-          }
-        });
-      });
-      
-      logoutBtn.addEventListener('click', function() {
-        localStorage.removeItem('token');
-        showLoginPage();
-      });
-      
-      function setLoading(isLoading) {
-        addToQueueBtn.disabled = isLoading;
-        printNowBtn.disabled = isLoading;
-        if (isLoading) {
-          addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
-          printNowBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
-        } else {
-          addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>添加</span></span>';
-          printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>生成</span></span>';
-        }
-      }
-      
-      function showStatus(message, isError = false) {
-        statusMessage.textContent = message;
-        statusMessage.className = isError ? 'mt-3 text-center text-sm text-red-600 fade-in' : 'mt-3 text-center text-sm text-green-600 fade-in';
-      }
-      
-      function jsonp(url, callback) {
-        var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-        window[callbackName] = function(data) {
-          delete window[callbackName];
-          document.body.removeChild(script);
-          callback(data);
-        };
-        var script = document.createElement('script');
-        script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-        document.body.appendChild(script);
-      }
-      
-      function submitForm(action) {
-        if (!validateInputs()) {
-          showStatus('请检查输入字数限制', true);
-          return;
-        }
-        
-        setLoading(true);
-        showStatus('');
-        
-        var formData = new FormData(form);
-        formData.append('action', action);
-        formData.append('token', localStorage.getItem('token'));
-        
-        // Handle the special case for 超荐牌位
-        if (designType.value === '超荐牌位') {
-          formData.set('textLeft', yangshang1.value); // Use yangshang1 as textLeft
-          if (yangshang2.value) {
-            formData.set('yangshang2', yangshang2.value);
-          }
-        }
-        
-        var data = Object.fromEntries(formData.entries());
-        var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
-        
-        jsonp(_0x3c4d + '?' + queryString, function(response) {
-          if (response.success) {
-            showStatus(response.message);
-            if (response.pdfBase64) {
-              try {
-                var byteCharacters = atob(response.pdfBase64);
-                var byteNumbers = new Array(byteCharacters.length);
-                for (var i = 0; i < byteCharacters.length; i++) {
-                  byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                var byteArray = new Uint8Array(byteNumbers);
-                var blob = new Blob([byteArray], {type: 'application/pdf'});
-                var blobUrl = URL.createObjectURL(blob);
-                
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                  // Mobile device: trigger download
-                  var link = document.createElement('a');
-                  link.href = blobUrl;
-                  link.download = '祈福牌.pdf';
-                  link.click();
+            <div class="flex flex-col space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" id="addToQueueBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition duration-150 ease-in-out">
+                        <span class="flex items-center">
+                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            <span>添加</span>
+                        </span>
+                    </button>
+                    <button type="button" id="printNowBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out">
+                        <span class="flex items-center">
+                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span>生成</span>
+                        </span>
+                    </button>
+                </div>
+                <a href="mailto:softbizalexander@gmail.com" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition duration-150 ease-in-out">
+                    有问题可联系
+                </a>
+            </div>
+        </form>
+        <div id="statusMessage" class="text-center text-sm"></div>
+    </div>
+
+    <script>
+        (function() {
+            var _0x5f4e3d = "PLACEHOLDER_STRING";
+            var _0x2a1b = function(s) {
+                return String.fromCharCode.apply(null, s.match(/.{1,2}/g).map(function(c) {
+                    return parseInt(c, 16);
+                }));
+            };
+            var _0x3c4d = _0x2a1b(_0x5f4e3d);
+            var loginForm = document.getElementById('loginForm');
+            var loginMessage = document.getElementById('loginMessage');
+            var loginPage = document.getElementById('loginPage');
+            var mainPage = document.getElementById('mainPage');
+            var form = document.getElementById('pdfForm');
+            var statusMessage = document.getElementById('statusMessage');
+            var addToQueueBtn = document.getElementById('addToQueueBtn');
+            var printNowBtn = document.getElementById('printNowBtn');
+            var searchInput = document.getElementById('search');
+            var searchResults = document.getElementById('searchResults');
+            var logoutBtn = document.getElementById('logoutBtn');
+            var loadingOverlay = document.getElementById('loadingOverlay');
+            var designType = document.getElementById('designType');
+            var textLeft = document.getElementById('textLeft');
+            var yangshang1 = document.getElementById('yangshang1');
+            var yangshang2 = document.getElementById('yangshang2');
+            var textMiddle = document.getElementById('textMiddle');
+            var textRight = document.getElementById('textRight');
+            var textLeftContainer = document.getElementById('textLeftContainer');
+            var yangshang1Container = document.getElementById('yangshang1Container');
+            var yangshang2Container = document.getElementById('yangshang2Container');
+            var leftCount = document.getElementById('leftCount');
+            var yangshang1Count = document.getElementById('yangshang1Count');
+            var yangshang2Count = document.getElementById('yangshang2Count');
+            var middleCount = document.getElementById('middleCount');
+            var rightCount = document.getElementById('rightCount');
+
+            function updateLabelsAndTooltips(type) {
+                const middleLabel = document.querySelector('label[for="textMiddle"]');
+                const rightLabel = document.querySelector('label[for="textRight"]');
+                const middleTooltip = document.getElementById('middleTooltip');
+                const rightTooltip = document.getElementById('rightTooltip');
+
+                if (type === '超荐牌位') {
+                    // Hide 祈福牌位 fields
+                    textLeftContainer.style.display = 'none';
+                    textLeft.required = false;
+                    // Show 超荐牌位 fields
+                    yangshang1Container.style.display = 'block';
+                    yangshang2Container.style.display = 'block';
+                    yangshang1.required = true;
+
+                    middleLabel.textContent = '回向至';
+                    rightLabel.textContent = '地址';
+                    middleTooltip.textContent = '12字以内';
+                    rightTooltip.textContent = containsChinese(textRight.value) ? '46字以内' : '180字符以内';
+                    middleCount.textContent = `${textMiddle.value.length}/12`;
+                    rightCount.textContent = containsChinese(textRight.value) ? `${textRight.value.length}/46` : `${textRight.value.length}/180`;
+                    textMiddle.placeholder = '请输入回向至';
+                    textRight.placeholder = '请输入地址';
                 } else {
-                  // Desktop: open in new tab
-                  window.open(blobUrl, '_blank');
+                    // Show 祈福牌位 fields
+                    textLeftContainer.style.display = 'block';
+                    textLeft.required = true;
+                    // Hide 超荐牌位 fields
+                    yangshang1Container.style.display = 'none';
+                    yangshang2Container.style.display = 'none';
+                    yangshang1.required = false;
+
+                    middleLabel.textContent = '中间 1-2 排名字';
+                    rightLabel.textContent = '右 1 排名字';
+                    middleTooltip.textContent = '24字以内';
+                    rightTooltip.textContent = '12字以内';
+                    middleCount.textContent = `${textMiddle.value.length}/24`;
+                    rightCount.textContent = `${textRight.value.length}/12`;
+                    textMiddle.placeholder = '请输入中间 1-2 排名字';
+                    textRight.placeholder = '请输入右 1 排名字';
                 }
-              } catch (error) {
-                console.error("Error creating PDF blob:", error);
-                showStatus('创建 PDF 时出错: ' + error.message, true);
-              }
             }
-          } else {
-            if (response.error === 'Invalid or expired token') {
-              localStorage.removeItem('token');
-              showLoginPage();
+
+            function updateCharCount(input, countElement, maxLength) {
+                const currentLength = input.value.length;
+                countElement.textContent = `${currentLength}/${maxLength}`;
             }
-            showStatus('发生错误: ' + (response.error || '未知错误'), true);
-          }
-          setLoading(false);
-        });
-      }
-      
-      function searchSheet() {
-        var searchTerm = searchInput.value.trim();
-        if (searchTerm.length > 0) {
-          jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
-            if (response.success && response.results) {
-              searchResults.innerHTML = '<option value="">选择搜索结果</option>';
-              response.results.forEach(function(result) {
-                var option = document.createElement('option');
-                option.value = JSON.stringify(result);
-                option.textContent = result.name + ' (' + result.date + ')';
-                searchResults.appendChild(option);
-              });
-              searchResults.style.display = 'block';
+
+            // Add input event listeners for character count updates
+            textLeft.addEventListener('input', function() {
+                updateCharCount(this, leftCount, 12);
+            });
+
+            yangshang1.addEventListener('input', function() {
+                updateCharCount(this, yangshang1Count, 29);
+            });
+
+            yangshang2.addEventListener('input', function() {
+                updateCharCount(this, yangshang2Count, 29);
+            });
+
+            textMiddle.addEventListener('input', function() {
+                const maxLength = designType.value === '超荐牌位' ? 12 : 24;
+                updateCharCount(this, middleCount, maxLength);
+            });
+
+            textRight.addEventListener('input', function() {
+                let maxLength;
+                if (designType.value === '超荐牌位') {
+                    maxLength = containsChinese(this.value) ? 46 : 180;
+                } else {
+                    maxLength = 12;
+                }
+                updateCharCount(this, rightCount, maxLength);
+            });
+
+            // Update labels on initial load
+            updateLabelsAndTooltips(designType.value);
+
+            // Update labels when design type changes
+            designType.addEventListener('change', function() {
+                updateLabelsAndTooltips(this.value);
+                validateInputs();
+            });
+
+            function containsChinese(text) {
+                return /[\u4E00-\u9FFF]/.test(text);
+            }
+
+            function validateInputLength(input, maxLength, errorId, countElement) {
+                const errorDiv = document.getElementById(errorId);
+                if (input.value.length > maxLength) {
+                    input.classList.add('input-error');
+                    errorDiv.style.display = 'block';
+                    errorDiv.textContent = `超出最大字数限制 (${maxLength})`;
+                    return false;
+                } else {
+                    input.classList.remove('input-error');
+                    errorDiv.style.display = 'none';
+                    return true;
+                }
+            }
+
+            function validateInputs() {
+                const type = designType.value;
+                let isValid = true;
+
+                if (type === '超荐牌位') {
+                    isValid = validateInputLength(yangshang1, 29, 'yangshang1Error', yangshang1Count) && isValid;
+                    isValid = validateInputLength(yangshang2, 29, 'yangshang2Error', yangshang2Count) && isValid;
+                    isValid = validateInputLength(textMiddle, 12, 'textMiddleError', middleCount) && isValid;
+                    if (containsChinese(textRight.value)) {
+                        isValid = validateInputLength(textRight, 46, 'textRightError', rightCount) && isValid;
+                    } else {
+                        isValid = validateInputLength(textRight, 180, 'textRightError', rightCount) && isValid;
+                    }
+                } else {
+                    isValid = validateInputLength(textLeft, 12, 'textLeftError', leftCount) && isValid;
+                    isValid = validateInputLength(textMiddle, 24, 'textMiddleError', middleCount) && isValid;
+                    isValid = validateInputLength(textRight, 12, 'textRightError', rightCount) && isValid;
+                }
+                return isValid;
+            }
+
+            // Add input event listeners for real-time validation
+            [textLeft, yangshang1, yangshang2, textMiddle, textRight].forEach(input => {
+                input.addEventListener('input', () => {
+                    validateInputs();
+                });
+            });
+
+            function showLoadingOverlay() {
+                loadingOverlay.style.display = 'flex';
+            }
+
+            function hideLoadingOverlay() {
+                loadingOverlay.style.display = 'none';
+            }
+
+            function showLoginPage() {
+                hideLoadingOverlay();
+                loginPage.style.display = 'block';
+                mainPage.style.display = 'none';
+            }
+
+            function showMainPage() {
+                hideLoadingOverlay();
+                loginPage.style.display = 'none';
+                mainPage.style.display = 'block';
+            }
+
+            var token = localStorage.getItem('token');
+            if (token) {
+                showLoadingOverlay();
+                validateToken(token);
             } else {
-              if (response.error === 'Invalid or expired token') {
+                showLoginPage();
+            }
+
+            function validateToken(token) {
+                jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
+                    if (response.success) {
+                        showMainPage();
+                    } else {
+                        localStorage.removeItem('token');
+                        showLoginPage();
+                    }
+                });
+            }
+
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var username = document.getElementById('username').value;
+                var password = document.getElementById('password').value;
+                jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
+                    if (response.success) {
+                        localStorage.setItem('token', response.token);
+                        showMainPage();
+                    } else {
+                        loginMessage.textContent = '登录失败: ' + response.error;
+                        loginMessage.className = 'text-center text-sm text-red-600';
+                    }
+                });
+            });
+
+            logoutBtn.addEventListener('click', function() {
                 localStorage.removeItem('token');
                 showLoginPage();
-              }
-              showStatus('搜索失败: ' + (response.error || '未知错误'), true);
+            });
+
+            function setLoading(isLoading) {
+                addToQueueBtn.disabled = isLoading;
+                printNowBtn.disabled = isLoading;
+                if (isLoading) {
+                    addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
+                    printNowBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
+                } else {
+                    addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>添加</span></span>';
+                    printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>生成</span></span>';
+                }
             }
-          });
-        } else {
-          searchResults.style.display = 'none';
-        }
-      }
-      
-      function fillForm(result) {
-        document.getElementById('name').value = result.name || '';
-        
-        if (result.designType === '超荐牌位') {
-          document.getElementById('yangshang1').value = result.textLeft || '';
-          document.getElementById('yangshang2').value = result.yangshang2 || '';
-        } else {
-          document.getElementById('textLeft').value = result.textLeft || '';
-        }
-        
-        document.getElementById('textMiddle').value = result.textMiddle || '';
-        document.getElementById('textRight').value = result.textRight || '';
-        
-        if (result.designType) {
-          document.getElementById('designType').value = result.designType;
-        }
-        
-        // Update labels after filling form
-        updateLabelsAndTooltips(document.getElementById('designType').value);
-        validateInputs();
-      }
-      
-      addToQueueBtn.addEventListener('click', function() {
-        submitForm('addToQueue');
-      });
-      
-      printNowBtn.addEventListener('click', function() {
-        submitForm('printNow');
-      });
-      
-      searchInput.addEventListener('input', searchSheet);
-      
-      searchResults.addEventListener('change', function() {
-        var selectedValue = searchResults.value;
-        if (selectedValue) {
-          var result = JSON.parse(selectedValue);
-          fillForm(result);
-        }
-      });
-    })();
-  </script>
+
+            function showStatus(message, isError = false) {
+                statusMessage.textContent = message;
+                statusMessage.className = isError ? 'mt-3 text-center text-sm text-red-600 fade-in' : 'mt-3 text-center text-sm text-green-600 fade-in';
+            }
+
+            function jsonp(url, callback) {
+                var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    callback(data);
+                };
+                var script = document.createElement('script');
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                document.body.appendChild(script);
+            }
+
+            function submitForm(action) {
+                if (!validateInputs()) {
+                    showStatus('请检查输入字数限制', true);
+                    return;
+                }
+                setLoading(true);
+                showStatus('');
+
+                var formData = new FormData(form);
+                formData.append('action', action);
+                formData.append('token', localStorage.getItem('token'));
+
+                var data = Object.fromEntries(formData.entries());
+                var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
+
+                jsonp(_0x3c4d + '?' + queryString, function(response) {
+                    if (response.success) {
+                        showStatus(response.message);
+                        if (response.pdfBase64) {
+                            try {
+                                var byteCharacters = atob(response.pdfBase64);
+                                var byteNumbers = new Array(byteCharacters.length);
+                                for (var i = 0; i < byteCharacters.length; i++) {
+                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                }
+                                var byteArray = new Uint8Array(byteNumbers);
+                                var blob = new Blob([byteArray], {type: 'application/pdf'});
+                                var blobUrl = URL.createObjectURL(blob);
+                                
+                                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                                    // Mobile device: trigger download
+                                    var link = document.createElement('a');
+                                    link.href = blobUrl;
+                                    link.download = '祈福牌.pdf';
+                                    link.click();
+                                } else {
+                                    // Desktop: open in new tab
+                                    window.open(blobUrl, '_blank');
+                                }
+                            } catch (error) {
+                                console.error("Error creating PDF blob:", error);
+                                showStatus('创建 PDF 时出错: ' + error.message, true);
+                            }
+                        }
+                    } else {
+                        if (response.error === 'Invalid or expired token') {
+                            localStorage.removeItem('token');
+                            showLoginPage();
+                        }
+                        showStatus('发生错误: ' + (response.error || '未知错误'), true);
+                    }
+                    setLoading(false);
+                });
+            }
+
+            function fillForm(result) {
+                // First clear all fields
+                document.getElementById('name').value = '';
+                document.getElementById('yangshang1').value = '';
+                document.getElementById('yangshang2').value = '';
+                document.getElementById('textLeft').value = '';
+                document.getElementById('textMiddle').value = '';
+                document.getElementById('textRight').value = '';
+
+                // Set name
+                document.getElementById('name').value = result.name || '';
+
+                // Set design type and update UI
+                if (result.designType) {
+                    const designTypeSelect = document.getElementById('designType');
+                    // Update design type dropdown
+                    designTypeSelect.value = result.designType;
+                    // Manually trigger change event to update UI
+                    const event = new Event('change', { bubbles: true });
+                    designTypeSelect.dispatchEvent(event);
+                }
+
+                // Wait for UI update to complete
+                setTimeout(() => {
+                    // Fill fields based on design type
+                    if (result.designType === '超荐牌位') {
+                        document.getElementById('yangshang1').value = result.yangshang1 || '';
+                        document.getElementById('yangshang2').value = result.yangshang2 || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        document.getElementById('textRight').value = result.textRight || '';
+                    } else {
+                        document.getElementById('textLeft').value = result.textLeft || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        document.getElementById('textRight').value = result.textRight || '';
+                    }
+
+                    // Update all character counts
+                    updateCharCount(yangshang1, yangshang1Count, 29);
+                    updateCharCount(yangshang2, yangshang2Count, 29);
+                    updateCharCount(textLeft, leftCount, 12);
+                    updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
+                    updateCharCount(textRight, rightCount, 
+                        result.designType === '超荐牌位' ? (containsChinese(result.textRight || '') ? 46 : 180) : 12);
+
+                    validateInputs();
+                }, 0);
+            }
+
+            function searchSheet() {
+                var searchTerm = searchInput.value.trim();
+                if (searchTerm.length > 0) {
+                    jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
+                        if (response.success && response.results) {
+                            searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+                            response.results.forEach(function(result) {
+                                var option = document.createElement('option');
+                                option.value = JSON.stringify(result);
+                                option.textContent = result.name + ' (' + result.date + ')';
+                                searchResults.appendChild(option);
+                            });
+                            searchResults.style.display = 'block';
+                        } else {
+                            if (response.error === 'Invalid or expired token') {
+                                localStorage.removeItem('token');
+                                showLoginPage();
+                            }
+                            showStatus('搜索失败: ' + (response.error || '未知错误'), true);
+                        }
+                    });
+                } else {
+                    searchResults.style.display = 'none';
+                }
+            }
+
+            addToQueueBtn.addEventListener('click', function() {
+                submitForm('addToQueue');
+            });
+
+            printNowBtn.addEventListener('click', function() {
+                submitForm('printNow');
+            });
+
+            searchInput.addEventListener('input', searchSheet);
+
+            searchResults.addEventListener('change', function() {
+                var selectedValue = searchResults.value;
+                if (selectedValue) {
+                    var result = JSON.parse(selectedValue);
+                    
+                    // Update design type first
+                    var designTypeSelect = document.getElementById('designType');
+                    designTypeSelect.value = result.designType || '祈福牌位';
+                    
+                    // Trigger change event for designType
+                    designTypeSelect.dispatchEvent(new Event('change', {
+                        bubbles: true,
+                        cancelable: true
+                    }));
+                    
+                    // Then fill other form fields
+                    document.getElementById('name').value = result.name || '';
+                    
+                    if (result.designType === '超荐牌位') {
+                        document.getElementById('yangshang1').value = result.yangshang1 || '';
+                        document.getElementById('yangshang2').value = result.yangshang2 || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        document.getElementById('textRight').value = result.textRight || '';
+                        
+                        // Update character counts
+                        updateCharCount(document.getElementById('yangshang1'), yangshang1Count, 29);
+                        updateCharCount(document.getElementById('yangshang2'), yangshang2Count, 29);
+                        updateCharCount(document.getElementById('textMiddle'), middleCount, 12);
+                        updateCharCount(document.getElementById('textRight'), rightCount, 
+                            containsChinese(result.textRight || '') ? 46 : 180);
+                    } else {
+                        document.getElementById('textLeft').value = result.textLeft || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        document.getElementById('textRight').value = result.textRight || '';
+                        
+                        // Update character counts
+                        updateCharCount(document.getElementById('textLeft'), leftCount, 12);
+                        updateCharCount(document.getElementById('textMiddle'), middleCount, 24);
+                        updateCharCount(document.getElementById('textRight'), rightCount, 12);
+                    }
+                    
+                    validateInputs();
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
