@@ -238,7 +238,7 @@
                                 <label for="address1" class="text-sm font-medium text-gray-700">地址1</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="address1Tooltip">160字以内</span>
+                                    <span class="tooltiptext" id="address1Tooltip">中文80字/英文160字以内</span>
                                 </span>
                             </div>
                             <span class="char-count" id="address1Count">0/160</span>
@@ -430,10 +430,18 @@
                 return containsChinese(text) ? 46 : 180;
             }
 
+            // Update tooltip and counter dynamically based on content
             function updateAddressCharCount(input, countElement) {
-                const maxLength = 160;  // Fixed 160 character limit for addresses
+                const isChinese = containsChinese(input.value);
+                const maxLength = isChinese ? 80 : 160;
                 const currentLength = input.value.length;
                 countElement.textContent = `${currentLength}/${maxLength}`;
+                
+                // Update tooltip text
+                const tooltipElement = countElement.previousElementSibling.querySelector('.tooltiptext');
+                if (tooltipElement) {
+                    tooltipElement.textContent = isChinese ? '80个汉字以内' : '160字符以内';
+                }
             }
 
             // Add input event listeners for character count updates
@@ -457,7 +465,15 @@
             function validateInputs() {
                 const type = designType.value;
                 let isValid = true;
-
+            
+                // For addresses, check if contains Chinese
+                function getAddressLimit(text) {
+                    if (containsChinese(text)) {
+                        return 80;  // Suitable limit for Chinese characters
+                    }
+                    return 160;  // Increased limit for non-Chinese text
+                }
+            
                 if (type === '超荐牌位') {
                     // Validate 超荐牌位 fields
                     isValid = validateInputLength(yangshang1, 28, 'yangshang1Error') && isValid;
@@ -466,15 +482,30 @@
                     }
                     isValid = validateInputLength(textMiddle, 12, 'textMiddleError') && isValid;
                     
-                    // Validate address fields with 160 character limit
+                    // Validate address fields with dynamic character limit
                     if (address1.value) {
-                        isValid = validateInputLength(address1, 160, 'address1Error') && isValid;
+                        isValid = validateInputLength(address1, getAddressLimit(address1.value), 'address1Error') && isValid;
+                        // Update tooltip dynamically
+                        const tooltip1 = document.getElementById('address1Tooltip');
+                        if (tooltip1) {
+                            tooltip1.textContent = containsChinese(address1.value) ? '80个汉字以内' : '160字符以内';
+                        }
                     }
                     if (address2.value) {
-                        isValid = validateInputLength(address2, 160, 'address2Error') && isValid;
+                        isValid = validateInputLength(address2, getAddressLimit(address2.value), 'address2Error') && isValid;
+                        // Update tooltip dynamically
+                        const tooltip2 = document.getElementById('address2Tooltip');
+                        if (tooltip2) {
+                            tooltip2.textContent = containsChinese(address2.value) ? '80个汉字以内' : '160字符以内';
+                        }
                     }
                     if (address3.value) {
-                        isValid = validateInputLength(address3, 160, 'address3Error') && isValid;
+                        isValid = validateInputLength(address3, getAddressLimit(address3.value), 'address3Error') && isValid;
+                        // Update tooltip dynamically
+                        const tooltip3 = document.getElementById('address3Tooltip');
+                        if (tooltip3) {
+                            tooltip3.textContent = containsChinese(address3.value) ? '80个汉字以内' : '160字符以内';
+                        }
                     }
                 } else {
                     // Validate 祈福牌位 fields
@@ -482,7 +513,7 @@
                     isValid = validateInputLength(textMiddle, 24, 'textMiddleError') && isValid;
                     isValid = validateInputLength(textRight, 12, 'textRightError') && isValid;
                 }
-
+            
                 return isValid;
             }
 
