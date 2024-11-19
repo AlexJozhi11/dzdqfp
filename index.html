@@ -181,10 +181,10 @@
                             <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
                             <span class="tooltip">
                                 <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="yangshang1Tooltip">29字以内</span>
+                                <span class="tooltiptext" id="yangshang1Tooltip">28字以内</span>
                             </span>
                         </div>
-                        <span class="char-count" id="yangshang1Count">0/29</span>
+                        <span class="char-count" id="yangshang1Count">0/28</span>
                     </div>
                     <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
                     <div class="error-message" id="yangshang1Error"></div>
@@ -195,10 +195,10 @@
                             <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
                             <span class="tooltip">
                                 <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="yangshang2Tooltip">29字以内</span>
+                                <span class="tooltiptext" id="yangshang2Tooltip">28字以内</span>
                             </span>
                         </div>
-                        <span class="char-count" id="yangshang2Count">0/29</span>
+                        <span class="char-count" id="yangshang2Count">0/28</span>
                     </div>
                     <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
                     <div class="error-message" id="yangshang2Error"></div>
@@ -350,11 +350,11 @@
             });
 
             yangshang1.addEventListener('input', function() {
-                updateCharCount(this, yangshang1Count, 29);
+                updateCharCount(this, yangshang1Count, 28);
             });
 
             yangshang2.addEventListener('input', function() {
-                updateCharCount(this, yangshang2Count, 29);
+                updateCharCount(this, yangshang2Count, 28);
             });
 
             textMiddle.addEventListener('input', function() {
@@ -404,8 +404,8 @@
                 let isValid = true;
 
                 if (type === '超荐牌位') {
-                    isValid = validateInputLength(yangshang1, 29, 'yangshang1Error', yangshang1Count) && isValid;
-                    isValid = validateInputLength(yangshang2, 29, 'yangshang2Error', yangshang2Count) && isValid;
+                    isValid = validateInputLength(yangshang1, 28, 'yangshang1Error', yangshang1Count) && isValid;
+                    isValid = validateInputLength(yangshang2, 28, 'yangshang2Error', yangshang2Count) && isValid;
                     isValid = validateInputLength(textMiddle, 12, 'textMiddleError', middleCount) && isValid;
                     if (containsChinese(textRight.value)) {
                         isValid = validateInputLength(textRight, 46, 'textRightError', rightCount) && isValid;
@@ -607,8 +607,8 @@
                     }
 
                     // Update all character counts
-                    updateCharCount(yangshang1, yangshang1Count, 29);
-                    updateCharCount(yangshang2, yangshang2Count, 29);
+                    updateCharCount(yangshang1, yangshang1Count, 28);
+                    updateCharCount(yangshang2, yangshang2Count, 28);
                     updateCharCount(textLeft, leftCount, 12);
                     updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
                     updateCharCount(textRight, rightCount, 
@@ -679,8 +679,8 @@
                         document.getElementById('textRight').value = result.textRight || '';
                         
                         // Update character counts
-                        updateCharCount(document.getElementById('yangshang1'), yangshang1Count, 29);
-                        updateCharCount(document.getElementById('yangshang2'), yangshang2Count, 29);
+                        updateCharCount(document.getElementById('yangshang1'), yangshang1Count, 28);
+                        updateCharCount(document.getElementById('yangshang2'), yangshang2Count, 28);
                         updateCharCount(document.getElementById('textMiddle'), middleCount, 12);
                         updateCharCount(document.getElementById('textRight'), rightCount, 
                             containsChinese(result.textRight || '') ? 46 : 180);
