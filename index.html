@@ -238,7 +238,7 @@
                                 <label for="address1" class="text-sm font-medium text-gray-700">地址1</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="address1Tooltip">中文80字/英文160字以内</span>
+                                    <span class="tooltiptext" id="address1Tooltip">中文120字/英文180字以内</span>
                                 </span>
                             </div>
                             <span class="char-count" id="address1Count">0/160</span>
@@ -427,20 +427,20 @@
             }
 
             function getAddressMaxLength(text) {
-                return containsChinese(text) ? 46 : 180;
+                return containsChinese(text) ? 120 : 180;
             }
 
             // Update tooltip and counter dynamically based on content
             function updateAddressCharCount(input, countElement) {
                 const isChinese = containsChinese(input.value);
-                const maxLength = isChinese ? 80 : 160;
+                const maxLength = isChinese ? 120 : 180;
                 const currentLength = input.value.length;
                 countElement.textContent = `${currentLength}/${maxLength}`;
                 
                 // Update tooltip text
                 const tooltipElement = countElement.previousElementSibling.querySelector('.tooltiptext');
                 if (tooltipElement) {
-                    tooltipElement.textContent = isChinese ? '80个汉字以内' : '160字符以内';
+                    tooltipElement.textContent = isChinese ? '120个汉字以内' : '180字符以内';
                 }
             }
 
@@ -469,9 +469,9 @@
                 // For addresses, check if contains Chinese
                 function getAddressLimit(text) {
                     if (containsChinese(text)) {
-                        return 80;  // Suitable limit for Chinese characters
+                        return 120;  // Suitable limit for Chinese characters
                     }
-                    return 160;  // Increased limit for non-Chinese text
+                    return 180;  // Increased limit for non-Chinese text
                 }
             
                 if (type === '超荐牌位') {
@@ -488,7 +488,7 @@
                         // Update tooltip dynamically
                         const tooltip1 = document.getElementById('address1Tooltip');
                         if (tooltip1) {
-                            tooltip1.textContent = containsChinese(address1.value) ? '80个汉字以内' : '160字符以内';
+                            tooltip1.textContent = containsChinese(address1.value) ? '120个汉字以内' : '180字符以内';
                         }
                     }
                     if (address2.value) {
@@ -496,7 +496,7 @@
                         // Update tooltip dynamically
                         const tooltip2 = document.getElementById('address2Tooltip');
                         if (tooltip2) {
-                            tooltip2.textContent = containsChinese(address2.value) ? '80个汉字以内' : '160字符以内';
+                            tooltip2.textContent = containsChinese(address2.value) ? '120个汉字以内' : '180字符以内';
                         }
                     }
                     if (address3.value) {
@@ -504,7 +504,7 @@
                         // Update tooltip dynamically
                         const tooltip3 = document.getElementById('address3Tooltip');
                         if (tooltip3) {
-                            tooltip3.textContent = containsChinese(address3.value) ? '80个汉字以内' : '160字符以内';
+                            tooltip3.textContent = containsChinese(address3.value) ? '120个汉字以内' : '180字符以内';
                         }
                     }
                 } else {
