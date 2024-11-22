@@ -92,6 +92,20 @@
             display: block;
             animation: fadeIn 0.3s ease-in-out;
         }
+        .compact-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .input-group {
+            margin-bottom: 0.5rem;
+        }
+        .input-label {
+            margin-bottom: 0.25rem;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
@@ -122,50 +136,82 @@
         <div id="loginMessage" class="text-center text-sm"></div>
     </div>
 
-    <div id="mainPage" class="w-full max-w-lg bg-white rounded-xl shadow-2xl fade-in p-6 space-y-2" style="display: none;">
-        <div class="flex justify-between items-center">
+    <div id="mainPage" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl fade-in p-6 space-y-2" style="display: none;">
+        <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">槟城金刚山牌位系统</h2>
             <button id="logoutBtn" class="px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">
                 退出
             </button>
         </div>
-        <p class="text-sm text-gray-600 -mt-1">只有最后一个/单个可点'生成'，其他的都点'添加'</p>
+        <p class="text-sm text-gray-600 -mt-1 mb-4">只有最后一个/单个可点'生成'，其他的都点'添加'</p>
         <form id="pdfForm" class="space-y-4">
-            <div class="grid grid-cols-1 gap-4">
-                <div>
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">搜索</label>
-                    <input id="search" name="search" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入要搜索的名字记录">
+            <div class="compact-form">
+                <!-- Search and Name fields - Full width -->
+                <div class="input-group full-width">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="search" class="block text-sm font-medium text-gray-700 mb-1">搜索</label>
+                            <input id="search" name="search" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入要搜索的名字记录">
+                        </div>
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">名字记录</label>
+                            <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入名字记录">
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <select id="searchResults" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" style="display: none;">
-                        <option value="">选择搜索结果</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                        名字记录
-                        <span class="tooltip ml-1">
-                            <i class="fas fa-info-circle text-gray-500"></i>
-                            <span class="tooltiptext">以后可搜寻现在填写的名字记录</span>
-                        </span>
-                    </label>
-                    <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入名字记录">
-                </div>
-                <div>
-                    <label for="designType" class="block text-sm font-medium text-gray-700 mb-1">
-                        牌位类型
-                        <span class="tooltip ml-1">
-                            <i class="fas fa-info-circle text-gray-500"></i>
-                            <span class="tooltiptext">选择牌位类型</span>
-                        </span>
-                    </label>
+
+                <!-- Design Type - Full width -->
+                <div class="input-group full-width">
+                    <label for="designType" class="block text-sm font-medium text-gray-700 mb-1">牌位类型</label>
                     <select id="designType" name="designType" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="祈福牌位">祈福牌位</option>
                         <option value="超荐牌位">超荐牌位</option>
                     </select>
                 </div>
 
-                <!-- 祈福牌位-specific fields -->
+                <!-- Search Results - Full width -->
+                <div class="full-width">
+                    <select id="searchResults" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" style="display: none;">
+                        <option value="">选择搜索结果</option>
+                    </select>
+                </div>
+
+                <!-- 超荐牌位 specific fields -->
+                <div id="chaojianFields" class="address-fields full-width">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">28字以内</span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yangshang1Count">0/28</span>
+                            </div>
+                            <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
+                            <div class="error-message" id="yangshang1Error"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">28字以内</span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yangshang2Count">0/28</span>
+                            </div>
+                            <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
+                            <div class="error-message" id="yangshang2Error"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 祈福牌位 specific fields -->
                 <div id="qifuFields">
                     <div id="textLeftContainer">
                         <div class="label-container mb-1">
@@ -173,7 +219,7 @@
                                 <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="leftTooltip">12字以内</span>
+                                    <span class="tooltiptext">12字以内</span>
                                 </span>
                             </div>
                             <span class="char-count" id="leftCount">0/12</span>
@@ -183,42 +229,11 @@
                     </div>
                 </div>
 
-                <!-- 超荐牌位-specific fields -->
-                <div id="chaojianFields" class="address-fields">
-                    <div id="yangshang1Container">
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="yangshang1Tooltip">28字以内</span>
-                                </span>
-                            </div>
-                            <span class="char-count" id="yangshang1Count">0/28</span>
-                        </div>
-                        <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
-                        <div class="error-message" id="yangshang1Error"></div>
-                    </div>
-                    <div id="yangshang2Container">
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="yangshang2Tooltip">28字以内</span>
-                                </span>
-                            </div>
-                            <span class="char-count" id="yangshang2Count">0/28</span>
-                        </div>
-                        <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
-                        <div class="error-message" id="yangshang2Error"></div>
-                    </div>
-                </div>
-
-                <div>
+                <!-- Middle text field -->
+                <div class="input-group">
                     <div class="label-container mb-1">
                         <div class="label-left">
-                            <label for="textMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
+                            <label for="textMiddle" class="text-sm font-medium text-gray-700">回向至</label>
                             <span class="tooltip">
                                 <i class="fas fa-info-circle text-gray-500"></i>
                                 <span class="tooltiptext" id="middleTooltip">24字以内</span>
@@ -226,560 +241,594 @@
                         </div>
                         <span class="char-count" id="middleCount">0/24</span>
                     </div>
-                    <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
+                    <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
                     <div class="error-message" id="textMiddleError"></div>
                 </div>
 
-                <!-- New address fields for 超荐牌位 -->
-                <div id="addressFields" class="address-fields">
-                    <div id="address1Container">
+                <!-- Left and Right Yigu names -->
+                <div class="grid grid-cols-2 gap-4 full-width">
+                    <div class="input-group">
                         <div class="label-container mb-1">
                             <div class="label-left">
-                                <label for="address1" class="text-sm font-medium text-gray-700">地址1</label>
+                                <label for="yiguLeft" class="text-sm font-medium text-gray-700">左侧已故名字</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="address1Tooltip">中文108字/英文177字以内</span>
+                                    <span class="tooltiptext">21字以内</span>
                                 </span>
                             </div>
-                            <span class="char-count" id="address1Count">0/177</span>
+                            <span class="char-count" id="yiguLeftCount">0/21</span>
                         </div>
-                        <input id="address1" name="address1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址1">
-                        <div class="error-message" id="address1Error"></div>
+                        <input id="yiguLeft" name="yiguLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左侧已故名字">
+                        <div class="error-message" id="yiguLeftError"></div>
                     </div>
-                    <div id="address2Container">
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="address2" class="text-sm font-medium text-gray-700">地址2</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="address2Tooltip">中文108字/英文177字以内</span>
-                                </span>
-                            </div>
-                            <span class="char-count" id="address2Count">0/177</span>
-                        </div>
-                        <input id="address2" name="address2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址2">
-                        <div class="error-message" id="address2Error"></div>
-                    </div>
-                    <div id="address3Container">
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="address3" class="text-sm font-medium text-gray-700">地址3</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="address3Tooltip">中文108字/英文177字以内</span>
-                                </span>
-                            </div>
-                            <span class="char-count" id="address3Count">0/177</span>
-                        </div>
-                        <input id="address3" name="address3" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址3">
-                        <div class="error-message" id="address3Error"></div>
-                    </div>
-                </div>
 
-                <!-- Right text field for 祈福牌位 -->
-                <div id="textRightContainer">
-                    <div class="label-container mb-1">
-                        <div class="label-left">
-                            <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext" id="rightTooltip">12字以内</span>
-                            </span>
-                        </div>
-                        <span class="char-count" id="rightCount">0/12</span>
-                    </div>
-                    <input id="textRight" name="textRight" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
-                    <div class="error-message" id="textRightError"></div>
-                </div>
-            </div>
-            <div class="flex flex-col space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                    <button type="button" id="addToQueueBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition duration-150 ease-in-out">
-                        <span class="flex items-center">
-                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                            </svg>
-                            <span>添加</span>
-                        </span>
-                    </button>
-                    <button type="button" id="printNowBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out">
-                        <span class="flex items-center">
-                            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
-                            </svg>
-                            <span>生成</span>
-                        </span>
-                    </button>
-                </div>
-                <a href="mailto:softbizalexander@gmail.com" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition duration-150 ease-in-out">
-                    有问题可联系
-                </a>
-            </div>
-        </form>
-        <div id="statusMessage" class="text-center text-sm"></div>
-    </div>
+                    <div class="input-group">
+                       <div class="label-container mb-1">
+                           <div class="label-left">
+                               <label for="yiguRight" class="text-sm font-medium text-gray-700">右侧已故名字</label>
+                               <span class="tooltip">
+                                   <i class="fas fa-info-circle text-gray-500"></i>
+                                   <span class="tooltiptext">21字以内</span>
+                               </span>
+                           </div>
+                           <span class="char-count" id="yiguRightCount">0/21</span>
+                       </div>
+                       <input id="yiguRight" name="yiguRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右侧已故名字">
+                       <div class="error-message" id="yiguRightError"></div>
+                   </div>
+               </div>
 
-    <script>
-        (function() {
-            var _0x5f4e3d = "PLACEHOLDER_STRING";
-            var _0x2a1b = function(s) {
-                return String.fromCharCode.apply(null, s.match(/.{1,2}/g).map(function(c) {
-                    return parseInt(c, 16);
-                }));
-            };
-            var _0x3c4d = _0x2a1b(_0x5f4e3d);
-            var loginForm = document.getElementById('loginForm');
-            var loginMessage = document.getElementById('loginMessage');
-            var loginPage = document.getElementById('loginPage');
-            var mainPage = document.getElementById('mainPage');
-            var form = document.getElementById('pdfForm');
-            var statusMessage = document.getElementById('statusMessage');
-            var addToQueueBtn = document.getElementById('addToQueueBtn');
-            var printNowBtn = document.getElementById('printNowBtn');
-            var searchInput = document.getElementById('search');
-            var searchResults = document.getElementById('searchResults');
-            var logoutBtn = document.getElementById('logoutBtn');
-            var loadingOverlay = document.getElementById('loadingOverlay');
-            var designType = document.getElementById('designType');
+               <!-- Address fields -->
+               <div id="addressFields" class="address-fields full-width">
+                   <div class="grid grid-cols-3 gap-4">
+                       <div class="input-group">
+                           <div class="label-container mb-1">
+                               <div class="label-left">
+                                   <label for="address1" class="text-sm font-medium text-gray-700">地址1</label>
+                                   <span class="tooltip">
+                                       <i class="fas fa-info-circle text-gray-500"></i>
+                                       <span class="tooltiptext">中文108字/英文177字以内</span>
+                                   </span>
+                               </div>
+                               <span class="char-count" id="address1Count">0/177</span>
+                           </div>
+                           <input id="address1" name="address1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址1">
+                           <div class="error-message" id="address1Error"></div>
+                       </div>
 
-            // Field elements
-            var textLeft = document.getElementById('textLeft');
-            var yangshang1 = document.getElementById('yangshang1');
-            var yangshang2 = document.getElementById('yangshang2');
-            var textMiddle = document.getElementById('textMiddle');
-            var textRight = document.getElementById('textRight');
-            var address1 = document.getElementById('address1');
-            var address2 = document.getElementById('address2');
-            var address3 = document.getElementById('address3');
+                       <div class="input-group">
+                           <div class="label-container mb-1">
+                               <div class="label-left">
+                                   <label for="address2" class="text-sm font-medium text-gray-700">地址2</label>
+                                   <span class="tooltip">
+                                       <i class="fas fa-info-circle text-gray-500"></i>
+                                       <span class="tooltiptext">中文108字/英文177字以内</span>
+                                   </span>
+                               </div>
+                               <span class="char-count" id="address2Count">0/177</span>
+                           </div>
+                           <input id="address2" name="address2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址2">
+                           <div class="error-message" id="address2Error"></div>
+                       </div>
 
-            // Container elements
-            var textLeftContainer = document.getElementById('textLeftContainer');
-            var yangshang1Container = document.getElementById('yangshang1Container');
-            var yangshang2Container = document.getElementById('yangshang2Container');
-            var addressFields = document.getElementById('addressFields');
-            var qifuFields = document.getElementById('qifuFields');
-            var chaojianFields = document.getElementById('chaojianFields');
+                       <div class="input-group">
+                           <div class="label-container mb-1">
+                               <div class="label-left">
+                                   <label for="address3" class="text-sm font-medium text-gray-700">地址3</label>
+                                   <span class="tooltip">
+                                       <i class="fas fa-info-circle text-gray-500"></i>
+                                       <span class="tooltiptext">中文108字/英文177字以内</span>
+                                   </span>
+                               </div>
+                               <span class="char-count" id="address3Count">0/177</span>
+                           </div>
+                           <input id="address3" name="address3" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址3">
+                           <div class="error-message" id="address3Error"></div>
+                       </div>
+                   </div>
+               </div>
 
-            // Counter elements
-            var leftCount = document.getElementById('leftCount');
-            var yangshang1Count = document.getElementById('yangshang1Count');
-            var yangshang2Count = document.getElementById('yangshang2Count');
-            var middleCount = document.getElementById('middleCount');
-            var rightCount = document.getElementById('rightCount');
-            var address1Count = document.getElementById('address1Count');
-            var address2Count = document.getElementById('address2Count');
-            var address3Count = document.getElementById('address3Count');
+               <!-- Right text field -->
+               <div id="textRightContainer">
+                   <div class="label-container mb-1">
+                       <div class="label-left">
+                           <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
+                           <span class="tooltip">
+                               <i class="fas fa-info-circle text-gray-500"></i>
+                               <span class="tooltiptext">12字以内</span>
+                           </span>
+                       </div>
+                       <span class="char-count" id="rightCount">0/12</span>
+                   </div>
+                   <input id="textRight" name="textRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
+                   <div class="error-message" id="textRightError"></div>
+               </div>
+           </div>
 
-            function updateFieldsVisibility(type) {
-                const middleLabel = document.querySelector('label[for="textMiddle"]');
-                const middleTooltip = document.getElementById('middleTooltip');
+           <!-- Action buttons -->
+           <div class="flex flex-col space-y-3">
+               <div class="grid grid-cols-2 gap-3">
+                   <button type="button" id="addToQueueBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition duration-150 ease-in-out">
+                       <span class="flex items-center">
+                           <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                               <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                           </svg>
+                           <span>添加</span>
+                       </span>
+                   </button>
+                   <button type="button" id="printNowBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out">
+                       <span class="flex items-center">
+                           <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                               <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+                           </svg>
+                           <span>生成</span>
+                       </span>
+                   </button>
+               </div>
+               <a href="mailto:softbizalexander@gmail.com" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition duration-150 ease-in-out">
+                   有问题可联系
+               </a>
+           </div>
+       </form>
+       <div id="statusMessage" class="text-center text-sm"></div>
+   </div>
 
-                if (type === '超荐牌位') {
-                    // Hide 祈福牌位 fields
-                    qifuFields.style.display = 'none';
-                    textLeft.required = false;
-                    textRight.required = false;
-                    
-                    // Show 超荐牌位 fields
-                    chaojianFields.classList.add('active');
-                    addressFields.classList.add('active');
-                    yangshang1.required = true;
-                    
-                    // Update labels and tooltips
-                    middleLabel.textContent = '回向至';
-                    middleTooltip.textContent = '12字以内';
-                    middleCount.textContent = `${textMiddle.value.length}/12`;
-                    textMiddle.placeholder = '请输入回向至';
-                    
-                    // Hide right text field
-                    textRightContainer.style.display = 'none';
-                } else {
-                    // Show 祈福牌位 fields
-                    qifuFields.style.display = 'block';
-                    textLeft.required = true;
-                    textRight.required = true;
-                    
-                    // Hide 超荐牌位 fields
-                    chaojianFields.classList.remove('active');
-                    addressFields.classList.remove('active');
-                    yangshang1.required = false;
-                    
-                    // Update labels and tooltips
-                    middleLabel.textContent = '中间 1-2 排名字';
-                    middleTooltip.textContent = '24字以内';
-                    middleCount.textContent = `${textMiddle.value.length}/24`;
-                    textMiddle.placeholder = '请输入中间 1-2 排名字';
-                    
-                    // Show right text field
-                    textRightContainer.style.display = 'block';
-                }
-                
-                validateInputs();
-            }
+   <script>
+    (function() {
+        var _0x5f4e3d = "PLACEHOLDER_STRING";
+        var _0x2a1b = function(s) {
+            return String.fromCharCode.apply(null, s.match(/.{1,2}/g).map(function(c) {
+                return parseInt(c, 16);
+            }));
+        };
+        var _0x3c4d = _0x2a1b(_0x5f4e3d);
+        var loginForm = document.getElementById('loginForm');
+        var loginMessage = document.getElementById('loginMessage');
+        var loginPage = document.getElementById('loginPage');
+        var mainPage = document.getElementById('mainPage');
+        var form = document.getElementById('pdfForm');
+        var statusMessage = document.getElementById('statusMessage');
+        var addToQueueBtn = document.getElementById('addToQueueBtn');
+        var printNowBtn = document.getElementById('printNowBtn');
+        var searchInput = document.getElementById('search');
+        var searchResults = document.getElementById('searchResults');
+        var logoutBtn = document.getElementById('logoutBtn');
+        var loadingOverlay = document.getElementById('loadingOverlay');
+        var designType = document.getElementById('designType');
 
-            function updateCharCount(input, countElement, maxLength) {
-                const currentLength = input.value.length;
-                countElement.textContent = `${currentLength}/${maxLength}`;
-            }
+        // Field elements
+        var textLeft = document.getElementById('textLeft');
+        var yangshang1 = document.getElementById('yangshang1');
+        var yangshang2 = document.getElementById('yangshang2');
+        var textMiddle = document.getElementById('textMiddle');
+        var textRight = document.getElementById('textRight');
+        var address1 = document.getElementById('address1');
+        var address2 = document.getElementById('address2');
+        var address3 = document.getElementById('address3');
+        var yiguLeft = document.getElementById('yiguLeft');
+        var yiguRight = document.getElementById('yiguRight');
 
-            function containsChinese(text) {
-                return /[\u4E00-\u9FFF]/.test(text);
-            }
+        // Container elements
+        var textLeftContainer = document.getElementById('textLeftContainer');
+        var yangshang1Container = document.getElementById('yangshang1Container');
+        var yangshang2Container = document.getElementById('yangshang2Container');
+        var addressFields = document.getElementById('addressFields');
+        var qifuFields = document.getElementById('qifuFields');
+        var chaojianFields = document.getElementById('chaojianFields');
 
-            function getAddressMaxLength(text) {
-                return containsChinese(text) ? 108 : 177;
-            }
+        // Counter elements
+        var leftCount = document.getElementById('leftCount');
+        var yangshang1Count = document.getElementById('yangshang1Count');
+        var yangshang2Count = document.getElementById('yangshang2Count');
+        var middleCount = document.getElementById('middleCount');
+        var rightCount = document.getElementById('rightCount');
+        var address1Count = document.getElementById('address1Count');
+        var address2Count = document.getElementById('address2Count');
+        var address3Count = document.getElementById('address3Count');
+        var yiguLeftCount = document.getElementById('yiguLeftCount');
+        var yiguRightCount = document.getElementById('yiguRightCount');
 
-            // Update tooltip and counter dynamically based on content
-            function updateAddressCharCount(input, countElement) {
-                const isChinese = containsChinese(input.value);
-                const maxLength = isChinese ? 108 : 177;
-                const currentLength = input.value.length;
-                countElement.textContent = `${currentLength}/${maxLength}`;
-                
-                // Update tooltip text
-                const tooltipElement = countElement.previousElementSibling.querySelector('.tooltiptext');
-                if (tooltipElement) {
-                    tooltipElement.textContent = isChinese ? '108个汉字以内' : '177字符以内';
-                }
-            }
+        function updateFieldsVisibility(type) {
+            const middleLabel = document.querySelector('label[for="textMiddle"]');
+            const middleTooltip = document.getElementById('middleTooltip');
 
-            // Add input event listeners for character count updates
-            textLeft.addEventListener('input', () => updateCharCount(textLeft, leftCount, 12));
-            yangshang1.addEventListener('input', () => updateCharCount(yangshang1, yangshang1Count, 28));
-            yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
-            textMiddle.addEventListener('input', () => {
-                const maxLength = designType.value === '超荐牌位' ? 12 : 24;
-                updateCharCount(textMiddle, middleCount, maxLength);
-            });
-            textRight.addEventListener('input', () => updateCharCount(textRight, rightCount, 12));
-            address1.addEventListener('input', () => updateAddressCharCount(address1, address1Count));
-            address2.addEventListener('input', () => updateAddressCharCount(address2, address2Count));
-            address3.addEventListener('input', () => updateAddressCharCount(address3, address3Count));
-
-            // Update fields visibility on design type change
-            designType.addEventListener('change', function() {
-                updateFieldsVisibility(this.value);
-            });
-
-            function validateInputs() {
-                const type = designType.value;
-                let isValid = true;
-            
-                // For addresses, check if contains Chinese
-                function getAddressLimit(text) {
-                    if (containsChinese(text)) {
-                        return 108;  // Suitable limit for Chinese characters
-                    }
-                    return 177;  // Increased limit for non-Chinese text
-                }
-            
-                if (type === '超荐牌位') {
-                    // Validate 超荐牌位 fields
-                    isValid = validateInputLength(yangshang1, 28, 'yangshang1Error') && isValid;
-                    if (yangshang2.value) {
-                        isValid = validateInputLength(yangshang2, 28, 'yangshang2Error') && isValid;
-                    }
-                    isValid = validateInputLength(textMiddle, 12, 'textMiddleError') && isValid;
-                    
-                    // Validate address fields with dynamic character limit
-                    if (address1.value) {
-                        isValid = validateInputLength(address1, getAddressLimit(address1.value), 'address1Error') && isValid;
-                        // Update tooltip dynamically
-                        const tooltip1 = document.getElementById('address1Tooltip');
-                        if (tooltip1) {
-                            tooltip1.textContent = containsChinese(address1.value) ? '108个汉字以内' : '177字符以内';
-                        }
-                    }
-                    if (address2.value) {
-                        isValid = validateInputLength(address2, getAddressLimit(address2.value), 'address2Error') && isValid;
-                        // Update tooltip dynamically
-                        const tooltip2 = document.getElementById('address2Tooltip');
-                        if (tooltip2) {
-                            tooltip2.textContent = containsChinese(address2.value) ? '108个汉字以内' : '177字符以内';
-                        }
-                    }
-                    if (address3.value) {
-                        isValid = validateInputLength(address3, getAddressLimit(address3.value), 'address3Error') && isValid;
-                        // Update tooltip dynamically
-                        const tooltip3 = document.getElementById('address3Tooltip');
-                        if (tooltip3) {
-                            tooltip3.textContent = containsChinese(address3.value) ? '108个汉字以内' : '177字符以内';
-                        }
-                    }
-                } else {
-                    // Validate 祈福牌位 fields
-                    isValid = validateInputLength(textLeft, 12, 'textLeftError') && isValid;
-                    isValid = validateInputLength(textMiddle, 24, 'textMiddleError') && isValid;
-                    isValid = validateInputLength(textRight, 12, 'textRightError') && isValid;
-                }
-            
-                return isValid;
-            }
-
-            function validateInputLength(input, maxLength, errorId) {
-                const errorDiv = document.getElementById(errorId);
-                if (input.value.length > maxLength) {
-                    input.classList.add('input-error');
-                    errorDiv.style.display = 'block';
-                    errorDiv.textContent = `超出最大字数限制 (${maxLength})`;
-                    return false;
-                } else {
-                    input.classList.remove('input-error');
-                    errorDiv.style.display = 'none';
-                    return true;
-                }
-            }
-
-            function showLoadingOverlay() {
-                loadingOverlay.style.display = 'flex';
-            }
-
-            function hideLoadingOverlay() {
-                loadingOverlay.style.display = 'none';
-            }
-
-            function showLoginPage() {
-                hideLoadingOverlay();
-                loginPage.style.display = 'block';
-                mainPage.style.display = 'none';
-            }
-
-            function showMainPage() {
-                hideLoadingOverlay();
-                loginPage.style.display = 'none';
-                mainPage.style.display = 'block';
-            }
-
-            var token = localStorage.getItem('token');
-            if (token) {
-                showLoadingOverlay();
-                validateToken(token);
+            if (type === '超荐牌位') {
+                qifuFields.style.display = 'none';
+                textLeft.required = false;
+                textRight.required = false;
+                chaojianFields.classList.add('active');
+                addressFields.classList.add('active');
+                yangshang1.required = true;
+                middleLabel.textContent = '回向至';
+                middleTooltip.textContent = '12字以内';
+                middleCount.textContent = `${textMiddle.value.length}/12`;
+                textMiddle.placeholder = '请输入回向至';
+                textRightContainer.style.display = 'none';
             } else {
-                showLoginPage();
+                qifuFields.style.display = 'block';
+                textLeft.required = true;
+                textRight.required = true;
+                chaojianFields.classList.remove('active');
+                addressFields.classList.remove('active');
+                yangshang1.required = false;
+                middleLabel.textContent = '中间 1-2 排名字';
+                middleTooltip.textContent = '24字以内';
+                middleCount.textContent = `${textMiddle.value.length}/24`;
+                textMiddle.placeholder = '请输入中间 1-2 排名字';
+                textRightContainer.style.display = 'block';
+            }
+            validateInputs();
+        }
+
+        function updateCharCount(input, countElement, maxLength) {
+            const currentLength = input.value.length;
+            countElement.textContent = `${currentLength}/${maxLength}`;
+        }
+
+        function containsChinese(text) {
+            return /[\u4E00-\u9FFF]/.test(text);
+        }
+
+        function getAddressMaxLength(text) {
+            return containsChinese(text) ? 108 : 177;
+        }
+
+        function updateAddressCharCount(input, countElement) {
+            const isChinese = containsChinese(input.value);
+            const maxLength = isChinese ? 108 : 177;
+            const currentLength = input.value.length;
+            countElement.textContent = `${currentLength}/${maxLength}`;
+            const tooltipElement = countElement.previousElementSibling.querySelector('.tooltiptext');
+            if (tooltipElement) {
+                tooltipElement.textContent = isChinese ? '108个汉字以内' : '177字符以内';
+            }
+        }
+
+        // Event listeners
+        textLeft.addEventListener('input', () => updateCharCount(textLeft, leftCount, 12));
+        yangshang1.addEventListener('input', () => updateCharCount(yangshang1, yangshang1Count, 28));
+        yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
+        textMiddle.addEventListener('input', () => {
+            const maxLength = designType.value === '超荐牌位' ? 12 : 24;
+            updateCharCount(textMiddle, middleCount, maxLength);
+        });
+        textRight.addEventListener('input', () => updateCharCount(textRight, rightCount, 12));
+        address1.addEventListener('input', () => updateAddressCharCount(address1, address1Count));
+        address2.addEventListener('input', () => updateAddressCharCount(address2, address2Count));
+        address3.addEventListener('input', () => updateAddressCharCount(address3, address3Count));
+
+        yiguLeft.addEventListener('input', () => {
+            if (!containsChinese(yiguLeft.value)) {
+                document.getElementById('yiguLeftError').textContent = '只能输入中文字符';
+                document.getElementById('yiguLeftError').style.display = 'block';
+                yiguLeft.classList.add('input-error');
+            } else {
+                updateCharCount(yiguLeft, yiguLeftCount, 21);
+                validateInputLength(yiguLeft, 21, 'yiguLeftError');
+            }
+        });
+
+        yiguRight.addEventListener('input', () => {
+            if (!containsChinese(yiguRight.value)) {
+                document.getElementById('yiguRightError').textContent = '只能输入中文字符';
+                document.getElementById('yiguRightError').style.display = 'block';
+                yiguRight.classList.add('input-error');
+            } else {
+                updateCharCount(yiguRight, yiguRightCount, 21);
+                validateInputLength(yiguRight, 21, 'yiguRightError');
+            }
+        });
+
+        designType.addEventListener('change', function() {
+            updateFieldsVisibility(this.value);
+        });
+
+        function validateInputs() {
+            const type = designType.value;
+            let isValid = true;
+
+            function getAddressLimit(text) {
+                if (containsChinese(text)) {
+                    return 108;
+                }
+                return 177;
             }
 
-            function validateToken(token) {
-                jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
-                    if (response.success) {
-                        showMainPage();
-                    } else {
-                        localStorage.removeItem('token');
-                        showLoginPage();
-                    }
-                });
+            if (type === '超荐牌位') {
+                isValid = validateInputLength(yangshang1, 28, 'yangshang1Error') && isValid;
+                if (yangshang2.value) {
+                    isValid = validateInputLength(yangshang2, 28, 'yangshang2Error') && isValid;
+                }
+                isValid = validateInputLength(textMiddle, 12, 'textMiddleError') && isValid;
+
+                if (address1.value) {
+                    isValid = validateInputLength(address1, getAddressLimit(address1.value), 'address1Error') && isValid;
+                }
+                if (address2.value) {
+                    isValid = validateInputLength(address2, getAddressLimit(address2.value), 'address2Error') && isValid;
+                }
+                if (address3.value) {
+                    isValid = validateInputLength(address3, getAddressLimit(address3.value), 'address3Error') && isValid;
+                }
+            } else {
+                isValid = validateInputLength(textLeft, 12, 'textLeftError') && isValid;
+                isValid = validateInputLength(textMiddle, 24, 'textMiddleError') && isValid;
+                isValid = validateInputLength(textRight, 12, 'textRightError') && isValid;
             }
 
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                var username = document.getElementById('username').value;
-                var password = document.getElementById('password').value;
-                jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-                    if (response.success) {
-                        localStorage.setItem('token', response.token);
-                        showMainPage();
-                    } else {
-                        loginMessage.textContent = '登录失败: ' + response.error;
-                        loginMessage.className = 'text-center text-sm text-red-600';
-                    }
-                });
-            });
+            // Validate yigu fields
+            if (yiguLeft.value && (!containsChinese(yiguLeft.value) || yiguLeft.value.length > 21)) {
+                isValid = false;
+            }
+            if (yiguRight.value && (!containsChinese(yiguRight.value) || yiguRight.value.length > 21)) {
+                isValid = false;
+            }
 
-            logoutBtn.addEventListener('click', function() {
-                localStorage.removeItem('token');
-                showLoginPage();
-            });
+            return isValid;
+        }
 
-            function setLoading(isLoading) {
-                addToQueueBtn.disabled = isLoading;
-                printNowBtn.disabled = isLoading;
-                if (isLoading) {
-                    addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
-                    printNowBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
+        function validateInputLength(input, maxLength, errorId) {
+            const errorDiv = document.getElementById(errorId);
+            if (input.value.length > maxLength) {
+                input.classList.add('input-error');
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = `超出最大字数限制 (${maxLength})`;
+                return false;
+            } else {
+                input.classList.remove('input-error');
+                errorDiv.style.display = 'none';
+                return true;
+            }
+        }
+
+        function showLoadingOverlay() {
+            loadingOverlay.style.display = 'flex';
+        }
+
+        function hideLoadingOverlay() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        function showLoginPage() {
+            hideLoadingOverlay();
+            loginPage.style.display = 'block';
+            mainPage.style.display = 'none';
+        }
+
+        function showMainPage() {
+            hideLoadingOverlay();
+            loginPage.style.display = 'none';
+            mainPage.style.display = 'block';
+        }
+
+        var token = localStorage.getItem('token');
+        if (token) {
+            showLoadingOverlay();
+            validateToken(token);
+        } else {
+            showLoginPage();
+        }
+
+        function validateToken(token) {
+            jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
+                if (response.success) {
+                    showMainPage();
                 } else {
-                    addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>添加</span></span>';
-                    printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>生成</span></span>';
+                    localStorage.removeItem('token');
+                    showLoginPage();
                 }
-            }
+            });
+        }
 
-            function showStatus(message, isError = false) {
-                statusMessage.textContent = message;
-                statusMessage.className = isError ? 'mt-3 text-center text-sm text-red-600 fade-in' : 'mt-3 text-center text-sm text-green-600 fade-in';
-            }
-
-            function jsonp(url, callback) {
-                var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-                window[callbackName] = function(data) {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    callback(data);
-                };
-                var script = document.createElement('script');
-                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-                document.body.appendChild(script);
-            }
-
-            function submitForm(action) {
-                if (!validateInputs()) {
-                    showStatus('请检查输入字数限制', true);
-                    return;
-                }
-                setLoading(true);
-                showStatus('');
-
-                var formData = new FormData(form);
-                formData.append('action', action);
-                formData.append('token', localStorage.getItem('token'));
-
-                // Handle address fields for 超荐牌位
-                if (designType.value === '超荐牌位') {
-                    formData.set('address1', address1.value || '');
-                    formData.set('address2', address2.value || '');
-                    formData.set('address3', address3.value || '');
-                }
-
-                var data = Object.fromEntries(formData.entries());
-                var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
-
-                jsonp(_0x3c4d + '?' + queryString, function(response) {
-                    if (response.success) {
-                        showStatus(response.message);
-                        if (response.pdfBase64) {
-                            try {
-                                var byteCharacters = atob(response.pdfBase64);
-                                var byteNumbers = new Array(byteCharacters.length);
-                                for (var i = 0; i < byteCharacters.length; i++) {
-                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                                }
-                                var byteArray = new Uint8Array(byteNumbers);
-                                var blob = new Blob([byteArray], {type: 'application/pdf'});
-                                var blobUrl = URL.createObjectURL(blob);
-                                
-                                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                                    // Mobile device: trigger download
-                                    var link = document.createElement('a');
-                                    link.href = blobUrl;
-                                    link.download = '祈福牌.pdf';
-                                    link.click();
-                                } else {
-                                    // Desktop: open in new tab
-                                    window.open(blobUrl, '_blank');
-                                }
-                            } catch (error) {
-                                console.error("Error creating PDF blob:", error);
-                                showStatus('创建 PDF 时出错: ' + error.message, true);
-                            }
-                        }
-                    } else {
-                        if (response.error === 'Invalid or expired token') {
-                            localStorage.removeItem('token');
-                            showLoginPage();
-                        }
-                        showStatus('发生错误: ' + (response.error || '未知错误'), true);
-                    }
-                    setLoading(false);
-                });
-            }
-
-            function fillForm(result) {
-                // Clear all fields
-                document.getElementById('name').value = '';
-                document.getElementById('yangshang1').value = '';
-                document.getElementById('yangshang2').value = '';
-                document.getElementById('textLeft').value = '';
-                document.getElementById('textMiddle').value = '';
-                document.getElementById('textRight').value = '';
-                document.getElementById('address1').value = '';
-                document.getElementById('address2').value = '';
-                document.getElementById('address3').value = '';
-
-                // Set name
-                document.getElementById('name').value = result.name || '';
-
-                // Set design type and update UI
-                if (result.designType) {
-                    designType.value = result.designType;
-                    const event = new Event('change', { bubbles: true });
-                    designType.dispatchEvent(event);
-                }
-
-                // Wait for UI update to complete
-                setTimeout(() => {
-                    if (result.designType === '超荐牌位') {
-                        document.getElementById('yangshang1').value = result.yangshang1 || '';
-                        document.getElementById('yangshang2').value = result.yangshang2 || '';
-                        document.getElementById('textMiddle').value = result.textMiddle || '';
-                        document.getElementById('address1').value = result.address1 || '';
-                        document.getElementById('address2').value = result.address2 || '';
-                        document.getElementById('address3').value = result.address3 || '';
-                    } else {
-                        document.getElementById('textLeft').value = result.textLeft || '';
-                        document.getElementById('textMiddle').value = result.textMiddle || '';
-                        document.getElementById('textRight').value = result.textRight || '';
-                    }
-
-                    // Update all character counts
-                    updateCharCount(yangshang1, yangshang1Count, 28);
-                    updateCharCount(yangshang2, yangshang2Count, 28);
-                    updateCharCount(textLeft, leftCount, 12);
-                    updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
-                    updateCharCount(textRight, rightCount, 12);
-                    if (result.designType === '超荐牌位') {
-                        updateAddressCharCount(address1, address1Count);
-                        updateAddressCharCount(address2, address2Count);
-                        updateAddressCharCount(address3, address3Count);
-                    }
-
-                    validateInputs();
-                }, 0);
-            }
-
-            function searchSheet() {
-                var searchTerm = searchInput.value.trim();
-                if (searchTerm.length > 0) {
-                    jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
-                        if (response.success && response.results) {
-                            searchResults.innerHTML = '<option value="">选择搜索结果</option>';
-                            response.results.forEach(function(result) {
-                                var option = document.createElement('option');
-                                option.value = JSON.stringify(result);
-                                option.textContent = result.name + ' (' + result.date + ')';
-                                searchResults.appendChild(option);
-                            });
-                            searchResults.style.display = 'block';
-                        } else {
-                            if (response.error === 'Invalid or expired token') {
-                                localStorage.removeItem('token');
-                                showLoginPage();
-                            }
-                            showStatus('搜索失败: ' + (response.error || '未知错误'), true);
-                        }
-                    });
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
+                if (response.success) {
+                    localStorage.setItem('token', response.token);
+                    showMainPage();
                 } else {
-                    searchResults.style.display = 'none';
+                    loginMessage.textContent = '登录失败: ' + response.error;
+                    loginMessage.className = 'text-center text-sm text-red-600';
                 }
+            });
+        });
+
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('token');
+            showLoginPage();
+        });
+
+        function setLoading(isLoading) {
+            addToQueueBtn.disabled = isLoading;
+            printNowBtn.disabled = isLoading;
+            if (isLoading) {
+                addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
+                printNowBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
+            } else {
+                addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>添加</span></span>';
+                printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>生成</span></span>';
             }
+        }
 
-            addToQueueBtn.addEventListener('click', function() {
-                submitForm('addToQueue');
-            });
+        function showStatus(message, isError = false) {
+            statusMessage.textContent = message;
+            statusMessage.className = isError ? 'mt-3 text-center text-sm text-red-600 fade-in' : 'mt-3 text-center text-sm text-green-600 fade-in';
+        }
 
-            printNowBtn.addEventListener('click', function() {
-                submitForm('printNow');
-            });
+        function jsonp(url, callback) {
+            var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                document.body.removeChild(script);
+                callback(data);
+            };
+            var script = document.createElement('script');
+            script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+            document.body.appendChild(script);
+        }
 
-            searchInput.addEventListener('input', searchSheet);
+        function submitForm(action) {
+           if (!validateInputs()) {
+               showStatus('请检查输入字数限制', true);
+               return;
+           }
+           setLoading(true);
+           showStatus('');
 
-            searchResults.addEventListener('change', function() {
-                var selectedValue = searchResults.value;
-                if (selectedValue) {
-                    fillForm(JSON.parse(selectedValue));
-                }
-            });
+           var formData = new FormData(form);
+           formData.append('action', action);
+           formData.append('token', localStorage.getItem('token'));
 
-            // Initialize visibility on page load
-            updateFieldsVisibility(designType.value);
-        })();
-    </script>
-</body>
-</html>
+           if (designType.value === '超荐牌位') {
+               formData.set('address1', address1.value || '');
+               formData.set('address2', address2.value || '');
+               formData.set('address3', address3.value || '');
+           }
+
+           formData.set('yiguLeft', yiguLeft.value || '');
+           formData.set('yiguRight', yiguRight.value || '');
+
+           var data = Object.fromEntries(formData.entries());
+           var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
+
+           jsonp(_0x3c4d + '?' + queryString, function(response) {
+               if (response.success) {
+                   showStatus(response.message);
+                   if (response.pdfBase64) {
+                       try {
+                           var byteCharacters = atob(response.pdfBase64);
+                           var byteNumbers = new Array(byteCharacters.length);
+                           for (var i = 0; i < byteCharacters.length; i++) {
+                               byteNumbers[i] = byteCharacters.charCodeAt(i);
+                           }
+                           var byteArray = new Uint8Array(byteNumbers);
+                           var blob = new Blob([byteArray], {type: 'application/pdf'});
+                           var blobUrl = URL.createObjectURL(blob);
+                           
+                           if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                               var link = document.createElement('a');
+                               link.href = blobUrl;
+                               link.download = '祈福牌.pdf';
+                               link.click();
+                           } else {
+                               window.open(blobUrl, '_blank');
+                           }
+                       } catch (error) {
+                           console.error("Error creating PDF blob:", error);
+                           showStatus('创建 PDF 时出错: ' + error.message, true);
+                       }
+                   }
+               } else {
+                   if (response.error === 'Invalid or expired token') {
+                       localStorage.removeItem('token');
+                       showLoginPage();
+                   }
+                   showStatus('发生错误: ' + (response.error || '未知错误'), true);
+               }
+               setLoading(false);
+           });
+       }
+
+       function fillForm(result) {
+           document.getElementById('name').value = '';
+           document.getElementById('yangshang1').value = '';
+           document.getElementById('yangshang2').value = '';
+           document.getElementById('textLeft').value = '';
+           document.getElementById('textMiddle').value = '';
+           document.getElementById('textRight').value = '';
+           document.getElementById('address1').value = '';
+           document.getElementById('address2').value = '';
+           document.getElementById('address3').value = '';
+           document.getElementById('yiguLeft').value = '';
+           document.getElementById('yiguRight').value = '';
+
+           document.getElementById('name').value = result.name || '';
+
+           if (result.designType) {
+               designType.value = result.designType;
+               const event = new Event('change', { bubbles: true });
+               designType.dispatchEvent(event);
+           }
+
+           setTimeout(() => {
+               if (result.designType === '超荐牌位') {
+                   document.getElementById('yangshang1').value = result.yangshang1 || '';
+                   document.getElementById('yangshang2').value = result.yangshang2 || '';
+                   document.getElementById('textMiddle').value = result.textMiddle || '';
+                   document.getElementById('address1').value = result.address1 || '';
+                   document.getElementById('address2').value = result.address2 || '';
+                   document.getElementById('address3').value = result.address3 || '';
+                   document.getElementById('yiguLeft').value = result.yiguLeft || '';
+                   document.getElementById('yiguRight').value = result.yiguRight || '';
+               } else {
+                   document.getElementById('textLeft').value = result.textLeft || '';
+                   document.getElementById('textMiddle').value = result.textMiddle || '';
+                   document.getElementById('textRight').value = result.textRight || '';
+               }
+
+               updateCharCount(yangshang1, yangshang1Count, 28);
+               updateCharCount(yangshang2, yangshang2Count, 28);
+               updateCharCount(textLeft, leftCount, 12);
+               updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
+               updateCharCount(textRight, rightCount, 12);
+               updateCharCount(yiguLeft, yiguLeftCount, 21);
+               updateCharCount(yiguRight, yiguRightCount, 21);
+               
+               if (result.designType === '超荐牌位') {
+                   updateAddressCharCount(address1, address1Count);
+                   updateAddressCharCount(address2, address2Count);
+                   updateAddressCharCount(address3, address3Count);
+               }
+
+               validateInputs();
+           }, 0);
+       }
+
+       function searchSheet() {
+           var searchTerm = searchInput.value.trim();
+           if (searchTerm.length > 0) {
+               jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
+                   if (response.success && response.results) {
+                       searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+                       response.results.forEach(function(result) {
+                           var option = document.createElement('option');
+                           option.value = JSON.stringify(result);
+                           option.textContent = result.name + ' (' + result.date + ')';
+                           searchResults.appendChild(option);
+                       });
+                       searchResults.style.display = 'block';
+                   } else {
+                       if (response.error === 'Invalid or expired token') {
+                           localStorage.removeItem('token');
+                           showLoginPage();
+                       }
+                       showStatus('搜索失败: ' + (response.error || '未知错误'), true);
+                   }
+               });
+           } else {
+               searchResults.style.display = 'none';
+           }
+       }
+
+       addToQueueBtn.addEventListener('click', function() {
+           submitForm('addToQueue');
+       });
+
+       printNowBtn.addEventListener('click', function() {
+           submitForm('printNow');
+       });
+
+       searchInput.addEventListener('input', searchSheet);
+
+       searchResults.addEventListener('change', function() {
+           var selectedValue = searchResults.value;
+           if (selectedValue) {
+               fillForm(JSON.parse(selectedValue));
+           }
+       });
+
+       updateFieldsVisibility(designType.value);
+   })();
+</script>
