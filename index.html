@@ -739,82 +739,65 @@
            }
 
            function submitForm(action) {
-                if (!validateInputs()) {
-                    showStatus('请检查输入字数限制', true);
-                    return;
-                }
-                setLoading(true);
-                showStatus('');
+               if (!validateInputs()) {
+                   showStatus('请检查输入字数限制', true);
+                   return;
+               }
+               setLoading(true);
+               showStatus('');
 
-                // Create FormData object
-                var formData = new FormData(form);
-                
-                // Explicitly set required fields
-                formData.set('action', action);
-                formData.set('token', localStorage.getItem('token'));
-                formData.set('name', document.getElementById('name').value || '');
-                formData.set('designType', designType.value);
-                
-                // Always include textMiddle regardless of design type
-                formData.set('textMiddle', textMiddle.value || '');
+               var formData = new FormData(form);
+               formData.append('action', action);
+               formData.append('token', localStorage.getItem('token'));
 
-                if (designType.value === '超荐牌位') {
-                    // Set 超荐牌位 specific fields
-                    formData.set('yangshang1', yangshang1.value || '');
-                    formData.set('yangshang2', yangshang2.value || '');
-                    formData.set('address1', address1.value || '');
-                    formData.set('address2', address2.value || '');
-                    formData.set('address3', address3.value || '');
-                    formData.set('yiguLeft', yiguLeft.value || '');
-                    formData.set('yiguRight', yiguRight.value || '');
-                } else {
-                    // Set 祈福牌位 specific fields
-                    formData.set('textLeft', textLeft.value || '');
-                    formData.set('textRight', textRight.value || '');
-                }
+               if (designType.value === '超荐牌位') {
+                   formData.set('address1', address1.value || '');
+                   formData.set('address2', address2.value || '');
+                   formData.set('address3', address3.value || '');
+                   formData.set('yiguLeft', yiguLeft.value || '');
+                   formData.set('yiguRight', yiguRight.value || '');
+               }
 
-                // Convert FormData to query string
-                var queryString = Array.from(formData.entries())
-                    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-                    .join('&');
+               var data = Object.fromEntries(formData.entries());
+               var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
 
-                jsonp(_0x3c4d + '?' + queryString, function(response) {
-                    if (response.success) {
-                        showStatus(response.message);
-                        if (response.pdfBase64) {
-                            try {
-                                var byteCharacters = atob(response.pdfBase64);
-                                var byteNumbers = new Array(byteCharacters.length);
-                                for (var i = 0; i < byteCharacters.length; i++) {
-                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                                }
-                                var byteArray = new Uint8Array(byteNumbers);
-                                var blob = new Blob([byteArray], {type: 'application/pdf'});
-                                var blobUrl = URL.createObjectURL(blob);
-                                
-                                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                                    var link = document.createElement('a');
-                                    link.href = blobUrl;
-                                    link.download = '祈福牌.pdf';
-                                    link.click();
-                                } else {
-                                    window.open(blobUrl, '_blank');
-                                }
-                            } catch (error) {
-                                console.error("Error creating PDF blob:", error);
-                                showStatus('创建 PDF 时出错: ' + error.message, true);
-                            }
-                        }
-                    } else {
-                        if (response.error === 'Invalid or expired token') {
-                            localStorage.removeItem('token');
-                            showLoginPage();
-                        }
-                        showStatus('发生错误: ' + (response.error || '未知错误'), true);
-                    }
-                    setLoading(false);
-                });
-            }
+               jsonp(_0x3c4d + '?' + queryString, function(response) {
+                   if (response.success) {
+                       showStatus(response.message);
+                       if (response.pdfBase64) {
+                           try {
+                               var byteCharacters = atob(response.pdfBase64);
+                               var byteNumbers = new Array(byteCharacters.length);
+                               for (var i = 0; i < byteCharacters.length; i++) {
+                                   byteNumbers[i] = byteCharacters.charCodeAt(i);
+                               }
+                               var byteArray = new Uint8Array(byteNumbers);
+                               var blob = new Blob([byteArray], {type: 'application/pdf'});
+                               var blobUrl = URL.createObjectURL(blob);
+                               
+                               if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                                   var link = document.createElement('a');
+                                   link.href = blobUrl;
+                                   link.download = '祈福牌.pdf';
+                                   link.click();
+                               } else {
+                                   window.open(blobUrl, '_blank');
+                               }
+                           } catch (error) {
+                               console.error("Error creating PDF blob:", error);
+                               showStatus('创建 PDF 时出错: ' + error.message, true);
+                           }
+                       }
+                   } else {
+                       if (response.error === 'Invalid or expired token') {
+                           localStorage.removeItem('token');
+                           showLoginPage();
+                       }
+                       showStatus('发生错误: ' + (response.error || '未知错误'), true);
+                   }
+                   setLoading(false);
+               });
+           }
 
            function fillForm(result) {
                document.getElementById('name').value = '';
