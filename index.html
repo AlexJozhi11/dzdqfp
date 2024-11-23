@@ -739,120 +739,122 @@
            }
 
            function submitForm(action) {
-               if (!validateInputs()) {
-                   showStatus('请检查输入字数限制', true);
-                   return;
-               }
-               setLoading(true);
-               showStatus('');
-
-               var formData = new FormData(form);
-               formData.append('action', action);
-               formData.append('token', localStorage.getItem('token'));
-
-               if (designType.value === '超荐牌位') {
-                   formData.set('address1', address1.value || '');
-                   formData.set('address2', address2.value || '');
-                   formData.set('address3', address3.value || '');
-                   formData.set('yiguLeft', yiguLeft.value || '');
-                   formData.set('yiguRight', yiguRight.value || '');
-               }
-
-               var data = Object.fromEntries(formData.entries());
-               var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
-
-               jsonp(_0x3c4d + '?' + queryString, function(response) {
-                   if (response.success) {
-                       showStatus(response.message);
-                       if (response.pdfBase64) {
-                           try {
-                               var byteCharacters = atob(response.pdfBase64);
-                               var byteNumbers = new Array(byteCharacters.length);
-                               for (var i = 0; i < byteCharacters.length; i++) {
-                                   byteNumbers[i] = byteCharacters.charCodeAt(i);
-                               }
-                               var byteArray = new Uint8Array(byteNumbers);
-                               var blob = new Blob([byteArray], {type: 'application/pdf'});
-                               var blobUrl = URL.createObjectURL(blob);
-                               
-                               if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                                   var link = document.createElement('a');
-                                   link.href = blobUrl;
-                                   link.download = '祈福牌.pdf';
-                                   link.click();
-                               } else {
-                                   window.open(blobUrl, '_blank');
-                               }
-                           } catch (error) {
-                               console.error("Error creating PDF blob:", error);
-                               showStatus('创建 PDF 时出错: ' + error.message, true);
-                           }
-                       }
-                   } else {
-                       if (response.error === 'Invalid or expired token') {
-                           localStorage.removeItem('token');
-                           showLoginPage();
-                       }
-                       showStatus('发生错误: ' + (response.error || '未知错误'), true);
-                   }
-                   setLoading(false);
-               });
-           }
+                if (!validateInputs()) {
+                    showStatus('请检查输入字数限制', true);
+                    return;
+                }
+                setLoading(true);
+                showStatus('');
+            
+                var formData = new FormData(form);
+                formData.append('action', action);
+                formData.append('token', localStorage.getItem('token'));
+                
+                if (designType.value === '超荐牌位') {
+                    formData.set('address1', address1.value || '');
+                    formData.set('address2', address2.value || '');
+                    formData.set('address3', address3.value || '');
+                    formData.set('yiguLeft', yiguLeft.value || '');
+                    formData.set('yiguRight', yiguRight.value || '');
+                }
+            
+                var data = Object.fromEntries(formData.entries());
+                var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
+            
+                jsonp(_0x3c4d + '?' + queryString, function(response) {
+                    if (response.success) {
+                        showStatus(response.message);
+                        if (response.pdfBase64) {
+                            try {
+                                var byteCharacters = atob(response.pdfBase64);
+                                var byteNumbers = new Array(byteCharacters.length);
+                                for (var i = 0; i < byteCharacters.length; i++) {
+                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                }
+                                var byteArray = new Uint8Array(byteNumbers);
+                                var blob = new Blob([byteArray], {type: 'application/pdf'});
+                                var blobUrl = URL.createObjectURL(blob);
+                                
+                                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                                    var link = document.createElement('a');
+                                    link.href = blobUrl;
+                                    link.download = '祈福牌.pdf';
+                                    link.click();
+                                } else {
+                                    window.open(blobUrl, '_blank');
+                                }
+                            } catch (error) {
+                                console.error("Error creating PDF blob:", error);
+                                showStatus('创建 PDF 时出错: ' + error.message, true);
+                            }
+                        }
+                    } else {
+                        if (response.error === 'Invalid or expired token') {
+                            localStorage.removeItem('token');
+                            showLoginPage();
+                        }
+                        showStatus('发生错误: ' + (response.error || '未知错误'), true);
+                    }
+                    setLoading(false);
+                });
+            }
 
            function fillForm(result) {
-               document.getElementById('name').value = '';
-               document.getElementById('yangshang1').value = '';
-               document.getElementById('yangshang2').value = '';
-               document.getElementById('textLeft').value = '';
-               document.getElementById('textMiddle').value = '';
-               document.getElementById('textRight').value = '';
-               document.getElementById('address1').value = '';
-               document.getElementById('address2').value = '';
-               document.getElementById('address3').value = '';
-               document.getElementById('yiguLeft').value = '';
-               document.getElementById('yiguRight').value = '';
-
-               document.getElementById('name').value = result.name || '';
-
-               if (result.designType) {
-                   designType.value = result.designType;
-                   const event = new Event('change', { bubbles: true });
-                   designType.dispatchEvent(event);
-               }
-
-               setTimeout(() => {
-                   if (result.designType === '超荐牌位') {
-                       document.getElementById('yangshang1').value = result.yangshang1 || '';
-                       document.getElementById('yangshang2').value = result.yangshang2 || '';
-                       document.getElementById('textMiddle').value = result.textMiddle || '';
-                       document.getElementById('address1').value = result.address1 || '';
-                       document.getElementById('address2').value = result.address2 || '';
-                       document.getElementById('address3').value = result.address3 || '';
-                       document.getElementById('yiguLeft').value = result.yiguLeft || '';
-                       document.getElementById('yiguRight').value = result.yiguRight || '';
-                   } else {
-                       document.getElementById('textLeft').value = result.textLeft || '';
-                       document.getElementById('textMiddle').value = result.textMiddle || '';
-                       document.getElementById('textRight').value = result.textRight || '';
-                   }
-
-                   updateCharCount(yangshang1, yangshang1Count, 28);
-                   updateCharCount(yangshang2, yangshang2Count, 28);
-                   updateCharCount(textLeft, leftCount, 12);
-                   updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
-                   updateCharCount(textRight, rightCount, 12);
-                   updateCharCount(yiguLeft, yiguLeftCount, 21);
-                   updateCharCount(yiguRight, yiguRightCount, 21);
-                   
-                   if (result.designType === '超荐牌位') {
-                       updateAddressCharCount(address1, address1Count);
-                       updateAddressCharCount(address2, address2Count);
-                       updateAddressCharCount(address3, address3Count);
-                   }
-
-                   validateInputs();
-               }, 0);
-           }
+                document.getElementById('name').value = result.name || '';
+                
+                // Clear all fields first
+                document.getElementById('yangshang1').value = '';
+                document.getElementById('yangshang2').value = '';
+                document.getElementById('textLeft').value = '';
+                document.getElementById('textMiddle').value = '';
+                document.getElementById('textRight').value = '';
+                document.getElementById('address1').value = '';
+                document.getElementById('address2').value = '';
+                document.getElementById('address3').value = '';
+                document.getElementById('yiguLeft').value = '';
+                document.getElementById('yiguRight').value = '';
+            
+                if (result.designType) {
+                    designType.value = result.designType;
+                    const event = new Event('change', { bubbles: true });
+                    designType.dispatchEvent(event);
+                }
+            
+                // Set timeout to ensure fields are updated after design type change
+                setTimeout(() => {
+                    if (result.designType === '超荐牌位') {
+                        document.getElementById('yangshang1').value = result.yangshang1 || '';
+                        document.getElementById('yangshang2').value = result.yangshang2 || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';  // This sets the 回向至
+                        document.getElementById('address1').value = result.address1 || '';
+                        document.getElementById('address2').value = result.address2 || '';
+                        document.getElementById('address3').value = result.address3 || '';
+                        document.getElementById('yiguLeft').value = result.yiguLeft || '';
+                        document.getElementById('yiguRight').value = result.yiguRight || '';
+                    } else {
+                        document.getElementById('textLeft').value = result.textLeft || '';
+                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        document.getElementById('textRight').value = result.textRight || '';
+                    }
+            
+                    // Update character counts
+                    updateCharCount(yangshang1, yangshang1Count, 28);
+                    updateCharCount(yangshang2, yangshang2Count, 28);
+                    updateCharCount(textLeft, leftCount, 12);
+                    updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
+                    updateCharCount(textRight, rightCount, 12);
+                    updateCharCount(yiguLeft, yiguLeftCount, 21);
+                    updateCharCount(yiguRight, yiguRightCount, 21);
+                    
+                    if (result.designType === '超荐牌位') {
+                        updateAddressCharCount(address1, address1Count);
+                        updateAddressCharCount(address2, address2Count);
+                        updateAddressCharCount(address3, address3Count);
+                    }
+            
+                    validateInputs();
+                }, 0);
+            }
 
            function searchSheet() {
                var searchTerm = searchInput.value.trim();
