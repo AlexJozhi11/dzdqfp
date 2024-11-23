@@ -456,25 +456,28 @@
             function updateFieldsVisibility(type) {
                 const middleLabel = document.querySelector('label[for="textMiddle"]');
                 const middleTooltip = document.getElementById('middleTooltip');
-
+                const middleCount = document.getElementById('middleCount');
+                const textMiddle = document.getElementById('textMiddle');
+            
                 if (type === '超荐牌位') {
                     // Hide 祈福牌位 fields
                     qifuFields.style.display = 'none';
                     textLeft.required = false;
                     textRight.required = false;
                     
-                    // Show 超荐牌位 fields and hide 祈福牌位 fields
+                    // Show 超荐牌位 fields
                     chaojianFields.classList.add('active');
                     addressFields.classList.add('active');
                     yangshang1.required = true;
                     textRightContainer.style.display = 'none';
                     
-                    // Update middle text field properties
+                    // Update middle text field properties for 回向至
                     middleLabel.textContent = '回向至';
                     middleTooltip.textContent = '12字以内';
+                    textMiddle.maxLength = 12;  // Add maxLength constraint
                     middleCount.textContent = `${textMiddle.value.length}/12`;
                     textMiddle.placeholder = '请输入回向至';
-
+            
                     // Clear 祈福牌位 fields
                     textLeft.value = '';
                     textRight.value = '';
@@ -482,8 +485,8 @@
                     updateCharCount(textRight, rightCount, 12);
                     
                 } else {
-                    // Show 祈福牌位 fields and hide 超荐牌位 fields
-                    qifuFields.style.display = 'block';
+                    // Show 祈福牌位 fields
+                    qifuFields.style.display = 'grid';
                     textLeft.required = true;
                     textRight.required = true;
                     chaojianFields.classList.remove('active');
@@ -491,12 +494,13 @@
                     yangshang1.required = false;
                     textRightContainer.style.display = 'block';
                     
-                    // Update middle text field properties
+                    // Update middle text field properties for regular middle text
                     middleLabel.textContent = '中间 1-2 排名字';
                     middleTooltip.textContent = '24字以内';
+                    textMiddle.maxLength = 24;  // Add maxLength constraint
                     middleCount.textContent = `${textMiddle.value.length}/24`;
                     textMiddle.placeholder = '请输入中间 1-2 排名字';
-
+            
                     // Clear 超荐牌位 fields
                     yangshang1.value = '';
                     yangshang2.value = '';
@@ -547,7 +551,9 @@
             yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
             textMiddle.addEventListener('input', () => {
                 const maxLength = designType.value === '超荐牌位' ? 12 : 24;
-                updateCharCount(textMiddle, middleCount, maxLength);
+                const currentLength = textMiddle.value.length;
+                middleCount.textContent = `${currentLength}/${maxLength}`;
+                validateInputLength(textMiddle, maxLength, 'textMiddleError');
             });
             textRight.addEventListener('input', () => updateCharCount(textRight, rightCount, 12));
             address1.addEventListener('input', () => updateAddressCharCount(address1, address1Count));
