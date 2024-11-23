@@ -810,9 +810,8 @@
             }
 
            function fillForm(result) {
-                document.getElementById('name').value = result.name || '';
-                
-                // Clear all fields first
+                // First clear the form
+                document.getElementById('name').value = '';
                 document.getElementById('yangshang1').value = '';
                 document.getElementById('yangshang2').value = '';
                 document.getElementById('textLeft').value = '';
@@ -824,18 +823,23 @@
                 document.getElementById('yiguLeft').value = '';
                 document.getElementById('yiguRight').value = '';
             
+                // Set name first
+                document.getElementById('name').value = result.name || '';
+            
+                // Set design type and trigger its change event
                 if (result.designType) {
                     designType.value = result.designType;
                     const event = new Event('change', { bubbles: true });
                     designType.dispatchEvent(event);
                 }
             
-                // Set timeout to ensure fields are updated after design type change
+                // Wait for design type change to complete
                 setTimeout(() => {
                     if (result.designType === '超荐牌位') {
                         document.getElementById('yangshang1').value = result.yangshang1 || '';
                         document.getElementById('yangshang2').value = result.yangshang2 || '';
-                        document.getElementById('textMiddle').value = result.textMiddle || '';  // This sets the 回向至
+                        // Explicitly set textMiddle for 回向至 regardless of design type
+                        document.getElementById('textMiddle').value = result.textMiddle || '';  // Critical fix here
                         document.getElementById('address1').value = result.address1 || '';
                         document.getElementById('address2').value = result.address2 || '';
                         document.getElementById('address3').value = result.address3 || '';
@@ -847,10 +851,11 @@
                         document.getElementById('textRight').value = result.textRight || '';
                     }
             
-                    // Update character counts
+                    // Update all character counters
                     updateCharCount(yangshang1, yangshang1Count, 28);
                     updateCharCount(yangshang2, yangshang2Count, 28);
                     updateCharCount(textLeft, leftCount, 12);
+                    // Important: Update middle text counter with correct max length based on design type
                     updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
                     updateCharCount(textRight, rightCount, 12);
                     updateCharCount(yiguLeft, yiguLeftCount, 21);
