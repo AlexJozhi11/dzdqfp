@@ -746,19 +746,29 @@
                 setLoading(true);
                 showStatus('');
             
-                var formData = new FormData(form);
-                formData.append('action', action);
-                formData.append('token', localStorage.getItem('token'));
-                
+                // Create data object directly instead of using FormData to ensure correct field mapping
+                var data = {
+                    action: action,
+                    token: localStorage.getItem('token'),
+                    name: document.getElementById('name').value,
+                    designType: document.getElementById('designType').value
+                };
+            
                 if (designType.value === '超荐牌位') {
-                    formData.set('address1', address1.value || '');
-                    formData.set('address2', address2.value || '');
-                    formData.set('address3', address3.value || '');
-                    formData.set('yiguLeft', yiguLeft.value || '');
-                    formData.set('yiguRight', yiguRight.value || '');
+                    data.yangshang1 = document.getElementById('yangshang1').value || '';
+                    data.yangshang2 = document.getElementById('yangshang2').value || '';
+                    data.textMiddle = document.getElementById('textMiddle').value || '';  // This ensures middle text is always included
+                    data.address1 = document.getElementById('address1').value || '';
+                    data.address2 = document.getElementById('address2').value || '';
+                    data.address3 = document.getElementById('address3').value || '';
+                    data.yiguLeft = document.getElementById('yiguLeft').value || '';
+                    data.yiguRight = document.getElementById('yiguRight').value || '';
+                } else {
+                    data.textLeft = document.getElementById('textLeft').value || '';
+                    data.textMiddle = document.getElementById('textMiddle').value || '';  // This ensures middle text is always included
+                    data.textRight = document.getElementById('textRight').value || '';
                 }
             
-                var data = Object.fromEntries(formData.entries());
                 var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
             
                 jsonp(_0x3c4d + '?' + queryString, function(response) {
