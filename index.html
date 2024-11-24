@@ -211,16 +211,16 @@
                     <div class="input-group">
                         <div class="label-container mb-1">
                             <div class="label-left">
-                                <label for="textMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
+                                <label for="qifuMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
                                     <span class="tooltiptext" id="middleTooltip">24字以内</span>
                                 </span>
                             </div>
-                            <span class="char-count" id="middleCount">0/24</span>
+                            <span class="char-count" id="qifuMiddleCount">0/24</span>
                         </div>
-                        <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
-                        <div class="error-message" id="textMiddleError"></div>
+                        <input id="qifuMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
+                        <div class="error-message" id="qifuMiddleError"></div>
                     </div>
 
                     <div class="input-group">
@@ -292,16 +292,16 @@
                        <div class="input-group">
                            <div class="label-container mb-1">
                                <div class="label-left">
-                                   <label for="textMiddle" class="text-sm font-medium text-gray-700">回向至</label>
+                                   <label for="chaojianMiddle" class="text-sm font-medium text-gray-700">回向至</label>
                                    <span class="tooltip">
                                        <i class="fas fa-info-circle text-gray-500"></i>
                                        <span class="tooltiptext">12字以内</span>
                                    </span>
                                </div>
-                               <span class="char-count" id="middleCount">0/12</span>
+                               <span class="char-count" id="chaojianMiddleCount">0/12</span>
                            </div>
-                           <input id="textMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
-                           <div class="error-message" id="textMiddleError"></div>
+                           <input id="chaojianMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
+                           <div class="error-message" id="chaojianMiddleError"></div>
                        </div>
 
                        <div class="input-group">
@@ -398,534 +398,513 @@
    </div>
 
    <script>
-        (function() {
-            var _0x5f4e3d = "PLACEHOLDER_STRING";
-            var _0x2a1b = function(s) {
-                return String.fromCharCode.apply(null, s.match(/.{1,2}/g).map(function(c) {
-                    return parseInt(c, 16);
-                }));
-            };
-            var _0x3c4d = _0x2a1b(_0x5f4e3d);
-            var loginForm = document.getElementById('loginForm');
-            var loginMessage = document.getElementById('loginMessage');
-            var loginPage = document.getElementById('loginPage');
-            var mainPage = document.getElementById('mainPage');
-            var form = document.getElementById('pdfForm');
-            var statusMessage = document.getElementById('statusMessage');
-            var addToQueueBtn = document.getElementById('addToQueueBtn');
-            var printNowBtn = document.getElementById('printNowBtn');
-            var searchInput = document.getElementById('search');
-            var searchResults = document.getElementById('searchResults');
-            var logoutBtn = document.getElementById('logoutBtn');
-            var loadingOverlay = document.getElementById('loadingOverlay');
-            var designType = document.getElementById('designType');
+    (function() {
+        var _0x5f4e3d = "PLACEHOLDER_STRING";
+        var _0x2a1b = function(s) {
+            return String.fromCharCode.apply(null, s.match(/.{1,2}/g).map(function(c) {
+                return parseInt(c, 16);
+            }));
+        };
+        var _0x3c4d = _0x2a1b(_0x5f4e3d);
+        var loginForm = document.getElementById('loginForm');
+        var loginMessage = document.getElementById('loginMessage');
+        var loginPage = document.getElementById('loginPage');
+        var mainPage = document.getElementById('mainPage');
+        var form = document.getElementById('pdfForm');
+        var statusMessage = document.getElementById('statusMessage');
+        var addToQueueBtn = document.getElementById('addToQueueBtn');
+        var printNowBtn = document.getElementById('printNowBtn');
+        var searchInput = document.getElementById('search');
+        var searchResults = document.getElementById('searchResults');
+        var logoutBtn = document.getElementById('logoutBtn');
+        var loadingOverlay = document.getElementById('loadingOverlay');
+        var designType = document.getElementById('designType');
 
-            // Field elements
-            var textLeft = document.getElementById('textLeft');
-            var yangshang1 = document.getElementById('yangshang1');
-            var yangshang2 = document.getElementById('yangshang2');
-            var textMiddle = document.getElementById('textMiddle');
-            var textRight = document.getElementById('textRight');
-            var address1 = document.getElementById('address1');
-            var address2 = document.getElementById('address2');
-            var address3 = document.getElementById('address3');
-            var yiguLeft = document.getElementById('yiguLeft');
-            var yiguRight = document.getElementById('yiguRight');
+        // Field elements
+        var textLeft = document.getElementById('textLeft');
+        var yangshang1 = document.getElementById('yangshang1');
+        var yangshang2 = document.getElementById('yangshang2');
+        var qifuMiddle = document.getElementById('qifuMiddle');     // Updated ID
+        var chaojianMiddle = document.getElementById('chaojianMiddle'); // New field
+        var textRight = document.getElementById('textRight');
+        var address1 = document.getElementById('address1');
+        var address2 = document.getElementById('address2');
+        var address3 = document.getElementById('address3');
+        var yiguLeft = document.getElementById('yiguLeft');
+        var yiguRight = document.getElementById('yiguRight');
 
-            // Container elements
-            var textLeftContainer = document.getElementById('textLeftContainer');
-            var yangshang1Container = document.getElementById('yangshang1Container');
-            var yangshang2Container = document.getElementById('yangshang2Container');
-            var addressFields = document.getElementById('addressFields');
-            var qifuFields = document.getElementById('qifuFields');
-            var chaojianFields = document.getElementById('chaojianFields');
-            var textRightContainer = document.getElementById('textRightContainer');
+        // Container elements
+        var textLeftContainer = document.getElementById('textLeftContainer');
+        var yangshang1Container = document.getElementById('yangshang1Container');
+        var yangshang2Container = document.getElementById('yangshang2Container');
+        var addressFields = document.getElementById('addressFields');
+        var qifuFields = document.getElementById('qifuFields');
+        var chaojianFields = document.getElementById('chaojianFields');
+        var textRightContainer = document.getElementById('textRightContainer');
 
-            // Counter elements
-            var leftCount = document.getElementById('leftCount');
-            var yangshang1Count = document.getElementById('yangshang1Count');
-            var yangshang2Count = document.getElementById('yangshang2Count');
-            var middleCount = document.getElementById('middleCount');
-            var rightCount = document.getElementById('rightCount');
-            var address1Count = document.getElementById('address1Count');
-            var address2Count = document.getElementById('address2Count');
-            var address3Count = document.getElementById('address3Count');
-            var yiguLeftCount = document.getElementById('yiguLeftCount');
-            var yiguRightCount = document.getElementById('yiguRightCount');
+        // Counter elements
+        var leftCount = document.getElementById('leftCount');
+        var yangshang1Count = document.getElementById('yangshang1Count');
+        var yangshang2Count = document.getElementById('yangshang2Count');
+        var qifuMiddleCount = document.getElementById('qifuMiddleCount');       // Updated ID
+        var chaojianMiddleCount = document.getElementById('chaojianMiddleCount'); // New counter
+        var rightCount = document.getElementById('rightCount');
+        var address1Count = document.getElementById('address1Count');
+        var address2Count = document.getElementById('address2Count');
+        var address3Count = document.getElementById('address3Count');
+        var yiguLeftCount = document.getElementById('yiguLeftCount');
+        var yiguRightCount = document.getElementById('yiguRightCount');
 
-            function updateFieldsVisibility(type) {
-                const middleLabel = document.querySelector('label[for="textMiddle"]');
-                const middleTooltip = document.getElementById('middleTooltip');
-                const middleCount = document.getElementById('middleCount');
-                const textMiddle = document.getElementById('textMiddle');
-            
-                if (type === '超荐牌位') {
-                    // Hide 祈福牌位 fields
-                    qifuFields.style.display = 'none';
-                    textLeft.required = false;
-                    textRight.required = false;
-                    
-                    // Show 超荐牌位 fields
-                    chaojianFields.classList.add('active');
-                    addressFields.classList.add('active');
-                    yangshang1.required = true;
-                    textRightContainer.style.display = 'none';
-                    
-                    // Update middle text field properties for 回向至
-                    middleLabel.textContent = '回向至';
-                    middleTooltip.textContent = '12字以内';
-                    textMiddle.maxLength = 12;  // Add maxLength constraint
-                    middleCount.textContent = `${textMiddle.value.length}/12`;
-                    textMiddle.placeholder = '请输入回向至';
-            
-                    // Clear 祈福牌位 fields
-                    textLeft.value = '';
-                    textRight.value = '';
-                    updateCharCount(textLeft, leftCount, 12);
-                    updateCharCount(textRight, rightCount, 12);
-                    
-                } else {
-                    // Show 祈福牌位 fields
-                    qifuFields.style.display = 'grid';
-                    textLeft.required = true;
-                    textRight.required = true;
-                    chaojianFields.classList.remove('active');
-                    addressFields.classList.remove('active');
-                    yangshang1.required = false;
-                    textRightContainer.style.display = 'block';
-                    
-                    // Update middle text field properties for regular middle text
-                    middleLabel.textContent = '中间 1-2 排名字';
-                    middleTooltip.textContent = '24字以内';
-                    textMiddle.maxLength = 24;  // Add maxLength constraint
-                    middleCount.textContent = `${textMiddle.value.length}/24`;
-                    textMiddle.placeholder = '请输入中间 1-2 排名字';
-            
-                    // Clear 超荐牌位 fields
-                    yangshang1.value = '';
-                    yangshang2.value = '';
-                    address1.value = '';
-                    address2.value = '';
-                    address3.value = '';
-                    yiguLeft.value = '';
-                    yiguRight.value = '';
-                    updateCharCount(yangshang1, yangshang1Count, 28);
-                    updateCharCount(yangshang2, yangshang2Count, 28);
-                    updateCharCount(yiguLeft, yiguLeftCount, 21);
-                    updateCharCount(yiguRight, yiguRightCount, 21);
-                    updateAddressCharCount(address1, address1Count);
-                    updateAddressCharCount(address2, address2Count);
-                    updateAddressCharCount(address3, address3Count);
-                }
+        function updateFieldsVisibility(type) {
+            if (type === '超荐牌位') {
+                // Hide 祈福牌位 fields
+                qifuFields.style.display = 'none';
+                textLeft.required = false;
+                textRight.required = false;
+                qifuMiddle.required = false;
+                chaojianMiddle.required = true;
                 
-                validateInputs();
+                // Show 超荐牌位 fields
+                chaojianFields.classList.add('active');
+                addressFields.classList.add('active');
+                yangshang1.required = true;
+                textRightContainer.style.display = 'none';
+                
+                // Clear 祈福牌位 fields
+                textLeft.value = '';
+                qifuMiddle.value = '';
+                textRight.value = '';
+                updateCharCount(textLeft, leftCount, 12);
+                updateCharCount(qifuMiddle, qifuMiddleCount, 24);
+                updateCharCount(textRight, rightCount, 12);
+                
+            } else {
+                // Show 祈福牌位 fields
+                qifuFields.style.display = 'grid';
+                textLeft.required = true;
+                textRight.required = true;
+                qifuMiddle.required = true;
+                chaojianMiddle.required = false;
+                
+                chaojianFields.classList.remove('active');
+                addressFields.classList.remove('active');
+                yangshang1.required = false;
+                textRightContainer.style.display = 'block';
+                
+                // Clear 超荐牌位 fields
+                yangshang1.value = '';
+                yangshang2.value = '';
+                chaojianMiddle.value = '';
+                address1.value = '';
+                address2.value = '';
+                address3.value = '';
+                yiguLeft.value = '';
+                yiguRight.value = '';
+                updateCharCount(yangshang1, yangshang1Count, 28);
+                updateCharCount(yangshang2, yangshang2Count, 28);
+                updateCharCount(chaojianMiddle, chaojianMiddleCount, 12);
+                updateCharCount(yiguLeft, yiguLeftCount, 21);
+                updateCharCount(yiguRight, yiguRightCount, 21);
+                updateAddressCharCount(address1, address1Count);
+                updateAddressCharCount(address2, address2Count);
+                updateAddressCharCount(address3, address3Count);
             }
+            
+            validateInputs();
+        }
 
-            function updateCharCount(input, countElement, maxLength) {
-                const currentLength = input.value.length;
-                countElement.textContent = `${currentLength}/${maxLength}`;
+        function updateCharCount(input, countElement, maxLength) {
+            const currentLength = input.value.length;
+            countElement.textContent = `${currentLength}/${maxLength}`;
+        }
+
+        function containsChinese(text) {
+            return /[\u4E00-\u9FFF]/.test(text);
+        }
+
+        function getAddressMaxLength(text) {
+            return containsChinese(text) ? 108 : 177;
+        }
+
+        function updateAddressCharCount(input, countElement) {
+            const isChinese = containsChinese(input.value);
+            const maxLength = isChinese ? 108 : 177;
+            const currentLength = input.value.length;
+            countElement.textContent = `${currentLength}/${maxLength}`;
+            const tooltipElement = countElement.previousElementSibling.querySelector('.tooltiptext');
+            if (tooltipElement) {
+                tooltipElement.textContent = isChinese ? '108个汉字以内' : '177字符以内';
             }
+        }
 
-            function containsChinese(text) {
-                return /[\u4E00-\u9FFF]/.test(text);
+        // Event listeners for input fields
+        textLeft.addEventListener('input', () => updateCharCount(textLeft, leftCount, 12));
+        yangshang1.addEventListener('input', () => updateCharCount(yangshang1, yangshang1Count, 28));
+        yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
+        qifuMiddle.addEventListener('input', () => updateCharCount(qifuMiddle, qifuMiddleCount, 24));
+        chaojianMiddle.addEventListener('input', () => updateCharCount(chaojianMiddle, chaojianMiddleCount, 12));
+        textRight.addEventListener('input', () => updateCharCount(textRight, rightCount, 12));
+        address1.addEventListener('input', () => updateAddressCharCount(address1, address1Count));
+        address2.addEventListener('input', () => updateAddressCharCount(address2, address2Count));
+        address3.addEventListener('input', () => updateAddressCharCount(address3, address3Count));
+
+        yiguLeft.addEventListener('input', () => {
+            if (!containsChinese(yiguLeft.value)) {
+                document.getElementById('yiguLeftError').textContent = '只能输入中文字符';
+                document.getElementById('yiguLeftError').style.display = 'block';
+                yiguLeft.classList.add('input-error');
+            } else {
+                updateCharCount(yiguLeft, yiguLeftCount, 21);
+                validateInputLength(yiguLeft, 21, 'yiguLeftError');
             }
+        });
 
-            function getAddressMaxLength(text) {
+        yiguRight.addEventListener('input', () => {
+            if (!containsChinese(yiguRight.value)) {
+                document.getElementById('yiguRightError').textContent = '只能输入中文字符';
+                document.getElementById('yiguRightError').style.display = 'block';
+                yiguRight.classList.add('input-error');
+            } else {
+                updateCharCount(yiguRight, yiguRightCount, 21);
+                validateInputLength(yiguRight, 21, 'yiguRightError');
+            }
+        });
+
+        designType.addEventListener('change', function() {
+            updateFieldsVisibility(this.value);
+        });
+
+        function validateInputs() {
+            const type = designType.value;
+            let isValid = true;
+
+            function getAddressLimit(text) {
                 return containsChinese(text) ? 108 : 177;
             }
 
-            function updateAddressCharCount(input, countElement) {
-                const isChinese = containsChinese(input.value);
-                const maxLength = isChinese ? 108 : 177;
-                const currentLength = input.value.length;
-                countElement.textContent = `${currentLength}/${maxLength}`;
-                const tooltipElement = countElement.previousElementSibling.querySelector('.tooltiptext');
-                if (tooltipElement) {
-                    tooltipElement.textContent = isChinese ? '108个汉字以内' : '177字符以内';
+            if (type === '超荐牌位') {
+                isValid = validateInputLength(yangshang1, 28, 'yangshang1Error') && isValid;
+                if (yangshang2.value) {
+                    isValid = validateInputLength(yangshang2, 28, 'yangshang2Error') && isValid;
                 }
-            }
+                isValid = validateInputLength(chaojianMiddle, 12, 'chaojianMiddleError') && isValid;
 
-            // Event listeners for input fields
-            textLeft.addEventListener('input', () => updateCharCount(textLeft, leftCount, 12));
-            yangshang1.addEventListener('input', () => updateCharCount(yangshang1, yangshang1Count, 28));
-            yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
-            textMiddle.addEventListener('input', () => {
-                const maxLength = designType.value === '超荐牌位' ? 12 : 24;
-                const currentLength = textMiddle.value.length;
-                const middleCountElement = document.getElementById('middleCount');
-                middleCountElement.textContent = `${currentLength}/${maxLength}`;
-                validateInputLength(textMiddle, maxLength, 'textMiddleError');
-            });
-            textRight.addEventListener('input', () => updateCharCount(textRight, rightCount, 12));
-            address1.addEventListener('input', () => updateAddressCharCount(address1, address1Count));
-            address2.addEventListener('input', () => updateAddressCharCount(address2, address2Count));
-            address3.addEventListener('input', () => updateAddressCharCount(address3, address3Count));
-
-            yiguLeft.addEventListener('input', () => {
-                if (!containsChinese(yiguLeft.value)) {
-                    document.getElementById('yiguLeftError').textContent = '只能输入中文字符';
-                    document.getElementById('yiguLeftError').style.display = 'block';
-                    yiguLeft.classList.add('input-error');
-                } else {
-                    updateCharCount(yiguLeft, yiguLeftCount, 21);
-                    validateInputLength(yiguLeft, 21, 'yiguLeftError');
-                }
-            });
-
-            yiguRight.addEventListener('input', () => {
-                if (!containsChinese(yiguRight.value)) {
-                    document.getElementById('yiguRightError').textContent = '只能输入中文字符';
-                    document.getElementById('yiguRightError').style.display = 'block';
-                    yiguRight.classList.add('input-error');
-                } else {
-                    updateCharCount(yiguRight, yiguRightCount, 21);
-                    validateInputLength(yiguRight, 21, 'yiguRightError');
-                }
-            });
-
-            designType.addEventListener('change', function() {
-                updateFieldsVisibility(this.value);
-            });
-
-            function validateInputs() {
-                const type = designType.value;
-                let isValid = true;
-
-                function getAddressLimit(text) {
-                    if (containsChinese(text)) {
-                        return 108;
+                if (yiguLeft.value) {
+                    if (!containsChinese(yiguLeft.value)) {
+                        isValid = false;
+                        document.getElementById('yiguLeftError').textContent = '只能输入中文字符';
+                        document.getElementById('yiguLeftError').style.display = 'block';
+                    } else {
+                        isValid = validateInputLength(yiguLeft, 21, 'yiguLeftError') && isValid;
                     }
-                    return 177;
                 }
 
-                if (type === '超荐牌位') {
-                    isValid = validateInputLength(yangshang1, 28, 'yangshang1Error') && isValid;
-                    if (yangshang2.value) {
-                        isValid = validateInputLength(yangshang2, 28, 'yangshang2Error') && isValid;
+                if (yiguRight.value) {
+                    if (!containsChinese(yiguRight.value)) {
+                        isValid = false;
+                        document.getElementById('yiguRightError').textContent = '只能输入中文字符';
+                        document.getElementById('yiguRightError').style.display = 'block';
+                    } else {
+                        isValid = validateInputLength(yiguRight, 21, 'yiguRightError') && isValid;
                     }
-                    isValid = validateInputLength(textMiddle, 12, 'textMiddleError') && isValid;
-
-                    if (yiguLeft.value) {
-                        if (!containsChinese(yiguLeft.value)) {
-                            isValid = false;
-                            document.getElementById('yiguLeftError').textContent = '只能输入中文字符';
-                            document.getElementById('yiguLeftError').style.display = 'block';
-                        } else {
-                            isValid = validateInputLength(yiguLeft, 21, 'yiguLeftError') && isValid;
-                        }
-                    }
-
-                    if (yiguRight.value) {
-                        if (!containsChinese(yiguRight.value)) {
-                            isValid = false;
-                            document.getElementById('yiguRightError').textContent = '只能输入中文字符';
-                            document.getElementById('yiguRightError').style.display = 'block';
-                        } else {
-                            isValid = validateInputLength(yiguRight, 21, 'yiguRightError') && isValid;
-                        }
-                    }
-                    
-                    if (address1.value) {
-                        isValid = validateInputLength(address1, getAddressLimit(address1.value), 'address1Error') && isValid;
-                    }
-                    if (address2.value) {
-                        isValid = validateInputLength(address2, getAddressLimit(address2.value), 'address2Error') && isValid;
-                    }
-                    if (address3.value) {
-                        isValid = validateInputLength(address3, getAddressLimit(address3.value), 'address3Error') && isValid;
-                    }
-                } else {
-                    isValid = validateInputLength(textLeft, 12, 'textLeftError') && isValid;
-                    isValid = validateInputLength(textMiddle, 24, 'textMiddleError') && isValid;
-                    isValid = validateInputLength(textRight, 12, 'textRightError') && isValid;
                 }
-
-                return isValid;
-            }
-
-            function validateInputLength(input, maxLength, errorId) {
-                const errorDiv = document.getElementById(errorId);
-                if (input.value.length > maxLength) {
-                    input.classList.add('input-error');
-                    errorDiv.style.display = 'block';
-                    errorDiv.textContent = `超出最大字数限制 (${maxLength})`;
-                    return false;
-                } else {
-                    input.classList.remove('input-error');
-                    errorDiv.style.display = 'none';
-                    return true;
+                
+                if (address1.value) {
+                    isValid = validateInputLength(address1, getAddressLimit(address1.value), 'address1Error') && isValid;
                 }
-            }
-
-            function showLoadingOverlay() {
-                loadingOverlay.style.display = 'flex';
-            }
-
-            function hideLoadingOverlay() {
-                loadingOverlay.style.display = 'none';
-            }
-
-            function showLoginPage() {
-                hideLoadingOverlay();
-                loginPage.style.display = 'block';
-                mainPage.style.display = 'none';
-            }
-
-            function showMainPage() {
-                hideLoadingOverlay();
-                loginPage.style.display = 'none';
-                mainPage.style.display = 'block';
-            }
-
-            var token = localStorage.getItem('token');
-            if (token) {
-                showLoadingOverlay();
-                validateToken(token);
+                if (address2.value) {
+                    isValid = validateInputLength(address2, getAddressLimit(address2.value), 'address2Error') && isValid;
+                }
+                if (address3.value) {
+                    isValid = validateInputLength(address3, getAddressLimit(address3.value), 'address3Error') && isValid;
+                }
             } else {
-                showLoginPage();
+                isValid = validateInputLength(textLeft, 12, 'textLeftError') && isValid;
+                isValid = validateInputLength(qifuMiddle, 24, 'qifuMiddleError') && isValid;
+                isValid = validateInputLength(textRight, 12, 'textRightError') && isValid;
             }
 
-            function validateToken(token) {
-                jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
-                    if (response.success) {
-                        showMainPage();
-                    } else {
-                        localStorage.removeItem('token');
-                        showLoginPage();
-                    }
-                });
+            return isValid;
+        }
+
+        function validateInputLength(input, maxLength, errorId) {
+            const errorDiv = document.getElementById(errorId);
+            if (input.value.length > maxLength) {
+                input.classList.add('input-error');
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = `超出最大字数限制 (${maxLength})`;
+                return false;
+            } else {
+                input.classList.remove('input-error');
+                errorDiv.style.display = 'none';
+                return true;
             }
+        }
 
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                var username = document.getElementById('username').value;
-                var password = document.getElementById('password').value;
-                jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-                    if (response.success) {
-                        localStorage.setItem('token', response.token);
-                        showMainPage();
-                    } else {
-                        loginMessage.textContent = '登录失败: ' + response.error;
-                        loginMessage.className = 'text-center text-sm text-red-600';
-                    }
-                });
-            });
+        function showLoadingOverlay() {
+            loadingOverlay.style.display = 'flex';
+        }
 
-            logoutBtn.addEventListener('click', function() {
-                localStorage.removeItem('token');
-                showLoginPage();
-            });
+        function hideLoadingOverlay() {
+            loadingOverlay.style.display = 'none';
+        }
 
-            function setLoading(isLoading) {
-               addToQueueBtn.disabled = isLoading;
-               printNowBtn.disabled = isLoading;
-               if (isLoading) {
-                   addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
-                   printNowBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
-               } else {
-                   addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>添加</span></span>';
-                   printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>生成</span></span>';
-               }
-           }
+        function showLoginPage() {
+            hideLoadingOverlay();
+            loginPage.style.display = 'block';
+            mainPage.style.display = 'none';
+        }
 
-           function showStatus(message, isError = false) {
-               statusMessage.textContent = message;
-               statusMessage.className = isError ? 'mt-3 text-center text-sm text-red-600 fade-in' : 'mt-3 text-center text-sm text-green-600 fade-in';
-           }
+        function showMainPage() {
+            hideLoadingOverlay();
+            loginPage.style.display = 'none';
+            mainPage.style.display = 'block';
+        }
 
-           function jsonp(url, callback) {
-               var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-               window[callbackName] = function(data) {
-                   delete window[callbackName];
-                   document.body.removeChild(script);
-                   callback(data);
-               };
-               var script = document.createElement('script');
-               script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-               document.body.appendChild(script);
-           }
+        var token = localStorage.getItem('token');
+        if (token) {
+            showLoadingOverlay();
+            validateToken(token);
+        } else {
+            showLoginPage();
+        }
 
-           function submitForm(action) {
-                if (!validateInputs()) {
-                    showStatus('请检查输入字数限制', true);
-                    return;
-                }
-                setLoading(true);
-                showStatus('');
-            
-                var data = {
-                    action: action,
-                    token: localStorage.getItem('token'),
-                    name: document.getElementById('name').value,
-                    designType: document.getElementById('designType').value
-                };
-            
-                if (designType.value === '超荐牌位') {
-                    data.yangshang1 = document.getElementById('yangshang1').value || '';
-                    data.yangshang2 = document.getElementById('yangshang2').value || '';
-                    data.textMiddle = document.getElementById('textMiddle').value;  // Remove || '' to prevent empty string default
-                    data.address1 = document.getElementById('address1').value || '';
-                    data.address2 = document.getElementById('address2').value || '';
-                    data.address3 = document.getElementById('address3').value || '';
-                    data.yiguLeft = document.getElementById('yiguLeft').value || '';
-                    data.yiguRight = document.getElementById('yiguRight').value || '';
+        function validateToken(token) {
+            jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
+                if (response.success) {
+                    showMainPage();
                 } else {
-                    data.textLeft = document.getElementById('textLeft').value || '';
-                    data.textMiddle = document.getElementById('textMiddle').value;  // Remove || '' to prevent empty string default
-                    data.textRight = document.getElementById('textRight').value || '';
+                    localStorage.removeItem('token');
+                    showLoginPage();
                 }
-            
-                var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
-            
-                jsonp(_0x3c4d + '?' + queryString, function(response) {
-                    if (response.success) {
-                        showStatus(response.message);
-                        if (response.pdfBase64) {
-                            try {
-                                var byteCharacters = atob(response.pdfBase64);
-                                var byteNumbers = new Array(byteCharacters.length);
-                                for (var i = 0; i < byteCharacters.length; i++) {
-                                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                                }
-                                var byteArray = new Uint8Array(byteNumbers);
-                                var blob = new Blob([byteArray], {type: 'application/pdf'});
-                                var blobUrl = URL.createObjectURL(blob);
-                                
-                                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                                    var link = document.createElement('a');
-                                    link.href = blobUrl;
-                                    link.download = '祈福牌.pdf';
-                                    link.click();
-                                } else {
-                                    window.open(blobUrl, '_blank');
-                                }
-                            } catch (error) {
-                                console.error("Error creating PDF blob:", error);
-                                showStatus('创建 PDF 时出错: ' + error.message, true);
-                            }
-                        }
-                    } else {
-                        if (response.error === 'Invalid or expired token') {
-                            localStorage.removeItem('token');
-                            showLoginPage();
-                        }
-                        showStatus('发生错误: ' + (response.error || '未知错误'), true);
-                    }
-                    setLoading(false);
-                });
-            }
+            });
+        }
 
-           function fillForm(result) {
-                // First clear the form
-                document.getElementById('name').value = '';
-                document.getElementById('yangshang1').value = '';
-                document.getElementById('yangshang2').value = '';
-                document.getElementById('textLeft').value = '';
-                document.getElementById('textMiddle').value = '';
-                document.getElementById('textRight').value = '';
-                document.getElementById('address1').value = '';
-                document.getElementById('address2').value = '';
-                document.getElementById('address3').value = '';
-                document.getElementById('yiguLeft').value = '';
-                document.getElementById('yiguRight').value = '';
-            
-                // Set name first
-                document.getElementById('name').value = result.name || '';
-            
-                // Set design type and trigger its change event
-                if (result.designType) {
-                    designType.value = result.designType;
-                    const event = new Event('change', { bubbles: true });
-                    designType.dispatchEvent(event);
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
+                if (response.success) {
+                    localStorage.setItem('token', response.token);
+                    showMainPage();
+                } else {
+                    loginMessage.textContent = '登录失败: ' + response.error;
+                    loginMessage.className = 'text-center text-sm text-red-600';
                 }
-            
-                // Wait for design type change to complete
-                setTimeout(() => {
-                    const textMiddleInput = document.getElementById('textMiddle');
-                    if (result.designType === '超荐牌位') {
-                        document.getElementById('yangshang1').value = result.yangshang1 || '';
-                        document.getElementById('yangshang2').value = result.yangshang2 || '';
-                        // Ensure textMiddle (回向至) is properly set
-                        textMiddleInput.value = result.textMiddle || '';
-                        document.getElementById('address1').value = result.address1 || '';
-                        document.getElementById('address2').value = result.address2 || '';
-                        document.getElementById('address3').value = result.address3 || '';
-                        document.getElementById('yiguLeft').value = result.yiguLeft || '';
-                        document.getElementById('yiguRight').value = result.yiguRight || '';
-            
-                        // Update character counter for 回向至
-                        const middleCountElement = document.getElementById('middleCount');
-                        middleCountElement.textContent = `${textMiddleInput.value.length}/12`;
-                    } else {
-                        document.getElementById('textLeft').value = result.textLeft || '';
-                        textMiddleInput.value = result.textMiddle || '';
-                        document.getElementById('textRight').value = result.textRight || '';
-                    }
-            
-                    // Update all character counters
-                    updateCharCount(yangshang1, yangshang1Count, 28);
-                    updateCharCount(yangshang2, yangshang2Count, 28);
-                    updateCharCount(textLeft, leftCount, 12);
-                    updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
-                    updateCharCount(textRight, rightCount, 12);
-                    updateCharCount(yiguLeft, yiguLeftCount, 21);
-                    updateCharCount(yiguRight, yiguRightCount, 21);
-            
-                    if (result.designType === '超荐牌位') {
-                        updateAddressCharCount(address1, address1Count);
-                        updateAddressCharCount(address2, address2Count);
-                        updateAddressCharCount(address3, address3Count);
-                    }
-            
-                    validateInputs();
-                }, 0);
-            }
-            
-           function searchSheet() {
-               var searchTerm = searchInput.value.trim();
-               if (searchTerm.length > 0) {
-                   jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
-                       if (response.success && response.results) {
-                           searchResults.innerHTML = '<option value="">选择搜索结果</option>';
-                           response.results.forEach(function(result) {
-                               var option = document.createElement('option');
-                               option.value = JSON.stringify(result);
-                               option.textContent = result.name + ' (' + result.date + ')';
-                               searchResults.appendChild(option);
-                           });
-                           searchResults.style.display = 'block';
-                       } else {
-                           if (response.error === 'Invalid or expired token') {
-                               localStorage.removeItem('token');
-                               showLoginPage();
-                           }
-                           showStatus('搜索失败: ' + (response.error || '未知错误'), true);
-                       }
-                   });
-               } else {
-                   searchResults.style.display = 'none';
-               }
+            });
+        });
+
+        logoutBtn.addEventListener('click', function() {
+            localStorage.removeItem('token');
+            showLoginPage();
+        });
+
+        function setLoading(isLoading) {
+           addToQueueBtn.disabled = isLoading;
+           printNowBtn.disabled = isLoading;
+           if (isLoading) {
+               addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
+               printNowBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>处理中...</span></span>';
+           } else {
+               addToQueueBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>添加</span></span>';
+               printNowBtn.innerHTML = '<span class="flex items-center justify-center"><svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg><span>生成</span></span>';
+           }
+       }
+
+       function showStatus(message, isError = false) {
+           statusMessage.textContent = message;
+           statusMessage.className = isError ? 'mt-3 text-center text-sm text-red-600 fade-in' : 'mt-3 text-center text-sm text-green-600 fade-in';
+       }
+
+       function jsonp(url, callback) {
+           var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+           window[callbackName] = function(data) {
+               delete window[callbackName];
+               document.body.removeChild(script);
+               callback(data);
+           };
+           var script = document.createElement('script');
+           script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+           document.body.appendChild(script);
+       }
+
+       function submitForm(action) {
+           if (!validateInputs()) {
+               showStatus('请检查输入字数限制', true);
+               return;
+           }
+           setLoading(true);
+           showStatus('');
+
+           var data = {
+               action: action,
+               token: localStorage.getItem('token'),
+               name: document.getElementById('name').value,
+               designType: document.getElementById('designType').value
+           };
+
+           if (designType.value === '超荐牌位') {
+               data.yangshang1 = yangshang1.value || '';
+               data.yangshang2 = yangshang2.value || '';
+               data.textMiddle = chaojianMiddle.value;  // Use the correct field
+               data.address1 = address1.value || '';
+               data.address2 = address2.value || '';
+               data.address3 = address3.value || '';
+               data.yiguLeft = yiguLeft.value || '';
+               data.yiguRight = yiguRight.value || '';
+           } else {
+               data.textLeft = textLeft.value || '';
+               data.textMiddle = qifuMiddle.value;  // Use the correct field
+               data.textRight = textRight.value || '';
            }
 
-           addToQueueBtn.addEventListener('click', function() {
-               submitForm('addToQueue');
-           });
+           var queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
 
-           printNowBtn.addEventListener('click', function() {
-               submitForm('printNow');
-           });
-
-           searchInput.addEventListener('input', searchSheet);
-
-           searchResults.addEventListener('change', function() {
-               var selectedValue = searchResults.value;
-               if (selectedValue) {
-                   fillForm(JSON.parse(selectedValue));
+           jsonp(_0x3c4d + '?' + queryString, function(response) {
+               if (response.success) {
+                   showStatus(response.message);
+                   if (response.pdfBase64) {
+                       try {
+                           var byteCharacters = atob(response.pdfBase64);
+                           var byteNumbers = new Array(byteCharacters.length);
+                           for (var i = 0; i < byteCharacters.length; i++) {
+                               byteNumbers[i] = byteCharacters.charCodeAt(i);
+                           }
+                           var byteArray = new Uint8Array(byteNumbers);
+                           var blob = new Blob([byteArray], {type: 'application/pdf'});
+                           var blobUrl = URL.createObjectURL(blob);
+                           
+                           if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                               var link = document.createElement('a');
+                               link.href = blobUrl;
+                               link.download = '祈福牌.pdf';
+                               link.click();
+                           } else {
+                               window.open(blobUrl, '_blank');
+                           }
+                       } catch (error) {
+                           console.error("Error creating PDF blob:", error);
+                           showStatus('创建 PDF 时出错: ' + error.message, true);
+                       }
+                   }
+               } else {
+                   if (response.error === 'Invalid or expired token') {
+                       localStorage.removeItem('token');
+                       showLoginPage();
+                   }
+                   showStatus('发生错误: ' + (response.error || '未知错误'), true);
                }
+               setLoading(false);
            });
+       }
 
-           updateFieldsVisibility(designType.value);
-       })();
-   </script>
+       function fillForm(result) {
+           // First clear the form
+           document.getElementById('name').value = '';
+           yangshang1.value = '';
+           yangshang2.value = '';
+           textLeft.value = '';
+           qifuMiddle.value = '';
+           chaojianMiddle.value = '';
+           textRight.value = '';
+           address1.value = '';
+           address2.value = '';
+           address3.value = '';
+           yiguLeft.value = '';
+           yiguRight.value = '';
+
+           // Set name first
+           document.getElementById('name').value = result.name || '';
+
+           // Set design type and trigger its change event
+           if (result.designType) {
+               designType.value = result.designType;
+               const event = new Event('change', { bubbles: true });
+               designType.dispatchEvent(event);
+           }
+
+           // Wait for design type change to complete
+           setTimeout(() => {
+               if (result.designType === '超荐牌位') {
+                   yangshang1.value = result.yangshang1 || '';
+                   yangshang2.value = result.yangshang2 || '';
+                   chaojianMiddle.value = result.textMiddle || '';  // Use correct field
+                   address1.value = result.address1 || '';
+                   address2.value = result.address2 || '';
+                   address3.value = result.address3 || '';
+                   yiguLeft.value = result.yiguLeft || '';
+                   yiguRight.value = result.yiguRight || '';
+                   
+                   // Update character counters
+                   updateCharCount(yangshang1, yangshang1Count, 28);
+                   updateCharCount(yangshang2, yangshang2Count, 28);
+                   updateCharCount(chaojianMiddle, chaojianMiddleCount, 12);
+                   updateCharCount(yiguLeft, yiguLeftCount, 21);
+                   updateCharCount(yiguRight, yiguRightCount, 21);
+                   updateAddressCharCount(address1, address1Count);
+                   updateAddressCharCount(address2, address2Count);
+                   updateAddressCharCount(address3, address3Count);
+               } else {
+                   textLeft.value = result.textLeft || '';
+                   qifuMiddle.value = result.textMiddle || '';  // Use correct field
+                   textRight.value = result.textRight || '';
+                   
+                   // Update character counters
+                   updateCharCount(textLeft, leftCount, 12);
+                   updateCharCount(qifuMiddle, qifuMiddleCount, 24);
+                   updateCharCount(textRight, rightCount, 12);
+               }
+
+               validateInputs();
+           }, 0);
+       }
+
+       function searchSheet() {
+           var searchTerm = searchInput.value.trim();
+           if (searchTerm.length > 0) {
+               jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
+                   if (response.success && response.results) {
+                       searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+                       response.results.forEach(function(result) {
+                           var option = document.createElement('option');
+                           option.value = JSON.stringify(result);
+                           option.textContent = result.name + ' (' + result.date + ')';
+                           searchResults.appendChild(option);
+                       });
+                       searchResults.style.display = 'block';
+                   } else {
+                       if (response.error === 'Invalid or expired token') {
+                           localStorage.removeItem('token');
+                           showLoginPage();
+                       }
+                       showStatus('搜索失败: ' + (response.error || '未知错误'), true);
+                   }
+               });
+           } else {
+               searchResults.style.display = 'none';
+           }
+       }
+
+       addToQueueBtn.addEventListener('click', function() {
+           submitForm('addToQueue');
+       });
+
+       printNowBtn.addEventListener('click', function() {
+           submitForm('printNow');
+       });
+
+       searchInput.addEventListener('input', searchSheet);
+
+       searchResults.addEventListener('change', function() {
+           var selectedValue = searchResults.value;
+           if (selectedValue) {
+               fillForm(JSON.parse(selectedValue));
+           }
+       });
+
+       updateFieldsVisibility(designType.value);
+   })();
+</script>
 </body>
 </html>
