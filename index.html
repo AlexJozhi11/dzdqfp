@@ -1045,9 +1045,44 @@
             searchResults.innerHTML = '<option value="">选择搜索结果</option>';
             
             if (response.success && response.results && Array.isArray(response.results)) {
-                // The server now sends correctly filtered results, just display them
-                if (response.results.length > 0) {
-                    response.results.forEach(result => {
+                // Additional client-side filtering for extra safety
+                const filteredResults = response.results.filter(result => {
+                    const searchTermLower = searchTerm.toLowerCase();
+                    
+                    // Function to safely check if a field contains the search term
+                    function hasSearchTerm(field) {
+                        // Convert null/undefined to empty string
+                        field = field || '';
+                        // Convert to string if it's not already
+                        field = field.toString();
+                        // Only proceed if field is not empty after trimming
+                        if (field.trim() === '') return false;
+                        
+                        // Convert to lowercase for case-insensitive comparison
+                        field = field.toLowerCase();
+                        
+                        // For exact string inclusion check
+                        return field.indexOf(searchTermLower) !== -1;
+                    }
+
+                    // Check each field individually
+                    return (
+                        hasSearchTerm(result.name) ||
+                        hasSearchTerm(result.textLeft) ||
+                        hasSearchTerm(result.yangshang1) ||
+                        hasSearchTerm(result.yangshang2) ||
+                        hasSearchTerm(result.textMiddle) ||
+                        hasSearchTerm(result.textRight) ||
+                        hasSearchTerm(result.address1) ||
+                        hasSearchTerm(result.address2) ||
+                        hasSearchTerm(result.address3) ||
+                        hasSearchTerm(result.yiguLeft) ||
+                        hasSearchTerm(result.yiguRight)
+                    );
+                });
+
+                if (filteredResults.length > 0) {
+                    filteredResults.forEach(result => {
                         var option = document.createElement('option');
                         option.value = JSON.stringify(result);
                         option.textContent = `${result.name} (${result.displayText}, ${result.date})`;
