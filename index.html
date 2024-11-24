@@ -597,21 +597,45 @@
             updateFieldsVisibility(this.value);
         });
 
+        function validateLeftRightPair() {
+            const leftText = textLeft.value.trim();
+            const rightText = textRight.value.trim();
+            const leftError = document.getElementById('textLeftError');
+            const rightError = document.getElementById('textRightError');
+            
+            if ((leftText && !rightText) || (!leftText && rightText)) {
+                const errorMessage = '左右栏文本必须同时填写或同时为空';
+                leftError.textContent = errorMessage;
+                rightError.textContent = errorMessage;
+                leftError.style.display = 'block';
+                rightError.style.display = 'block';
+                textLeft.classList.add('input-error');
+                textRight.classList.add('input-error');
+                return false;
+            }
+            
+            leftError.style.display = 'none';
+            rightError.style.display = 'none';
+            textLeft.classList.remove('input-error');
+            textRight.classList.remove('input-error');
+            return true;
+        }
+        
         function validateInputs() {
             const type = designType.value;
             let isValid = true;
-
+        
             function getAddressLimit(text) {
                 return containsChinese(text) ? 108 : 177;
             }
-
+        
             if (type === '超荐牌位') {
                 isValid = validateInputLength(yangshang1, 28, 'yangshang1Error') && isValid;
                 if (yangshang2.value) {
                     isValid = validateInputLength(yangshang2, 28, 'yangshang2Error') && isValid;
                 }
                 isValid = validateInputLength(chaojianMiddle, 12, 'chaojianMiddleError') && isValid;
-
+        
                 if (yiguLeft.value) {
                     if (!containsChinese(yiguLeft.value)) {
                         isValid = false;
@@ -621,7 +645,7 @@
                         isValid = validateInputLength(yiguLeft, 21, 'yiguLeftError') && isValid;
                     }
                 }
-
+        
                 if (yiguRight.value) {
                     if (!containsChinese(yiguRight.value)) {
                         isValid = false;
@@ -642,11 +666,12 @@
                     isValid = validateInputLength(address3, getAddressLimit(address3.value), 'address3Error') && isValid;
                 }
             } else {
+                isValid = validateLeftRightPair() && isValid;
                 isValid = validateInputLength(textLeft, 12, 'textLeftError') && isValid;
                 isValid = validateInputLength(qifuMiddle, 24, 'qifuMiddleError') && isValid;
                 isValid = validateInputLength(textRight, 12, 'textRightError') && isValid;
             }
-
+        
             return isValid;
         }
 
@@ -884,30 +909,37 @@
        }
 
        function searchSheet() {
-           var searchTerm = searchInput.value.trim();
-           if (searchTerm.length > 0) {
-               jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
-                   if (response.success && response.results) {
-                       searchResults.innerHTML = '<option value="">选择搜索结果</option>';
-                       response.results.forEach(function(result) {
-                           var option = document.createElement('option');
-                           option.value = JSON.stringify(result);
-                           option.textContent = result.name + ' (' + result.date + ')';
-                           searchResults.appendChild(option);
-                       });
-                       searchResults.style.display = 'block';
-                   } else {
-                       if (response.error === 'Invalid or expired token') {
-                           localStorage.removeItem('token');
-                           showLoginPage();
-                       }
-                       showStatus('搜索失败: ' + (response.error || '未知错误'), true);
-                   }
-               });
-           } else {
-               searchResults.style.display = 'none';
-           }
-       }
+            var searchTerm = searchInput.value.trim();
+            var filterType = document.getElementById('searchFilter').value;
+            
+            if (searchTerm.length > 0) {
+                var searchParams = encodeURIComponent(searchTerm);
+                if (filterType) {
+                    searchParams += '&filterType=' + encodeURIComponent(filterType);
+                }
+                
+                jsonp(_0x3c4d + '?action=search&term=' + searchParams + '&token=' + localStorage.getItem('token'), function(response) {
+                    if (response.success && response.results) {
+                        searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+                        response.results.forEach(function(result) {
+                            var option = document.createElement('option');
+                            option.value = JSON.stringify(result);
+                            option.textContent = `${result.name} (${result.displayText}, ${result.date})`;
+                            searchResults.appendChild(option);
+                        });
+                        searchResults.style.display = 'block';
+                    } else {
+                        if (response.error === 'Invalid or expired token') {
+                            localStorage.removeItem('token');
+                            showLoginPage();
+                        }
+                        showStatus('搜索失败: ' + (response.error || '未知错误'), true);
+                    }
+                });
+            } else {
+                searchResults.style.display = 'none';
+            }
+        }
 
        addToQueueBtn.addEventListener('click', function() {
            submitForm('addToQueue');
@@ -925,7 +957,9 @@
                fillForm(JSON.parse(selectedValue));
            }
        });
-
+       textLeft.addEventListener('input', validateLeftRightPair);
+       textRight.addEventListener('input', validateLeftRightPair);
+       document.getElementById('searchFilter').addEventListener('change', searchSheet);
        updateFieldsVisibility(designType.value);
    })();
 </script>
