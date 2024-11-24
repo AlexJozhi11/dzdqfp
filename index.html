@@ -518,6 +518,10 @@
             countElement.textContent = `${currentLength}/${maxLength}`;
         }
 
+        function containsNumbers(text) {
+            return /[0-9]/.test(text);
+        }
+        
         function containsChinese(text) {
             return /[\u4E00-\u9FFF]/.test(text);
         }
@@ -542,7 +546,18 @@
         yangshang1.addEventListener('input', () => updateCharCount(yangshang1, yangshang1Count, 28));
         yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
         qifuMiddle.addEventListener('input', () => updateCharCount(qifuMiddle, qifuMiddleCount, 24));
-        chaojianMiddle.addEventListener('input', () => updateCharCount(chaojianMiddle, chaojianMiddleCount, 12));
+        chaojianMiddle.addEventListener('input', () => {
+            if (containsNumbers(chaojianMiddle.value)) {
+                document.getElementById('chaojianMiddleError').textContent = '不能输入数字';
+                document.getElementById('chaojianMiddleError').style.display = 'block';
+                chaojianMiddle.classList.add('input-error');
+                chaojianMiddle.value = chaojianMiddle.value.replace(/[0-9]/g, '');
+            } else {
+                document.getElementById('chaojianMiddleError').style.display = 'none';
+                chaojianMiddle.classList.remove('input-error');
+                updateCharCount(chaojianMiddle, chaojianMiddleCount, 12);
+            }
+        });
         textRight.addEventListener('input', () => updateCharCount(textRight, rightCount, 12));
         address1.addEventListener('input', () => updateAddressCharCount(address1, address1Count));
         address2.addEventListener('input', () => updateAddressCharCount(address2, address2Count));
