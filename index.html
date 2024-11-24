@@ -552,7 +552,8 @@
             textMiddle.addEventListener('input', () => {
                 const maxLength = designType.value === '超荐牌位' ? 12 : 24;
                 const currentLength = textMiddle.value.length;
-                middleCount.textContent = `${currentLength}/${maxLength}`;
+                const middleCountElement = document.getElementById('middleCount');
+                middleCountElement.textContent = `${currentLength}/${maxLength}`;
                 validateInputLength(textMiddle, maxLength, 'textMiddleError');
             });
             textRight.addEventListener('input', () => updateCharCount(textRight, rightCount, 12));
@@ -752,7 +753,6 @@
                 setLoading(true);
                 showStatus('');
             
-                // Create data object directly instead of using FormData to ensure correct field mapping
                 var data = {
                     action: action,
                     token: localStorage.getItem('token'),
@@ -763,7 +763,7 @@
                 if (designType.value === '超荐牌位') {
                     data.yangshang1 = document.getElementById('yangshang1').value || '';
                     data.yangshang2 = document.getElementById('yangshang2').value || '';
-                    data.textMiddle = document.getElementById('textMiddle').value || '';  // This ensures middle text is always included
+                    data.textMiddle = document.getElementById('textMiddle').value;  // Remove || '' to prevent empty string default
                     data.address1 = document.getElementById('address1').value || '';
                     data.address2 = document.getElementById('address2').value || '';
                     data.address3 = document.getElementById('address3').value || '';
@@ -771,7 +771,7 @@
                     data.yiguRight = document.getElementById('yiguRight').value || '';
                 } else {
                     data.textLeft = document.getElementById('textLeft').value || '';
-                    data.textMiddle = document.getElementById('textMiddle').value || '';  // This ensures middle text is always included
+                    data.textMiddle = document.getElementById('textMiddle').value;  // Remove || '' to prevent empty string default
                     data.textRight = document.getElementById('textRight').value || '';
                 }
             
@@ -841,19 +841,24 @@
             
                 // Wait for design type change to complete
                 setTimeout(() => {
+                    const textMiddleInput = document.getElementById('textMiddle');
                     if (result.designType === '超荐牌位') {
                         document.getElementById('yangshang1').value = result.yangshang1 || '';
                         document.getElementById('yangshang2').value = result.yangshang2 || '';
-                        // Explicitly set textMiddle for 回向至 regardless of design type
-                        document.getElementById('textMiddle').value = result.textMiddle || '';  // Critical fix here
+                        // Ensure textMiddle (回向至) is properly set
+                        textMiddleInput.value = result.textMiddle || '';
                         document.getElementById('address1').value = result.address1 || '';
                         document.getElementById('address2').value = result.address2 || '';
                         document.getElementById('address3').value = result.address3 || '';
                         document.getElementById('yiguLeft').value = result.yiguLeft || '';
                         document.getElementById('yiguRight').value = result.yiguRight || '';
+            
+                        // Update character counter for 回向至
+                        const middleCountElement = document.getElementById('middleCount');
+                        middleCountElement.textContent = `${textMiddleInput.value.length}/12`;
                     } else {
                         document.getElementById('textLeft').value = result.textLeft || '';
-                        document.getElementById('textMiddle').value = result.textMiddle || '';
+                        textMiddleInput.value = result.textMiddle || '';
                         document.getElementById('textRight').value = result.textRight || '';
                     }
             
@@ -861,12 +866,11 @@
                     updateCharCount(yangshang1, yangshang1Count, 28);
                     updateCharCount(yangshang2, yangshang2Count, 28);
                     updateCharCount(textLeft, leftCount, 12);
-                    // Important: Update middle text counter with correct max length based on design type
                     updateCharCount(textMiddle, middleCount, result.designType === '超荐牌位' ? 12 : 24);
                     updateCharCount(textRight, rightCount, 12);
                     updateCharCount(yiguLeft, yiguLeftCount, 21);
                     updateCharCount(yiguRight, yiguRightCount, 21);
-                    
+            
                     if (result.designType === '超荐牌位') {
                         updateAddressCharCount(address1, address1Count);
                         updateAddressCharCount(address2, address2Count);
@@ -876,7 +880,7 @@
                     validateInputs();
                 }, 0);
             }
-
+            
            function searchSheet() {
                var searchTerm = searchInput.value.trim();
                if (searchTerm.length > 0) {
