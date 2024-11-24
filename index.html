@@ -1035,18 +1035,21 @@
        function searchSheet() {
             var searchTerm = searchInput.value.trim();
             
+            // Always clear the search results dropdown first
+            searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+            searchResults.style.display = 'none';
+            
             if (searchTerm.length > 0) {
                 jsonp(_0x3c4d + '?action=search&term=' + encodeURIComponent(searchTerm) + '&token=' + localStorage.getItem('token'), function(response) {
-                    if (response.success && response.results) {
-                        // Clear previous results first
-                        searchResults.innerHTML = '<option value="">选择搜索结果</option>';
-                        
-                        // Only add results that actually contain the search term
-                        response.results.forEach(function(result) {
-                            // Convert all relevant fields to lowercase for case-insensitive comparison
-                            var searchTermLower = searchTerm.toLowerCase();
-                            var resultString = [
-                                result.name,
+                    // Clear again before processing new results to prevent any race conditions
+                    searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+                    
+                    if (response.success && response.results && Array.isArray(response.results)) {
+                        // Filter results client-side to ensure exact match with search term
+                        const filteredResults = response.results.filter(result => {
+                            const searchTermLower = searchTerm.toLowerCase();
+                            const searchableFields = [
+                                result.name || '',
                                 result.textLeft || '',
                                 result.yangshang1 || '',
                                 result.yangshang2 || '',
@@ -1057,34 +1060,49 @@
                                 result.address3 || '',
                                 result.yiguLeft || '',
                                 result.yiguRight || ''
-                            ].join(' ').toLowerCase();
+                            ];
+                            
+                            return searchableFields.some(field => 
+                                field.toLowerCase().includes(searchTermLower)
+                            );
+                        });
         
-                            if (resultString.includes(searchTermLower)) {
+                        if (filteredResults.length > 0) {
+                            filteredResults.forEach(result => {
                                 var option = document.createElement('option');
                                 option.value = JSON.stringify(result);
                                 option.textContent = `${result.name} (${result.displayText}, ${result.date})`;
                                 searchResults.appendChild(option);
-                            }
-                        });
-                        
-                        searchResults.style.display = searchResults.options.length > 1 ? 'block' : 'none';
-                        
-                        if (searchResults.options.length <= 1) {
+                            });
+                            searchResults.style.display = 'block';
+                        } else {
                             showStatus('没有找到匹配的记录', true);
+                            searchResults.style.display = 'none';
                         }
                     } else {
                         if (response.error === 'Invalid or expired token') {
                             localStorage.removeItem('token');
                             showLoginPage();
+                        } else {
+                            showStatus('搜索失败: ' + (response.error || '未知错误'), true);
                         }
-                        showStatus('搜索失败: ' + (response.error || '未知错误'), true);
+                        searchResults.style.display = 'none';
                     }
                 });
             } else {
-                searchResults.style.display = 'none';
-                searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+                // Clear status when search term is empty
+                showStatus('');
             }
         }
+        
+        // Add this event listener to clear results when input is cleared
+        searchInput.addEventListener('input', function(e) {
+            if (!e.target.value.trim()) {
+                searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+                searchResults.style.display = 'none';
+                showStatus('');
+            }
+        });
 
        addToQueueBtn.addEventListener('click', function() {
            submitForm('addToQueue');
