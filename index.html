@@ -1045,7 +1045,7 @@
                     searchResults.innerHTML = '<option value="">选择搜索结果</option>';
                     
                     if (response.success && response.results && Array.isArray(response.results)) {
-                        // Filter results client-side to ensure exact match with search term
+                        // Filter results client-side for substring matching
                         const filteredResults = response.results.filter(result => {
                             const searchTermLower = searchTerm.toLowerCase();
                             const searchableFields = [
@@ -1060,11 +1060,10 @@
                                 result.address3 || '',
                                 result.yiguLeft || '',
                                 result.yiguRight || ''
-                            ];
-                            
-                            return searchableFields.some(field => 
-                                field.toLowerCase().includes(searchTermLower)
-                            );
+                            ].map(field => field.toString().toLowerCase());
+        
+                            // Check if any field contains the search term as a substring
+                            return searchableFields.some(field => field.includes(searchTermLower));
                         });
         
                         if (filteredResults.length > 0) {
