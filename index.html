@@ -530,6 +530,621 @@
    </div>
 
    <script>
+    // Define ChineseConverter globally so it's available to all scripts
+    class ChineseConverter {
+      constructor() {
+        this.loadCompleteMapping();
+        this.initializeRotatedCharacters();
+      }
+    
+      class ChineseConverter {
+          constructor() {
+            this.loadCompleteMapping();
+            this.initializeRotatedCharacters();
+          }
+        
+          initializeRotatedCharacters() {
+            this.rotatedChars = {
+              '(': '︵',
+              ')': '︶',
+              '（': '︵',
+              '）': '︶',
+              '[': '﹇',
+              ']': '﹈',
+              '［': '﹇',
+              '］': '﹈',
+              '{': '︷',
+              '}': '︸',
+              '｛': '︷',
+              '｝': '︸',
+              '⦅': '︹',
+              '⦆': '︺',
+              '「': '﹁',
+              '」': '﹂',
+              '『': '﹃',
+              '』': '﹄',
+              '〈': '︿',
+              '〉': '﹀',
+              '《': '︽',
+              '》': '︾',
+              '〔': '︹',
+              '〕': '︺',
+              '【': '︻',
+              '】': '︼'
+            };
+          }
+        
+          loadCompleteMapping() {
+            this.charMap = {
+              // Numbers and basic characters
+              "零":"零", "壹":"一", "貳":"二", "叁":"三", "肆":"四", "伍":"五",
+              "陸":"六", "柒":"七", "捌":"八", "玖":"九", "拾":"十", "佰":"百",
+              "仟":"千", "萬":"万", "億":"亿", "兆":"兆", "京":"京", "垓":"垓",
+              "秭":"秭", "穰":"穰", "溝":"沟", "澗":"涧", "正":"正", "負":"负",
+        
+              // Additional Personal Names (姓名用字补充)
+              "鎧":"铠", "鏘":"锵", "鑠":"铄", "錡":"铿", "鋕":"锧", "鈞":"钧",
+              "鉦":"钲", "鈺":"钰", "鈴":"铃", "鎮":"镇", "鑫":"鑫", "鋒":"锋",
+              "鋯":"锆", "鑄":"铸", "鈿":"钿", "欽":"钦", "鈁":"钫", "鎂":"镁",
+              "鈇":"斧", "鐸":"铎", "鑲":"镶", "鐫":"镌", "鑾":"銮", "錦":"锦",
+              "鋪":"铺", "鎔":"镕", "鐙":"镫", "鋝":"锊", "鈦":"钛", "鋁":"铝",
+              "銨":"铵", "鈉":"钠", "鎘":"镉", "鋅":"锌", "鋰":"锂", "鈷":"钴",
+        
+              // Noble and Prestigious Name Characters (高贵典雅用字)
+              "瓏":"珑", "璟":"璟", "璽":"玺", "瑗":"瑗", "琛":"琛", "琦":"琦",
+              "琨":"琨", "琪":"琪", "琥":"琥", "琳":"琳", "琴":"琴", "琯":"琯",
+              "琬":"琬", "琰":"琰", "瑛":"莹", "瑜":"瑜", "瑤":"瑶", "瑩":"莹",
+              "瑪":"玛", "瑋":"玮", "瑾":"瑾", "璉":"琏", "璦":"瑷", "璨":"璨",
+              "璞":"璞", "璧":"璧", "璐":"璐", "璜":"璜", "璋":"璋", "璇":"璇",
+        
+              // Virtuous Name Characters (品德用字)
+              "淑":"淑", "雅":"雅", "惠":"惠", "慧":"慧", "敏":"敏", "敬":"敬",
+              "賢":"贤", "德":"德", "澤":"泽", "思":"思", "孝":"孝", "仁":"仁",
+              "禮":"礼", "義":"义", "智":"智", "信":"信", "忠":"忠", "勇":"勇",
+              "毅":"毅", "純":"纯", "良":"良", "謙":"谦", "恆":"恒", "誠":"诚",
+              "正":"正", "軒":"轩", "弘":"弘", "文":"文", "質":"质", "彥":"彦",
+        
+              // Auspicious Name Characters (吉祥用字)
+              "瑞":"瑞", "福":"福", "祥":"祥", "吉":"吉", "慶":"庆", "榮":"荣",
+              "興":"兴", "盛":"盛", "泰":"泰", "昌":"昌", "富":"富", "貴":"贵",
+              "茂":"茂", "昭":"昭", "煥":"焕", "煊":"煊", "炫":"炫", "耀":"耀",
+              "煒":"炜", "熙":"熙", "燦":"灿", "曄":"晔", "曜":"耀", "灃":"沣",
+              "晟":"晟", "旭":"旭", "旺":"旺", "炎":"炎", "煜":"煜", "熾":"炽",
+        
+              // Nature-Based Name Characters (自然用字)
+              "霆":"霆", "震":"震", "雷":"雷", "霄":"霄", "霖":"霖", "霏":"霏",
+              "霙":"霙", "霜":"霜", "霞":"霞", "霽":"霁", "露":"露", "霑":"沾",
+              "雲":"云", "雨":"雨", "雪":"雪", "雯":"雯", "霓":"霓", "暘":"旸",
+              "曦":"曦", "瀚":"瀚", "瀛":"瀛", "瀠":"潆", "灝":"灏", "澤":"泽",
+              "潤":"润", "江":"江", "河":"河", "淮":"淮", "泓":"泓", "洋":"洋",
+        
+              // Company and Organization Name Characters (机构名称用字)
+              "實業":"实业", "控股":"控股", "集團":"集团", "公司":"公司",
+              "企業":"企业", "總部":"总部", "分行":"分行", "銀行":"银行",
+              "證券":"证券", "投資":"投资", "發展":"发展", "商貿":"商贸",
+              "國際":"国际", "科技":"科技", "電子":"电子", "工業":"工业",
+              "製造":"制造", "貿易":"贸易", "進出口":"进出口", "航運":"航运",
+              "物流":"物流", "建設":"建设", "地產":"地产", "建築":"建筑",
+              "礦業":"矿业", "能源":"能源", "化工":"化工", "製藥":"制药",
+              "生物":"生物", "傳媒":"传媒", "廣告":"广告", "文化":"文化",
+              "教育":"教育", "醫療":"医疗", "餐飲":"餐饮", "酒店":"酒店",
+              "旅遊":"旅游", "連鎖":"连锁", "百貨":"百货", "超市":"超市",
+        
+              // Place Name Characters (地名用字)
+              "墾":"垦", "莊":"庄", "埔":"埔", "崗":"岗", "嶺":"岭", "峰":"峰",
+              "壟":"垄", "塢":"坞", "壩":"坝", "堡":"堡", "垣":"垣", "堰":"堰",
+              "壇":"坛", "墩":"墩", "塘":"塘", "堤":"堤", "堋":"堋", "堆":"堆",
+              "塔":"塔", "墟":"墟", "壐":"壐", "墅":"墅", "壕":"壕", "壑":"壑",
+              "圳":"圳", "澗":"涧", "溝":"沟", "濱":"滨", "灣":"湾", "埠":"埠",
+              "鎭":"镇", "邨":"村", "郊":"郊", "郷":"乡", "鄕":"乡", "鎮":"镇",
+        
+              // Historic Place Names (历史地名)
+              "京":"京", "津":"津", "滬":"沪", "渝":"渝", "粵":"粤", "黔":"黔",
+              "陝":"陕", "晉":"晋", "冀":"冀", "豫":"豫", "魯":"鲁", "鄂":"鄂",
+              "湘":"湘", "贛":"赣", "閩":"闽", "浙":"浙", "皖":"皖", "蘇":"苏",
+              "遼":"辽", "吉":"吉", "黑":"黑", "桂":"桂", "蜀":"蜀", "滇":"滇",
+              "藏":"藏", "瓊":"琼", "秦":"秦", "楚":"楚", "燕":"燕", "齊":"齐",
+        
+              // Malaysian and International Chinese Names and Titles
+              // Common Surnames
+              "張":"张", "黃":"黄", "趙":"赵", "蔣":"蒋", "沈":"沈", "韓":"韩",
+              "楊":"杨", "朱":"朱", "秦":"秦", "尤":"尤", "許":"许", "何":"何",
+              "呂":"吕", "施":"施", "孫":"孙", "葉":"叶", "蕭":"萧", "莊":"庄",
+              "董":"董", "余":"余", "蘇":"苏", "李":"李", "林":"林", "陳":"陈",
+              "吳":"吴", "蔡":"蔡", "鄭":"郑", "謝":"谢", "洪":"洪", "郭":"郭",
+              "邱":"邱", "曾":"曾", "廖":"廖", "賴":"赖", "徐":"徐", "周":"周",
+              "江":"江", "劉":"刘", "鄧":"邓", "范":"范", "梁":"梁", "龔":"龚",
+              "歐":"欧", "顏":"颜", "高":"高", "龍":"龙", "潘":"潘", "馮":"冯",
+              "衛":"卫", "褚":"褚", "嚴":"严", "金":"金", "魏":"魏", "陸":"陆",
+              "夏":"夏", "童":"童", "馬":"马", "柳":"柳", "鍾":"钟", "盧":"卢",
+              "丁":"丁", "唐":"唐", "彭":"彭", "曹":"曹", "薛":"薛", "雷":"雷",
+              "賀":"贺", "倪":"倪", "湯":"汤", "田":"田", "方":"方", "石":"石",
+              "熊":"熊", "白":"白", "孟":"孟", "邵":"邵", "閻":"阎", "薄":"薄",
+              "尹":"尹", "姚":"姚", "邢":"邢", "文":"文", "樊":"樊", "韋":"韦",
+              "易":"易", "常":"常", "武":"武", "康":"康", "賈":"贾", "魯":"鲁",
+              "包":"包",
+        
+              // Complex Surnames
+              "歐陽":"欧阳", "司徒":"司徒", "上官":"上官", "皇甫":"皇甫",
+              "軒轅":"轩辕", "夏侯":"夏侯", "尉遲":"尉迟", "司馬":"司马",
+              "諸葛":"诸葛", "東方":"东方", "慕容":"慕容",
+        
+              // Common Given Names
+              "豐":"丰", "亮":"亮", "靈":"灵", "麗":"丽", "芳":"芳", "鳳":"凤",
+              "麟":"麟", "瑞":"瑞", "霞":"霞", "燕":"燕", "娟":"娟", "珠":"珠",
+              "玲":"玲", "豔":"艳", "芬":"芬", "蘭":"兰", "瑜":"瑜", "蓮":"莲",
+              "菊":"菊", "琴":"琴", "雯":"雯", "雪":"雪", "華":"华", "瓊":"琼",
+              "婷":"婷", "諭":"谕", "頤":"颐", "萱":"萱", "嘉":"嘉", "琳":"琳",
+              "懿":"懿", "純":"纯", "寧":"宁", "慧":"慧", "巧":"巧", "美":"美",
+              "玉":"玉", "萍":"萍", "鈺":"钰", "茹":"茹", "榮":"荣", "信":"信",
+              "宇":"宇", "卿":"卿", "怡":"怡", "冰":"冰", "瑩":"莹", "淑":"淑",
+              "貞":"贞", "雁":"雁", "愛":"爱", "瑋":"玮", "詩":"诗", "韻":"韵",
+              "珍":"珍", "翠":"翠", "桂":"桂", "芝":"芝", "凱":"凯", "偉":"伟",
+              "彥":"彦", "傑":"杰", "鵬":"鹏", "濤":"涛", "宏":"宏", "誠":"诚",
+              "毅":"毅", "駿":"骏", "博":"博", "彬":"彬", "昊":"昊", "鑫":"鑫",
+              "灝":"灏", "曄":"晔", "瀚":"瀚", "欽":"钦", "錦":"锦", "璐":"璐",
+              "璋":"璋", "璇":"璇", "璨":"璨", "瓏":"珑", "瑤":"瑶", "瑾":"瑾",
+              "璿":"璿", "琮":"琮", "琬":"琬",
+        
+              // Buddhist and Temple Terms
+              "佛":"佛", "菩":"菩", "薩":"萨", "涅":"涅", "槃":"槃", "僧":"僧",
+              "伽":"伽", "婆":"婆", "羅":"罗", "摩":"摩", "耶":"耶", "輪":"轮",
+              "迦":"迦", "陀":"陀", "衍":"衍", "那":"那", "密":"密", "觀音":"观音",
+              "菩薩":"菩萨", "羅漢":"罗汉", "金剛":"金刚", "淨土":"净土",
+              "彌陀":"弥陀", "彌勒":"弥勒", "般若":"般若", "道場":"道场",
+              "精舍":"精舍", "講堂":"讲堂", "禪堂":"禅堂", "念佛堂":"念佛堂",
+              "香積廚":"香积厨", "法師":"法师", "比丘":"比丘", "尼僧":"尼僧",
+              "居士":"居士", "功德主":"功德主", "佈施":"布施", "皈依":"皈依",
+              "受戒":"受戒", "傳戒":"传戒", "開光":"开光", "灌頂":"灌顶",
+              "加持":"加持", "祈福":"祈福", "消災":"消灾", "祝聖":"祝圣",
+              "超渡":"超渡", "誦經":"诵经", "持咒":"持咒", "打坐":"打坐",
+              "禪修":"禅修", "皈依三寶":"皈依三宝", "南無":"南无",
+              "阿彌陀佛":"阿弥陀佛", "藥師佛":"药师佛", "釋迦牟尼":"释迦牟尼",
+              "大慈大悲":"大慈大悲", "觀世音":"观世音", "地藏王":"地藏王",
+              "文殊師利":"文殊师利", "普賢菩薩":"普贤菩萨", "大威德":"大威德",
+              "金剛手":"金刚手", "觀音亭":"观音亭", "玄天上帝":"玄天上帝",
+              "福德正神":"福德正神", "城隍廟":"城隍庙", "保生大帝":"保生大帝",
+              "天后宮":"天后宫", "地藏殿":"地藏殿", "大雄寶殿":"大雄宝殿",
+              "藥師殿":"药师殿", "大悲殿":"大悲殿", "三寶殿":"三宝殿",
+              "五方佛":"五方佛",
+        
+              // Memorial Tablet Terms
+              "蓮位":"莲位", "神位":"神位", "靈位":"灵位", "長生祿位":"长生禄位",
+              "顯考":"显考", "顯妣":"显妣", "考妣":"考妣", "先考":"先考",
+              "先妣":"先妣", "祖考":"祖考", "祖妣":"祖妣", "歷代":"历代",
+              "祖先":"祖先", "親恩":"亲恩", "永遠":"永远", "懷念":"怀念",
+              "追思":"追思", "追遠":"追远", "追薦":"追荐", "超薦":"超荐",
+              "往生":"往生", "成佛":"成佛", "往生極樂":"往生极乐",
+              "早登極樂":"早登极乐", "蓮登寶座":"莲登宝座",
+              "佛國淨土":"佛国净土", "功德圓滿":"功德圆满",
+              "功德無量":"功德无量", "善緣":"善缘", "冥福":"冥福",
+              "早生淨土":"早生净土", "往生淨土":"往生净土",
+              "靈位永存":"灵位永存", "恭請":"恭请", "謹依":"谨依",
+              "修善":"修善", "修福":"修福", "延生祿位":"延生禄位",
+              "蓮座":"莲座", "陽上蓮位":"阳上莲位", "之靈":"之灵",
+              "懿德流芳":"懿德流芳", "福蔭子孫":"福荫子孙",
+              "流芳百世":"流芳百世", "功德迴向":"功德回向",
+              "功德迴施":"功德回施", "莊嚴淨土":"庄严净土",
+              "往生蓮邦":"往生莲邦", "龕安":"龛安", "安奉":"安奉",
+              "祿位":"禄位",
+        
+              // Address and Location Terms
+              "街道":"街道", "路名":"路名", "巷弄":"巷弄", "號樓":"号楼",
+              "郵遞區號":"邮递区号", "郵編":"邮编", "地址":"地址", "住址":"住址",
+              "通訊處":"通讯处", "聯絡處":"联络处", "辦事處":"办事处",
+              "鄰里":"邻里", "社區":"社区", "大廈":"大厦", 
+              "商業大樓":"商业大楼", "工業區":"工业区", "科技園區":"科技园区",
+              "文化園區":"文化园区", "農業區":"农业区", "住宅區":"住宅区",
+              "商業區":"商业区", "國":"国", "縣":"县", "鄉":"乡", "鎮":"镇",
+              "區":"区", "鄰":"邻", "郵":"邮", "遠":"远", "近":"近", "州":"州",
+              "府":"府", "郡":"郡",
+        
+              // Malaysia-Specific Locations
+              "檳榔嶼":"槟榔屿", "極樂寺":"极乐寺", "升旗山":"升旗山",
+              "檳城":"槟城", "喬治市":"乔治市", "關丹":"关丹", "巴生":"巴生",
+              "麻坡":"麻坡", "新山":"新山", "亞庇":"亚庇", "古晉":"古晋",
+              "詩巫":"诗巫",
+        
+              // Common Phrases and Terms
+              "謹以":"谨以", "敬以":"敬以", "恭以":"恭以", "虔以":"虔以",
+              "誠以":"诚以", "孝以":"孝以", "敬祝":"敬祝", "恭祝":"恭祝",
+              "敬獻":"敬献", "恭獻":"恭献", "薦亡":"荐亡", "薦拔":"荐拔",
+              "解冤":"解冤", "釋結":"释结", "消災":"消灾", "延壽":"延寿",
+              "祈安":"祈安", "祈壽":"祈寿", "祈福":"祈福", "祈願":"祈愿",
+        
+              // Additional Common Characters
+              "裏":"里", "裡":"里", "麵":"面", "讚":"赞", "歎":"叹",
+              "衆":"众", "眾":"众", "鷄":"鸡", "雞":"鸡", "麪":"面",
+              "靦":"腼", "攣":"挛", "欄":"栏", "蘭":"兰", "鸞":"鸾",
+        
+              // Taiwan-Specific Terms and Names
+              "臺灣":"台湾", "臺北":"台北", "臺中":"台中", "臺南":"台南",
+              "高雄":"高雄", "基隆":"基隆", "桃園":"桃园", "新竹":"新竹",
+              "苗栗":"苗栗", "彰化":"彰化", "雲林":"云林", "嘉義":"嘉义",
+              "屏東":"屏东", "宜蘭":"宜兰", "花蓮":"花莲", "臺東":"台东",
+              "澎湖":"澎湖", "金門":"金门", "馬祖":"马祖", "連江":"连江",
+        
+              // Taiwanese Common Words
+              "機車":"机车", "計程車":"计程车", "捷運":"捷运", "公車":"公车",
+              "腳踏車":"脚踏车", "摩托車":"摩托车", "單車":"单车", "電動車":"电动车",
+              "小七":"小七", "便利商店":"便利商店", "夜市":"夜市", "菜市場":"菜市场",
+              "傳統市場":"传统市场", "百貨公司":"百货公司", "士林":"士林",
+              "饒河":"饶河", "寧夏":"宁夏", "華西":"华西", "臨江":"临江",
+              "公館":"公馆", "永康":"永康", "師大":"师大", "通化":"通化",
+              "南機場":"南机场", "景美":"景美", "木柵":"木栅", "龍山寺":"龙山寺",
+        
+              // Taiwanese Food Terms
+              "珍珠奶茶":"珍珠奶茶", "波霸奶茶":"波霸奶茶", "鹹酥雞":"咸酥鸡",
+              "臭豆腐":"臭豆腐", "蚵仔煎":"蚵仔煎", "擔仔麵":"担仔面",
+              "滷肉飯":"卤肉饭", "割包":"割包", "蔥油餅":"葱油饼",
+              "豬血糕":"猪血糕", "大腸包小腸":"大肠包小肠", "潤餅":"润饼",
+              "炒米粉":"炒米粉", "肉圓":"肉圆", "筒仔米糕":"筒仔米糕",
+              "蚵仔麵線":"蚵仔面线", "魷魚羹":"鱿鱼羹", "貢丸":"贡丸",
+              "芋圓":"芋圆", "愛玉":"爱玉", "仙草":"仙草", "粉圓":"粉圆",
+              "白木耳":"白木耳", "剉冰":"剉冰", "豆花":"豆花",
+        
+              // Taiwanese Business Terms
+              "股份有限公司":"股份有限公司", "責任有限公司":"责任有限公司",
+              "無限公司":"无限公司", "兩岸":"两岸", "進出口":"进出口",
+              "貿易":"贸易", "加工出口區":"加工出口区", "科學園區":"科学园区",
+              "工業區":"工业区", "加工區":"加工区", "保稅區":"保税区",
+              "自由貿易港區":"自由贸易港区", "農業科技園區":"农业科技园区",
+              "生物科技園區":"生物科技园区", "軟體園區":"软体园区",
+        
+              // Taiwanese Educational Terms
+              "國立":"国立", "私立":"私立", "市立":"市立", "縣立":"县立",
+              "國民小學":"国民小学", "國民中學":"国民中学", "高級中學":"高级中学",
+              "職業學校":"职业学校", "專科學校":"专科学校", "大學":"大学",
+              "研究所":"研究所", "補習班":"补习班", "安親班":"安亲班",
+              "幼稚園":"幼稚园", "托兒所":"托儿所", "才藝班":"才艺班",
+        
+              // Common Traditional Phrases
+              "學而時習之":"学而时习之", "溫故知新":"温故知新", "為學日益":"为学日益",
+              "從善如流":"从善如流", "循序漸進":"循序渐进", "守株待兔":"守株待兔",
+              "亡羊補牢":"亡羊补牢", "揠苗助長":"揠苗助长", "囫圇吞棗":"囫囵吞枣",
+              "老馬識途":"老马识途", "班門弄斧":"班门弄斧", "仁者樂山":"仁者乐山",
+              "智者樂水":"智者乐水", "見賢思齊":"见贤思齐", "見不賢內自省":"见不贤内自省",
+              "讀書破萬卷":"读书破万卷", "下筆如有神":"下笔如有神",
+              "學海無涯":"学海无涯", "歲寒三友":"岁寒三友",
+        
+              // Modern Technology Terms
+              "軟體":"软体", "硬體":"硬体", "作業系統":"作业系统",
+              "資料庫":"数据库", "網際網路":"互联网", "電子郵件":"电子邮件",
+              "手機":"手机", "平板電腦":"平板电脑", "筆記型電腦":"笔记型电脑",
+              "雲端":"云端", "儲存":"储存", "備份":"备份", "記憶體":"内存",
+              "硬碟":"硬盘", "螢幕":"屏幕", "滑鼠":"鼠标", "鍵盤":"键盘",
+              "印表機":"打印机", "掃描器":"扫描仪", "網路":"网络",
+              "伺服器":"服务器", "防火牆":"防火墙", "病毒":"病毒",
+              "程式設計":"程序设计", "資訊安全":"信息安全",
+        
+              // Additional Traditional-Simplified Pairs
+              "髮":"发", "溼":"湿", "甚麼":"什么", "麽":"么", "歲":"岁",
+              "衝":"冲", "齊":"齐", "藝":"艺", "腳":"脚", "塊":"块",
+              "勳":"勋", "歡":"欢", "鄉":"乡", "況":"况", "凱":"凯",
+              "歷":"历", "厲":"厉", "曆":"历", "豐":"丰", "睏":"困",
+              "紮":"扎", "雜":"杂", "虛":"虚", "係":"系", "藥":"药",
+              "卻":"却", "廢":"废", "棄":"弃", "啟":"启", "瘦":"瘦",
+              "奪":"夺", "贊":"赞", "滯":"滞", "凍":"冻", "慾":"欲",
+              "謠":"谣", "謊":"谎", "謝":"谢", "謂":"谓", "謹":"谨",
+              "謙":"谦", "講":"讲", "謎":"谜", "謫":"谪", "謬":"谬",
+              "謗":"谤", "謝":"谢", "謠":"谣", "謨":"谟", "謫":"谪",
+              "謭":"谫", "謳":"讴", "謹":"谨", "謾":"谩", "謿":"谥",
+              "譁":"哗", "譜":"谱", "譙":"谯", "譚":"谭", "譯":"译",
+              "議":"议", "譲":"让", "護":"护", "譽":"誉", "讀":"读",
+              "讎":"雠", "讒":"谗", "讓":"让", "讕":"谰", "讖":"谶",
+              "讚":"赞", "讜":"谠", "讞":"谳", "谿":"溪", "諢":"诨",
+              "晝":"昼", "匯":"汇", "滙":"汇", "會":"会", "萬":"万"
+            };
+        
+            // Pre-compile regular expressions for better performance
+            const charPattern = Object.keys(this.charMap).join('|');
+            this.charRegex = new RegExp(`(${charPattern})`, 'g');
+        
+            const rotatedPattern = Object.keys(this.rotatedChars).join('|');
+            this.rotatedRegex = new RegExp(`(${rotatedPattern})`, 'g');
+          }
+        
+          // Core conversion methods
+          convert(text) {
+            if (!text) return text;
+            return text.replace(this.charRegex, match => this.charMap[match] || match);
+          }
+        
+          rotateChars(text) {
+            if (!text) return text;
+            return text.replace(this.rotatedRegex, match => this.rotatedChars[match] || match);
+          }
+        
+          // Address specific conversion with rotated characters
+          convertAddress(text) {
+            if (!text) return text;
+            
+            // First convert traditional to simplified
+            let converted = this.convert(text);
+            
+            // Then handle rotation for Chinese text sections
+            return converted.replace(/([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g, 
+              (match, open, content, close) => {
+                return this.rotatedChars[open] + content + this.rotatedChars[close];
+            });
+          }
+        
+          // Form data conversion with special handling
+          convertFormData(data) {
+            // Standard fields
+            const standardFields = [
+              'name', 'textLeft', 'textMiddle', 'textRight',
+              'yangshang1', 'yangshang2', 'yiguLeft', 'yiguRight'
+            ];
+            
+            // Address fields
+            const addressFields = ['address1', 'address2', 'address3'];
+        
+            // Convert standard fields
+            for (const field of standardFields) {
+              if (data[field]) {
+                data[field] = this.convert(data[field]);
+              }
+            }
+        
+            // Convert address fields with rotation
+            for (const field of addressFields) {
+              if (data[field]) {
+                data[field] = this.convertAddress(data[field]);
+              }
+            }
+        
+            return data;
+          }
+        
+          // DOM element conversion
+          convertElement(element) {
+            const walker = document.createTreeWalker(
+              element,
+              NodeFilter.SHOW_TEXT,
+              null,
+              false
+            );
+        
+            let node;
+            while (node = walker.nextNode()) {
+              const isAddressField = node.parentElement?.closest('input[id^="address"]');
+              node.nodeValue = isAddressField ? 
+                this.convertAddress(node.nodeValue) : 
+                this.convert(node.nodeValue);
+            }
+          }
+        
+          // Placeholder text conversion
+          convertPlaceholders(formElement) {
+            const elements = formElement.querySelectorAll('input[placeholder], textarea[placeholder]');
+            elements.forEach(element => {
+              const isAddressField = element.id?.startsWith('address');
+              element.placeholder = isAddressField ? 
+                this.convertAddress(element.placeholder) : 
+                this.convert(element.placeholder);
+            });
+          }
+        
+          // Utility methods
+          containsChinese(text) {
+            return /[\u4e00-\u9fff]/.test(text);
+          }
+        
+          isTraditionalCharacter(char) {
+            return this.charMap.hasOwnProperty(char);
+          }
+        }
+        
+        // Create global instance right after class definition
+        const converter = new ChineseConverter();
+    }
+    
+    // Create global instance that other scripts can access
+    window.chineseConverter = new ChineseConverter();
+    </script>
+    
+    <!-- THEN ADD THIS INITIALIZATION SCRIPT -->
+    <script>
+    // Initialize converter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const converter = window.chineseConverter;
+    
+      // Convert existing text content
+      converter.convertElement(document.body);
+      
+      // Convert form placeholders
+      const form = document.getElementById('pdfForm');
+      if (form) {
+        converter.convertPlaceholders(form);
+      }
+    
+      // Real-time conversion for all text inputs
+      const inputFields = document.querySelectorAll('input[type="text"]');
+      inputFields.forEach(field => {
+        field.addEventListener('input', (e) => {
+          const value = e.target.value;
+          if (!value) return;
+          
+          const converted = field.id.startsWith('address') ? 
+            converter.convertAddress(value) : 
+            converter.convert(value);
+          
+          if (converted !== value) {
+            const cursorPos = e.target.selectionStart;
+            e.target.value = converted;
+            e.target.setSelectionRange(cursorPos, cursorPos);
+          }
+        });
+      });
+    
+      // Modify the original submitForm to use converter
+      const originalSubmitForm = window.submitForm;
+      window.submitForm = function(action) {
+        if (!validateInputs()) {
+          showStatus('请检查输入字数限制', true);
+          return;
+        }
+        setLoading(true);
+        showStatus('');
+    
+        var data = {
+          action: action,
+          token: localStorage.getItem('token'),
+          name: converter.convert(document.getElementById('name').value),
+          designType: document.getElementById('designType').value
+        };
+    
+        if (designType.value === '超荐牌位') {
+          data = {
+            ...data,
+            yangshang1: converter.convert(yangshang1.value || ''),
+            yangshang2: converter.convert(yangshang2.value || ''),
+            textMiddle: converter.convert(chaojianMiddle.value),
+            address1: converter.convertAddress(address1.value || ''),
+            address2: converter.convertAddress(address2.value || ''),
+            address3: converter.convertAddress(address3.value || ''),
+            yiguLeft: converter.convert(yiguLeft.value || ''),
+            yiguRight: converter.convert(yiguRight.value || '')
+          };
+        } else {
+          data = {
+            ...data,
+            textLeft: converter.convert(textLeft.value || ''),
+            textMiddle: converter.convert(qifuMiddle.value),
+            textRight: converter.convert(textRight.value || '')
+          };
+        }
+    
+        var queryString = Object.keys(data)
+          .map(key => key + '=' + encodeURIComponent(data[key]))
+          .join('&');
+    
+        jsonp(_0x3c4d + '?' + queryString, function(response) {
+          if (response.success) {
+            showStatus(converter.convert(response.message));
+            if (response.pdfBase64) {
+              try {
+                var byteCharacters = atob(response.pdfBase64);
+                var byteNumbers = new Array(byteCharacters.length);
+                for (var i = 0; i < byteCharacters.length; i++) {
+                  byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                var byteArray = new Uint8Array(byteNumbers);
+                var blob = new Blob([byteArray], {type: 'application/pdf'});
+                var blobUrl = URL.createObjectURL(blob);
+                
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                  var link = document.createElement('a');
+                  link.href = blobUrl;
+                  link.download = '祈福牌.pdf';
+                  link.click();
+                } else {
+                  window.open(blobUrl, '_blank');
+                }
+              } catch (error) {
+                console.error("Error creating PDF blob:", error);
+                showStatus(converter.convert('创建 PDF 时出错: ' + error.message), true);
+              }
+            }
+          } else {
+            if (response.error === 'Invalid or expired token') {
+              localStorage.removeItem('token');
+              showLoginPage();
+            }
+            showStatus(converter.convert('发生错误: ' + (response.error || '未知错误')), true);
+          }
+          setLoading(false);
+        });
+      };
+    
+      // Enhance search functionality
+      const searchInput = document.getElementById('search');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const value = e.target.value;
+          if (!value) {
+            const searchResults = document.getElementById('searchResults');
+            if (searchResults) {
+              searchResults.innerHTML = '<option value="">选择搜索结果</option>';
+              searchResults.style.display = 'none';
+            }
+            showStatus('');
+            return;
+          }
+    
+          const converted = converter.convert(value);
+          if (converted !== value) {
+            const cursorPos = e.target.selectionStart;
+            e.target.value = converted;
+            e.target.setSelectionRange(cursorPos, cursorPos);
+          }
+    
+          // Preserve the original search functionality
+          if (window.searchSheet) {
+            window.searchSheet();
+          }
+        });
+      }
+    
+      // Handle login form
+      const loginForm = document.getElementById('loginForm');
+      if (loginForm) {
+        const originalSubmit = loginForm.onsubmit;
+        loginForm.onsubmit = function(e) {
+          e.preventDefault();
+          const username = converter.convert(document.getElementById('username').value);
+          const password = converter.convert(document.getElementById('password').value);
+          
+          jsonp(_0x3c4d + '?action=login&username=' + 
+            encodeURIComponent(username) + 
+            '&password=' + encodeURIComponent(password), 
+            function(response) {
+              if (response.success) {
+                localStorage.setItem('token', response.token);
+                showMainPage();
+              } else {
+                const loginMessage = document.getElementById('loginMessage');
+                if (loginMessage) {
+                  loginMessage.textContent = converter.convert('登录失败: ' + response.error);
+                  loginMessage.className = 'text-center text-sm text-red-600';
+                }
+              }
+          });
+        };
+      }
+    
+      // Convert search results
+      const searchResults = document.getElementById('searchResults');
+      if (searchResults) {
+        const originalChange = searchResults.onchange;
+        searchResults.onchange = function() {
+          try {
+            const selectedValue = this.value;
+            if (selectedValue) {
+              const result = JSON.parse(selectedValue);
+              if (result) {
+                // Convert any traditional characters in the result
+                Object.keys(result).forEach(key => {
+                  if (typeof result[key] === 'string') {
+                    result[key] = converter.convert(result[key]);
+                  }
+                });
+                if (window.fillForm) {
+                  window.fillForm(result);
+                }
+              }
+            }
+          } catch (error) {
+            console.error('Error processing search result:', error);
+            showStatus(converter.convert('处理搜索结果时出错'), true);
+          }
+        };
+      }
+    });
+    </script>
+    
+   <script>
     (function() {
         var _0x5f4e3d = "PLACEHOLDER_STRING";
         var _0x2a1b = function(s) {
