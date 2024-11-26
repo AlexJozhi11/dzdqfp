@@ -44,7 +44,7 @@
 
     .tooltip .tooltiptext {
         visibility: hidden;
-        min-width: 200px;
+        min-width: 220px;
         max-width: 280px;
         background-color: #4B5563;
         color: #fff;
@@ -62,6 +62,7 @@
         font-size: 0.875rem;
         line-height: 1.4;
         white-space: normal;
+        word-break: keep-all;
     }
 
     .tooltip .tooltiptext::before {
@@ -213,27 +214,25 @@
         }
     
         .tooltip .tooltiptext {
-            position: absolute;
             min-width: 200px;
-            max-width: 260px;
+            max-width: calc(100vw - 40px);
             left: auto;
-            right: -10px;
+            right: 0;
             top: auto;
-            bottom: 125%;
+            bottom: 100%;
+            margin-bottom: 10px;
             transform: none;
             text-align: left;
-            padding: 0.75rem;
-            white-space: normal;
-            font-size: 0.813rem;
+            line-height: 1.4;
         }
     
         .tooltip .tooltiptext::before {
             top: auto;
-            bottom: -12px;
+            bottom: -10px;
             left: auto;
             right: 10px;
+            transform: rotate(180deg);
             border-color: #4B5563 transparent transparent transparent;
-            border-width: 6px;
         }
     }
     
@@ -253,9 +252,9 @@
         
         .tooltip .tooltiptext {
             min-width: 180px;
-            max-width: calc(100vw - 60px);
-            font-size: 0.75rem;
-            right: -5px;
+            font-size: 0.813rem;
+            right: -20px;
+            padding: 0.75rem;
         }
     }
     
@@ -273,6 +272,22 @@
             display: block;
             visibility: visible;
             opacity: 1;
+            right: -10px;
+            font-size: 0.813rem;
+            line-height: 1.4;
+            text-align: left;
+            word-break: keep-all;
+        }
+    }
+
+    /* Ensure tooltip visibility for short content */
+    @media (max-width: 380px) {
+        .tooltip .tooltiptext {
+            min-width: 170px;
+            max-width: calc(100vw - 30px);
+            white-space: normal;
+            word-break: keep-all;
+            right: -15px;
         }
     }
     </style>
@@ -766,6 +781,28 @@
             }
         }
 
+        function updateYangshangFontSize(yangshang1, yangshang2) {
+            // Get current values
+            const text1 = yangshang1.value;
+            const text2 = yangshang2.value;
+            
+            // Get maximum length between both texts
+            const maxLength = Math.max(text1.length, text2.length);
+            
+            // Determine font size
+            if (maxLength <= 14) {
+                yangshang1.style.fontSize = '34.8px';
+                yangshang2.style.fontSize = '34.8px';
+                yangshang1.classList.add('short-text');
+                yangshang2.classList.add('short-text');
+            } else {
+                yangshang1.style.fontSize = '17.4375px';
+                yangshang2.style.fontSize = '17.4375px';
+                yangshang1.classList.remove('short-text');
+                yangshang2.classList.remove('short-text');
+            }
+        }
+        
         // Event listeners for input fields
         textLeft.addEventListener('input', () => updateCharCount(textLeft, leftCount, 12));
         yangshang1.addEventListener('input', function() {
@@ -773,8 +810,7 @@
             const currentLength = yangshang1.value.length;
             updateCharCount(yangshang1, yangshang1Count, maxLength);
             
-            // Enable/disable yangshang2 based on yangshang1 length
-            if (currentLength <= 25) { // Changed from 26 to 25 to ensure at least 3 chars are filled
+            if (currentLength <= 25) {
                 yangshang2.disabled = true;
                 yangshang2.value = '';
                 updateCharCount(yangshang2, yangshang2Count, maxLength);
@@ -785,8 +821,14 @@
                 yangshang2.classList.remove('bg-gray-100');
                 yangshang2.placeholder = '请输入阳上2';
             }
+            
+            updateYangshangFontSize(yangshang1, yangshang2);
         });
-        yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
+        
+        yangshang2.addEventListener('input', function() {
+            updateCharCount(yangshang2, yangshang2Count, 28);
+            updateYangshangFontSize(yangshang1, yangshang2);
+        });
         qifuMiddle.addEventListener('input', () => updateCharCount(qifuMiddle, qifuMiddleCount, 24));
         chaojianMiddle.addEventListener('input', () => {
             if (containsNumbers(chaojianMiddle.value)) {
