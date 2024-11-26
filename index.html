@@ -773,23 +773,26 @@
 
         function updateYangshangFontSize(yangshang1, yangshang2) {
             // Get current values
-            const text1 = yangshang1.value;
-            const text2 = yangshang2.value;
+            const text1 = yangshang1.value.trim();
+            const text2 = yangshang2.value.trim();
             
-            // Get maximum length between both texts
-            const maxLength = Math.max(text1.length, text2.length);
-            
-            // Determine font size
-            if (maxLength <= 14) {
-                yangshang1.style.fontSize = '34.8px';
-                yangshang2.style.fontSize = '34.8px';
-                yangshang1.classList.add('short-text');
-                yangshang2.classList.add('short-text');
-            } else {
-                yangshang1.style.fontSize = '17.4375px';
-                yangshang2.style.fontSize = '17.4375px';
-                yangshang1.classList.remove('short-text');
-                yangshang2.classList.remove('short-text');
+            // If either field has text, determine size based on the longer text
+            if (text1 || text2) {
+                const maxLength = Math.max(text1.length, text2.length);
+                
+                // Apply the same font size to both fields based on maxLength
+                const useLargeFont = maxLength <= 14;
+                
+                // Set font size and class for both fields
+                [yangshang1, yangshang2].forEach(field => {
+                    if (useLargeFont) {
+                        field.style.fontSize = '34.8px';
+                        field.classList.add('short-text');
+                    } else {
+                        field.style.fontSize = '17.4375px';
+                        field.classList.remove('short-text');
+                    }
+                });
             }
         }
         
@@ -812,12 +815,12 @@
                 yangshang2.placeholder = '请输入阳上2';
             }
             
-            updateYangshangFontSize(yangshang1, yangshang2);
+            updateYangshangFontSize(yangshang1, yangshang2);  // Always update font size
         });
         
         yangshang2.addEventListener('input', function() {
             updateCharCount(yangshang2, yangshang2Count, 28);
-            updateYangshangFontSize(yangshang1, yangshang2);
+            updateYangshangFontSize(yangshang1, yangshang2);  // Always update font size
         });
         qifuMiddle.addEventListener('input', () => updateCharCount(qifuMiddle, qifuMiddleCount, 24));
         chaojianMiddle.addEventListener('input', () => {
