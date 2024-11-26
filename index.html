@@ -344,7 +344,7 @@
                                     <span class="tooltiptext">
                                         重要标识信息：<br/>
                                         - 用于日后查询和修改<br/>
-                                        - 建议使用易记的名字或编号<br/>
+                                        - 建议用易记的名字/编号<br/>
                                         - 可包含中英文和数字
                                     </span>
                                 </span>
@@ -384,7 +384,12 @@
                                 <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">12字以内</span>
+                                    <span class="tooltiptext">
+                                        左右栏说明：<br/>
+                                        - 最多12个字<br/>
+                                        - 需同时填写左右栏<br/>
+                                        - 亦可都留空
+                                    </span>
                                 </span>
                             </div>
                             <span class="char-count" id="leftCount">0/12</span>
@@ -392,14 +397,19 @@
                         <input id="textLeft" name="textLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
                         <div class="error-message" id="textLeftError"></div>
                     </div>
-
+                
                     <div class="input-group">
                         <div class="label-container mb-1">
                             <div class="label-left">
                                 <label for="qifuMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" id="middleTooltip">24字以内</span>
+                                    <span class="tooltiptext">
+                                        中间栏说明：<br/>
+                                        - 必填项，最多24个字<br/>
+                                        - 超过12个字自动分成两栏<br/>
+                                        - 可独立使用
+                                    </span>
                                 </span>
                             </div>
                             <span class="char-count" id="qifuMiddleCount">0/24</span>
@@ -407,14 +417,19 @@
                         <input id="qifuMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
                         <div class="error-message" id="qifuMiddleError"></div>
                     </div>
-
+                
                     <div class="input-group">
                         <div class="label-container mb-1">
                             <div class="label-left">
                                 <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">12字以内</span>
+                                    <span class="tooltiptext">
+                                        左右栏说明：<br/>
+                                        - 最多12个字<br/>
+                                        - 需同时填写左右栏<br/>
+                                        - 亦可都留空
+                                    </span>
                                 </span>
                             </div>
                             <span class="char-count" id="rightCount">0/12</span>
@@ -431,11 +446,14 @@
                             <div class="label-container mb-1">
                                 <div class="label-left">
                                     <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
-                                    <span class="tooltiptext">
-                                        阳上1说明：<br/>
-                                        - 最多28个字<br/>
-                                        - 需填写26字以上才能启用阳上2<br/>
-                                        - 建议填写完整姓名
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            阳上1说明：<br/>
+                                            - 最多28个字<br/>
+                                            - 需填写至少26字才能启用阳上2<br/>
+                                            - 建议填写完整姓名
+                                        </span>
                                     </span>
                                 </div>
                                 <span class="char-count" id="yangshang1Count">0/28</span>
@@ -443,71 +461,89 @@
                             <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
                             <div class="error-message" id="yangshang1Error"></div>
                         </div>
-
+                
                         <div class="input-group">
                             <div class="label-container mb-1">
                                 <div class="label-left">
                                     <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
-                                    <span class="tooltiptext">
-                                        阳上2说明：<br/>
-                                        - 仅在阳上1填写26字以上时可用<br/>
-                                        - 最多28个字<br/>
-                                        - 可选填写，非必填项
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            阳上2说明：<br/>
+                                            - 需阳上1填写26字以上才可用<br/>
+                                            - 最多28个字<br/>
+                                            - 可选填写，非必填
+                                        </span>
                                     </span>
                                 </div>
                                 <span class="char-count" id="yangshang2Count">0/28</span>
                             </div>
-                            <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2">
-                           <div class="error-message" id="yangshang2Error"></div>
-                       </div>
-                   </div>
-
-                   <div class="grid grid-cols-3 gap-4 mt-4">
-                       <div class="input-group">
-                           <div class="label-container mb-1">
-                               <div class="label-left">
-                                   <label for="yiguLeft" class="text-sm font-medium text-gray-700">左侧已故名字</label>
-                                   <span class="tooltip">
-                                       <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">21字以内</span>
-                                   </span>
-                               </div>
-                               <span class="char-count" id="yiguLeftCount">0/21</span>
-                           </div>
-                           <input id="yiguLeft" name="yiguLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左侧已故名字">
-                           <div class="error-message" id="yiguLeftError"></div>
-                       </div>
-
-                       <div class="input-group">
-                           <div class="label-container mb-1">
-                               <div class="label-left">
-                                   <label for="chaojianMiddle" class="text-sm font-medium text-gray-700">回向至</label>
-                                   <span class="tooltip">
-                                       <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">12字以内</span>
-                                   </span>
-                               </div>
-                               <span class="char-count" id="chaojianMiddleCount">0/12</span>
-                           </div>
-                           <input id="chaojianMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
-                           <div class="error-message" id="chaojianMiddleError"></div>
-                       </div>
-
-                       <div class="input-group">
-                           <div class="label-container mb-1">
-                               <div class="label-left">
-                                   <label for="yiguRight" class="text-sm font-medium text-gray-700">右侧已故名字</label>
-                                   <span class="tooltip">
-                                       <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">21字以内</span>
-                                   </span>
-                               </div>
-                               <span class="char-count" id="yiguRightCount">0/21</span>
-                           </div>
-                           <input id="yiguRight" name="yiguRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右侧已故名字">
-                           <div class="error-message" id="yiguRightError"></div>
-                       </div>
-                   </div>
+                            <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2" disabled>
+                            <div class="error-message" id="yangshang2Error"></div>
+                        </div>
+                    </div>
+                
+                    <div class="grid grid-cols-3 gap-4 mt-4">
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yiguLeft" class="text-sm font-medium text-gray-700">左侧已故名字</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            已故者信息：<br/>
+                                            - 仅可输入中文字符<br/>
+                                            - 最多21个字<br/>
+                                            - 左右两栏可独立使用
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yiguLeftCount">0/21</span>
+                            </div>
+                            <input id="yiguLeft" name="yiguLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左侧已故名字">
+                            <div class="error-message" id="yiguLeftError"></div>
+                        </div>
+                
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="chaojianMiddle" class="text-sm font-medium text-gray-700">回向至</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            回向至说明：<br/>
+                                            - 必填项<br/>
+                                            - 最多12个字<br/>
+                                            - 不可输入数字
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="chaojianMiddleCount">0/12</span>
+                            </div>
+                            <input id="chaojianMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
+                            <div class="error-message" id="chaojianMiddleError"></div>
+                        </div>
+                
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yiguRight" class="text-sm font-medium text-gray-700">右侧已故名字</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            已故者信息：<br/>
+                                            - 仅可输入中文字符<br/>
+                                            - 最多21个字<br/>
+                                            - 左右两栏可独立使用
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yiguRightCount">0/21</span>
+                            </div>
+                            <input id="yiguRight" name="yiguRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右侧已故名字">
+                            <div class="error-message" id="yiguRightError"></div>
+                        </div>
+                    </div>
 
                    <div class="grid grid-cols-3 gap-4 mt-4">
                        <div class="input-group">
