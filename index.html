@@ -771,34 +771,16 @@
             }
         }
 
-        function updateYangshangFontSize(yangshang1, yangshang2) {
-            // Get current values
-            const text1 = yangshang1.value.trim();
-            const text2 = yangshang2.value.trim();
-            
-            // If either field has text, determine size based on the longer text
-            if (text1 || text2) {
-                const maxLength = Math.max(text1.length, text2.length);
-                
-                // Always use small font (17.4375px) if either text is longer than 14 chars
-                const shouldUseLargeFont = maxLength <= 14 && (!text2 || text2.length <= 14) && (!text1 || text1.length <= 14);
-                
-                // Apply same size to both fields even if one is empty
-                [yangshang1, yangshang2].forEach(field => {
-                    if (shouldUseLargeFont) {
-                        field.classList.add('short-text');
-                        field.style.fontSize = '34.8px';
-                    } else {
-                        field.classList.remove('short-text');
-                        field.style.fontSize = '17.4375px';
-                    }
-                });
+        function determineYangshangFontSize(text1, text2) {
+            const lengths = [
+                text1 ? text1.length : 0,
+                text2 ? text2.length : 0
+            ];
+            const maxLength = Math.max(...lengths);
+            if (maxLength <= 14) {
+                return '34.8px';  // Large font for short texts
             } else {
-                // Reset both fields if both are empty
-                [yangshang1, yangshang2].forEach(field => {
-                    field.classList.remove('short-text');
-                    field.style.fontSize = '17.4375px';
-                });
+                return '17.4375px';  // Small font for longer texts
             }
         }
         
@@ -821,12 +803,33 @@
                 yangshang2.placeholder = '请输入阳上2';
             }
             
-            updateYangshangFontSize(yangshang1, yangshang2);  // Always update font size
+            // Apply font size based on maximum length
+            const fontSize = determineYangshangFontSize(yangshang1.value, yangshang2.value);
+            yangshang1.style.fontSize = fontSize;
+            yangshang2.style.fontSize = fontSize;
+            if (fontSize === '34.8px') {
+                yangshang1.classList.add('short-text');
+                yangshang2.classList.add('short-text');
+            } else {
+                yangshang1.classList.remove('short-text');
+                yangshang2.classList.remove('short-text');
+            }
         });
         
         yangshang2.addEventListener('input', function() {
             updateCharCount(yangshang2, yangshang2Count, 28);
-            updateYangshangFontSize(yangshang1, yangshang2);  // Always update font size
+            
+            // Apply font size based on maximum length
+            const fontSize = determineYangshangFontSize(yangshang1.value, yangshang2.value);
+            yangshang1.style.fontSize = fontSize;
+            yangshang2.style.fontSize = fontSize;
+            if (fontSize === '34.8px') {
+                yangshang1.classList.add('short-text');
+                yangshang2.classList.add('short-text');
+            } else {
+                yangshang1.classList.remove('short-text');
+                yangshang2.classList.remove('short-text');
+            }
         });
         qifuMiddle.addEventListener('input', () => updateCharCount(qifuMiddle, qifuMiddleCount, 24));
         chaojianMiddle.addEventListener('input', () => {
