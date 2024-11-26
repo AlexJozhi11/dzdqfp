@@ -44,23 +44,24 @@
 
     .tooltip .tooltiptext {
         visibility: hidden;
-        width: 180px;
+        min-width: 200px;
+        max-width: 280px;
         background-color: #4B5563;
         color: #fff;
-        text-align: center;
+        text-align: left;
         border-radius: 0.375rem;
-        padding: 0.5rem;
+        padding: 0.75rem;
         position: absolute;
-        
+        z-index: 50;
         left: 150%;
         top: 50%;
         transform: translateY(-50%);
         opacity: 0;
         transition: opacity 0.3s;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        font-size: 0.75rem;
-        line-height: 1.25;
-        white-space: nowrap;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        white-space: normal;
     }
 
     .tooltip .tooltiptext::before {
@@ -69,7 +70,7 @@
         top: 50%;
         right: 100%;
         transform: translateY(-50%);
-        border-width: 5px;
+        border-width: 6px;
         border-style: solid;
         border-color: transparent #4B5563 transparent transparent;
     }
@@ -212,18 +213,27 @@
         }
     
         .tooltip .tooltiptext {
+            position: absolute;
+            min-width: 200px;
+            max-width: 260px;
             left: auto;
-            right: -5px;
-            top: -35px;
+            right: -10px;
+            top: auto;
+            bottom: 125%;
             transform: none;
+            text-align: left;
+            padding: 0.75rem;
+            white-space: normal;
+            font-size: 0.813rem;
         }
     
         .tooltip .tooltiptext::before {
             top: auto;
-            bottom: -8px;
+            bottom: -12px;
             left: auto;
-            right: 8px;
-            transform: rotate(135deg);
+            right: 10px;
+            border-color: #4B5563 transparent transparent transparent;
+            border-width: 6px;
         }
     }
     
@@ -240,6 +250,13 @@
         input, select, button {
             font-size: 0.875rem !important;
         }
+        
+        .tooltip .tooltiptext {
+            min-width: 180px;
+            max-width: calc(100vw - 60px);
+            font-size: 0.75rem;
+            right: -5px;
+        }
     }
     
     /* Touch device optimizations */
@@ -254,6 +271,8 @@
         
         .tooltip:active .tooltiptext {
             display: block;
+            visibility: visible;
+            opacity: 1;
         }
     }
     </style>
@@ -304,7 +323,13 @@
                                 <label for="search" class="text-sm font-medium text-gray-700">搜索</label>
                                 <span class="tooltip">
                                     <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext" style="width: 200px; white-space: normal;">输入任何相关内容，支持搜索所有文字、名字、地址等</span>
+                                    <span class="tooltiptext">
+                                        支持搜索多种内容：<br/>
+                                        - 牌位所有文字内容<br/>
+                                        - 名字记录<br/>
+                                        - 地址信息<br/>
+                                        - 历史记录回顾
+                                    </span>
                                 </span>
                             </div>
                         </div>
@@ -314,9 +339,11 @@
                         <div class="label-container mb-1">
                             <div class="label-left">
                                 <label for="name" class="text-sm font-medium text-gray-700">名字记录</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">用于记录和识别此牌位<br/>方便日后查询和更新</span>
+                                <span class="tooltiptext">
+                                    重要标识信息：<br/>
+                                    - 用于日后查询和修改<br/>
+                                    - 建议使用易记的名字或编号<br/>
+                                    - 可包含中英文和数字
                                 </span>
                             </div>
                         </div>
@@ -401,9 +428,11 @@
                             <div class="label-container mb-1">
                                 <div class="label-left">
                                     <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
-                                    <span class="tooltip">
-                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                        <span class="tooltiptext">28字以内</span>
+                                    <span class="tooltiptext">
+                                        阳上1说明：<br/>
+                                        - 最多28个字<br/>
+                                        - 需填写26字以上才能启用阳上2<br/>
+                                        - 建议填写完整姓名
                                     </span>
                                 </div>
                                 <span class="char-count" id="yangshang1Count">0/28</span>
@@ -416,9 +445,11 @@
                             <div class="label-container mb-1">
                                 <div class="label-left">
                                     <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
-                                    <span class="tooltip">
-                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                        <span class="tooltiptext">28字以内</span>
+                                    <span class="tooltiptext">
+                                        阳上2说明：<br/>
+                                        - 仅在阳上1填写26字以上时可用<br/>
+                                        - 最多28个字<br/>
+                                        - 可选填写，非必填项
                                     </span>
                                 </div>
                                 <span class="char-count" id="yangshang2Count">0/28</span>
@@ -704,14 +735,16 @@
             updateCharCount(yangshang1, yangshang1Count, maxLength);
             
             // Enable/disable yangshang2 based on yangshang1 length
-            if (currentLength >= 26) {
+            if (currentLength <= 25) { // Changed from 26 to 25 to ensure at least 3 chars are filled
                 yangshang2.disabled = true;
                 yangshang2.value = '';
                 updateCharCount(yangshang2, yangshang2Count, maxLength);
                 yangshang2.classList.add('bg-gray-100');
+                yangshang2.placeholder = '需要阳上1至少填写26个字';
             } else {
                 yangshang2.disabled = false;
                 yangshang2.classList.remove('bg-gray-100');
+                yangshang2.placeholder = '请输入阳上2';
             }
         });
         yangshang2.addEventListener('input', () => updateCharCount(yangshang2, yangshang2Count, 28));
