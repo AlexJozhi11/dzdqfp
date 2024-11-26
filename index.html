@@ -557,10 +557,10 @@
                                    <label for="address1" class="text-sm font-medium text-gray-700">地址1</label>
                                    <span class="tooltip">
                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">中文108字/英文177字以内</span>
+                                       <span class="tooltiptext">中文108字/英文163字以内</span>
                                    </span>
                                </div>
-                               <span class="char-count" id="address1Count">0/177</span>
+                               <span class="char-count" id="address1Count">0/163</span>
                            </div>
                            <input id="address1" name="address1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址1">
                            <div class="error-message" id="address1Error"></div>
@@ -572,10 +572,10 @@
                                    <label for="address2" class="text-sm font-medium text-gray-700">地址2</label>
                                    <span class="tooltip">
                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">中文108字/英文177字以内</span>
+                                       <span class="tooltiptext">中文108字/英文163字以内</span>
                                    </span>
                                </div>
-                               <span class="char-count" id="address2Count">0/177</span>
+                               <span class="char-count" id="address2Count">0/163</span>
                            </div>
                            <input id="address2" name="address2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址2">
                            <div class="error-message" id="address2Error"></div>
@@ -587,10 +587,10 @@
                                    <label for="address3" class="text-sm font-medium text-gray-700">地址3</label>
                                    <span class="tooltip">
                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">中文108字/英文177字以内</span>
+                                       <span class="tooltiptext">中文108字/英文163字以内</span>
                                    </span>
                                </div>
-                               <span class="char-count" id="address3Count">0/177</span>
+                               <span class="char-count" id="address3Count">0/163</span>
                            </div>
                            <input id="address3" name="address3" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址3">
                            <div class="error-message" id="address3Error"></div>
@@ -757,17 +757,17 @@
         }
 
         function getAddressMaxLength(text) {
-            return containsChinese(text) ? 108 : 177;
+            return containsChinese(text) ? 108 : 163;
         }
 
         function updateAddressCharCount(input, countElement) {
             const isChinese = containsChinese(input.value);
-            const maxLength = isChinese ? 108 : 177;
+            const maxLength = isChinese ? 108 : 163;
             const currentLength = input.value.length;
             countElement.textContent = `${currentLength}/${maxLength}`;
             const tooltipElement = countElement.previousElementSibling.querySelector('.tooltiptext');
             if (tooltipElement) {
-                tooltipElement.textContent = isChinese ? '108个汉字以内' : '177字符以内';
+                tooltipElement.textContent = isChinese ? '108个汉字以内' : '163字符以内';
             }
         }
         
@@ -865,7 +865,7 @@
             let isValid = true;
         
             function getAddressLimit(text) {
-                return containsChinese(text) ? 108 : 177;
+                return containsChinese(text) ? 108 : 163;
             }
         
             if (type === '超荐牌位') {
