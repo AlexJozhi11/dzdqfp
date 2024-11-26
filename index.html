@@ -780,18 +780,24 @@
             if (text1 || text2) {
                 const maxLength = Math.max(text1.length, text2.length);
                 
-                // Apply the same font size to both fields based on maxLength
-                const useLargeFont = maxLength <= 14;
+                // Always use small font (17.4375px) if either text is longer than 14 chars
+                const shouldUseLargeFont = maxLength <= 14 && (!text2 || text2.length <= 14) && (!text1 || text1.length <= 14);
                 
-                // Set font size and class for both fields
+                // Apply same size to both fields even if one is empty
                 [yangshang1, yangshang2].forEach(field => {
-                    if (useLargeFont) {
-                        field.style.fontSize = '34.8px';
+                    if (shouldUseLargeFont) {
                         field.classList.add('short-text');
+                        field.style.fontSize = '34.8px';
                     } else {
-                        field.style.fontSize = '17.4375px';
                         field.classList.remove('short-text');
+                        field.style.fontSize = '17.4375px';
                     }
+                });
+            } else {
+                // Reset both fields if both are empty
+                [yangshang1, yangshang2].forEach(field => {
+                    field.classList.remove('short-text');
+                    field.style.fontSize = '17.4375px';
                 });
             }
         }
