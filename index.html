@@ -1049,9 +1049,11 @@
                  var searchValue = searchResults.value;
                  if (searchValue) {
                      var originalEntry = JSON.parse(searchValue);
+                     var timestamp = originalEntry.timestamp || 
+                                    (originalEntry.date ? new Date(originalEntry.date).getTime() : '');
                      originalData = {
                          originalName: originalEntry.name,
-                         timestamp: originalEntry.timestamp
+                         timestamp: timestamp
                      };
                  }
              }
@@ -1062,7 +1064,7 @@
                  name: document.getElementById('name').value,
                  designType: document.getElementById('designType').value,
                  useExisting: form.hasAttribute('data-using-existing'),
-                 ...originalData  // Include original name and timestamp for exact row matching
+                 ...originalData // Include original data if using existing
              };
          
              if (designType.value === '超荐牌位') {
@@ -1081,7 +1083,7 @@
              }
          
              var queryString = Object.keys(data).map(key => 
-                 key + '=' + encodeURIComponent(data[key])
+                 key + '=' + encodeURIComponent(data[key] || '')
              ).join('&');
          
              jsonp(_0x3c4d + '?' + queryString, function(response) {
@@ -1121,7 +1123,7 @@
                  setLoading(false);
              });
          }
-
+       
        function fillForm(result) {
            // First clear the form
            document.getElementById('name').value = '';
