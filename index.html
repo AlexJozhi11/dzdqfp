@@ -304,382 +304,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <script>
-        let hideLoadingOverlayTimeout;
-        function initializeOpenCC() {
-            try {
-                if (typeof OpenCC !== 'undefined') {
-                    converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                    console.log('OpenCC initialized successfully');
-                    clearTimeout(hideLoadingOverlayTimeout);
-                    hideLoadingOverlay();
-                    if (designType) {
-                        updateFieldsVisibility(designType.value);
-                    }
-                } else {
-                    console.error('OpenCC not defined');
-                    hideLoadingOverlay();
-                }
-            } catch (error) {
-                console.error('Error initializing OpenCC:', error);
-                hideLoadingOverlay();
-            }
-        }
-   
-        // Add safety timeout
-        hideLoadingOverlayTimeout = setTimeout(() => {
-            console.error('Timeout waiting for OpenCC');
-            hideLoadingOverlay();
-        }, 5000);
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.min.js" 
-            onload="initializeOpenCC()" 
-            onerror="console.error('Failed to load OpenCC script'); hideLoadingOverlay();">
-    </script>
-    <div id="loadingOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-
-    <div id="loginPage" class="w-full max-w-md bg-white rounded-xl shadow-2xl fade-in p-8 space-y-4" style="display: none;">
-        <h2 class="text-3xl font-extrabold text-center text-gray-900">登录</h2>
-        <form id="loginForm" class="space-y-4">
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">用户名</label>
-                <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
-                <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            </div>
-            <div class="space-y-2">
-                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    登录
-                </button>
-                <a href="mailto:softbizalexander@gmail.com" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    联系
-                </a>
-            </div>
-        </form>
-        <div id="loginMessage" class="text-center text-sm"></div>
-    </div>
-
-    <div id="mainPage" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl fade-in p-6 space-y-2" style="display: none;">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">槟城金刚山牌位系统</h2>
-            <button id="logoutBtn" class="px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">
-                退出
-            </button>
-        </div>
-        <p class="text-sm text-gray-600 -mt-1 mb-4">单个/最后一个：点'生成'，其他的都点'添加'</p>
-        <form id="pdfForm" class="space-y-4">
-            <div class="compact-form">
-                <!-- Search and Name fields -->
-                <div class="grid grid-cols-2 gap-4 full-width">
-                    <div>
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="search" class="text-sm font-medium text-gray-700">搜索</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">
-                                        支持搜索多种内容：<br/>
-                                        - 牌位所有文字内容<br/>
-                                        - 名字记录<br/>
-                                        - 地址信息<br/>
-                                        - 历史记录回顾
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
-                        <input id="search" name="search" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入要搜索的名字记录">
-                    </div>
-                    <div>
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="name" class="text-sm font-medium text-gray-700">名字记录</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">
-                                        重要标识信息：<br/>
-                                        - 用于日后查询和修改<br/>
-                                        - 建议用易记的名字/编号<br/>
-                                        - 可包含中英文和数字
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
-                        <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入名字记录">
-                    </div>
-                </div>
-
-                <div class="input-group full-width">
-                    <select id="searchResults" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" style="display: none;">
-                        <option value="">选择搜索结果</option>
-                    </select>
-                </div>
-
-                <!-- Design Type Selection -->
-                <div class="input-group full-width">
-                    <div class="label-container mb-1">
-                        <div class="label-left">
-                            <label for="designType" class="text-sm font-medium text-gray-700">牌位类型</label>
-                            <span class="tooltip">
-                                <i class="fas fa-info-circle text-gray-500"></i>
-                                <span class="tooltiptext">祈福牌位：为在生者祈福<br/>超荐牌位：为已故者超度</span>
-                            </span>
-                        </div>
-                    </div>
-                    <select id="designType" name="designType" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="祈福牌位">祈福牌位</option>
-                        <option value="超荐牌位">超荐牌位</option>
-                    </select>
-                </div>
-                <!-- 祈福牌位 fields -->
-                <div id="qifuFields" class="grid grid-cols-3 gap-4">
-                    <div class="input-group">
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">
-                                        左右栏说明：<br/>
-                                        - 最多12个字<br/>
-                                        - 需同时填写左右栏<br/>
-                                        - 亦可都留空
-                                    </span>
-                                </span>
-                            </div>
-                            <span class="char-count" id="leftCount">0/12</span>
-                        </div>
-                        <input id="textLeft" name="textLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
-                        <div class="error-message" id="textLeftError"></div>
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="qifuMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">
-                                        中间栏说明：<br/>
-                                        - 必填项，最多24个字<br/>
-                                        - 超过12个字自动分成两栏<br/>
-                                        - 可独立使用
-                                    </span>
-                                </span>
-                            </div>
-                            <span class="char-count" id="qifuMiddleCount">0/24</span>
-                        </div>
-                        <input id="qifuMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
-                        <div class="error-message" id="qifuMiddleError"></div>
-                    </div>
-                
-                    <div class="input-group">
-                        <div class="label-container mb-1">
-                            <div class="label-left">
-                                <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-gray-500"></i>
-                                    <span class="tooltiptext">
-                                        左右栏说明：<br/>
-                                        - 最多12个字<br/>
-                                        - 需同时填写左右栏<br/>
-                                        - 亦可都留空
-                                    </span>
-                                </span>
-                            </div>
-                            <span class="char-count" id="rightCount">0/12</span>
-                        </div>
-                        <input id="textRight" name="textRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
-                        <div class="error-message" id="textRightError"></div>
-                    </div>
-                </div>
-
-                <!-- 超荐牌位 fields -->
-                <div id="chaojianFields" class="address-fields">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="input-group">
-                            <div class="label-container mb-1">
-                                <div class="label-left">
-                                    <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
-                                    <span class="tooltip">
-                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                        <span class="tooltiptext">
-                                            阳上1说明：<br/>
-                                            - 最多28个字<br/>
-                                            - 需要填写至少26个字才能启用阳上2<br/>
-                                            - 建议填写完整姓名
-                                        </span>
-                                    </span>
-                                </div>
-                                <span class="char-count" id="yangshang1Count">0/28</span>
-                            </div>
-                            <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
-                            <div class="error-message" id="yangshang1Error"></div>
-                        </div>
-                
-                        <div class="input-group">
-                            <div class="label-container mb-1">
-                                <div class="label-left">
-                                    <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
-                                    <span class="tooltip">
-                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                        <span class="tooltiptext">
-                                            阳上2说明：<br/>
-                                            - 需要阳上1填写26个字以上才可启用<br/>
-                                            - 最多28个字<br/>
-                                            - 可选填写，非必填项
-                                        </span>
-                                    </span>
-                                </div>
-                                <span class="char-count" id="yangshang2Count">0/28</span>
-                            </div>
-                            <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2" disabled>
-                            <div class="error-message" id="yangshang2Error"></div>
-                        </div>
-                    </div>
-                
-                    <div class="grid grid-cols-3 gap-4 mt-4">
-                        <div class="input-group">
-                            <div class="label-container mb-1">
-                                <div class="label-left">
-                                    <label for="yiguLeft" class="text-sm font-medium text-gray-700">左侧已故名字</label>
-                                    <span class="tooltip">
-                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                        <span class="tooltiptext">
-                                            已故者信息：<br/>
-                                            - 仅可输入中文字符<br/>
-                                            - 最多21个字<br/>
-                                            - 左右两栏可独立使用
-                                        </span>
-                                    </span>
-                                </div>
-                                <span class="char-count" id="yiguLeftCount">0/21</span>
-                            </div>
-                            <input id="yiguLeft" name="yiguLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左侧已故名字">
-                            <div class="error-message" id="yiguLeftError"></div>
-                        </div>
-                
-                        <div class="input-group">
-                            <div class="label-container mb-1">
-                                <div class="label-left">
-                                    <label for="chaojianMiddle" class="text-sm font-medium text-gray-700">回向至</label>
-                                    <span class="tooltip">
-                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                        <span class="tooltiptext">
-                                            回向至说明：<br/>
-                                            - 必填项<br/>
-                                            - 最多12个字<br/>
-                                            - 不可输入数字
-                                        </span>
-                                    </span>
-                                </div>
-                                <span class="char-count" id="chaojianMiddleCount">0/12</span>
-                            </div>
-                            <input id="chaojianMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
-                            <div class="error-message" id="chaojianMiddleError"></div>
-                        </div>
-                
-                        <div class="input-group">
-                            <div class="label-container mb-1">
-                                <div class="label-left">
-                                    <label for="yiguRight" class="text-sm font-medium text-gray-700">右侧已故名字</label>
-                                    <span class="tooltip">
-                                        <i class="fas fa-info-circle text-gray-500"></i>
-                                        <span class="tooltiptext">
-                                            已故者信息：<br/>
-                                            - 仅可输入中文字符<br/>
-                                            - 最多21个字<br/>
-                                            - 左右两栏可独立使用
-                                        </span>
-                                    </span>
-                                </div>
-                                <span class="char-count" id="yiguRightCount">0/21</span>
-                            </div>
-                            <input id="yiguRight" name="yiguRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右侧已故名字">
-                            <div class="error-message" id="yiguRightError"></div>
-                        </div>
-                    </div>
-
-                   <div class="grid grid-cols-3 gap-4 mt-4">
-                       <div class="input-group">
-                           <div class="label-container mb-1">
-                               <div class="label-left">
-                                   <label for="address1" class="text-sm font-medium text-gray-700">地址1</label>
-                                   <span class="tooltip">
-                                       <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">中文108字/英文163字以内</span>
-                                   </span>
-                               </div>
-                               <span class="char-count" id="address1Count">0/163</span>
-                           </div>
-                           <input id="address1" name="address1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址1">
-                           <div class="error-message" id="address1Error"></div>
-                       </div>
-
-                       <div class="input-group">
-                           <div class="label-container mb-1">
-                               <div class="label-left">
-                                   <label for="address2" class="text-sm font-medium text-gray-700">地址2</label>
-                                   <span class="tooltip">
-                                       <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">中文108字/英文163字以内</span>
-                                   </span>
-                               </div>
-                               <span class="char-count" id="address2Count">0/163</span>
-                           </div>
-                           <input id="address2" name="address2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址2">
-                           <div class="error-message" id="address2Error"></div>
-                       </div>
-
-                       <div class="input-group">
-                           <div class="label-container mb-1">
-                               <div class="label-left">
-                                   <label for="address3" class="text-sm font-medium text-gray-700">地址3</label>
-                                   <span class="tooltip">
-                                       <i class="fas fa-info-circle text-gray-500"></i>
-                                       <span class="tooltiptext">中文108字/英文163字以内</span>
-                                   </span>
-                               </div>
-                               <span class="char-count" id="address3Count">0/163</span>
-                           </div>
-                           <input id="address3" name="address3" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址3">
-                           <div class="error-message" id="address3Error"></div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-           <!-- Action buttons -->
-           <div class="flex flex-col space-y-3">
-               <div class="grid grid-cols-2 gap-3">
-                   <button type="button" id="addToQueueBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition duration-150 ease-in-out">
-                       <span class="flex items-center">
-                           <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                               <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                           </svg>
-                           <span>添加</span>
-                       </span>
-                   </button>
-                   <button type="button" id="printNowBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out">
-                       <span class="flex items-center">
-                           <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                               <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
-                           </svg>
-                           <span>生成</span>
-                       </span>
-                   </button>
-               </div>
-               <a href="mailto:softbizalexander@gmail.com" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition duration-150 ease-in-out">
-                   有问题可联系
-               </a>
-           </div>
-       </form>
-       <div id="statusMessage" class="text-center text-sm"></div>
-   </div>
-
-   <script>
     (function() {
         var _0x5f4e3d = "PLACEHOLDER_STRING";
         var _0x2a1b = function(s) {
@@ -688,6 +312,12 @@
             }));
         };
         var _0x3c4d = _0x2a1b(_0x5f4e3d);
+
+        // Core variables
+        let hideLoadingOverlayTimeout;
+        let converter;
+       
+        // Core DOM Elements
         var loginForm = document.getElementById('loginForm');
         var loginMessage = document.getElementById('loginMessage');
         var loginPage = document.getElementById('loginPage');
@@ -715,35 +345,6 @@
         var yiguLeft = document.getElementById('yiguLeft');
         var yiguRight = document.getElementById('yiguRight');
 
-        // Initialize Chinese input handling
-        const chineseInputFields = [
-            'textLeft', 'qifuMiddle', 'textRight',
-            'yangshang1', 'yangshang2', 'chaojianMiddle',
-            'address1', 'address2', 'address3',
-            'yiguLeft', 'yiguRight'
-        ];
-      
-        chineseInputFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                let isComposing = false;
-                field.addEventListener('compositionstart', () => isComposing = true);
-                field.addEventListener('compositionend', (e) => {
-                    isComposing = false;
-                    handleChineseInput(e.target);
-                });
-                field.addEventListener('input', (e) => {
-                    if (!isComposing) handleChineseInput(e.target);
-                });
-                field.addEventListener('paste', (e) => {
-                   setTimeout(() => handleChineseInput(e.target), 0);
-                });
-            }
-        });
-
-        // Initialize form state
-        updateFieldsVisibility(designType.value);
-       
         // Container elements
         var textLeftContainer = document.getElementById('textLeftContainer');
         var yangshang1Container = document.getElementById('yangshang1Container');
@@ -766,9 +367,26 @@
         var yiguLeftCount = document.getElementById('yiguLeftCount');
         var yiguRightCount = document.getElementById('yiguRightCount');
 
-        let converter;
+        // Core utility functions
+        function showLoadingOverlay() {
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+            }
+        }
+
+        function hideLoadingOverlay() {
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        function ensureLoadingOverlayHidden() {
+            clearTimeout(hideLoadingOverlayTimeout);
+            hideLoadingOverlay();
+        }
+
         const rotatedChars = {
-           "(": "︵", ")": "︶",
+            "(": "︵", ")": "︶",
             "（": "︵", "）": "︶",
             "[": "﹇", "]": "﹈",
             "［": "﹇", "］": "﹈",
@@ -782,58 +400,78 @@
             "〔": "︹", "〕": "︺",
             "【": "︻", "】": "︼"
         };
-         
-        // Function to handle Chinese conversion with enhanced error handling
-       function handleChineseInput(input) {
-           if (!input) {
-               console.log('No input provided');
-               return;
-           }
-           if (!converter) {
-               console.log('Converter not initialized, trying to initialize...');
-               try {
-                   if (typeof OpenCC !== 'undefined') {
-                       converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                       console.log('Converter initialized on demand');
-                   } else {
-                       console.error('OpenCC not available');
-                       return;
-                   }
-               } catch (error) {
-                   console.error('Failed to initialize converter:', error);
-                   return;
-               }
-           }
-          
-           try {
-               const cursorPosition = input.selectionStart;
-               const originalLength = input.value.length;
-              
-               input.classList.add('converting');
-              
-               let convertedText = converter(input.value);
-               console.log('Conversion result:', convertedText); // Debug log
-              
-               if (input.id.startsWith('address')) {
-                   convertedText = convertedText.replace(
-                       /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
-                       (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
-                   );
-               }
-              
-               if (convertedText !== input.value) {
-                   input.value = convertedText;
-                   input.setSelectionRange(cursorPosition, cursorPosition);
-                   input.dispatchEvent(new Event('input', { bubbles: true }));
-               }
-              
-               setTimeout(() => input.classList.remove('converting'), 100);
-           } catch (error) {
-               console.error('Error converting text:', error);
-               input.classList.remove('converting');
-           }
-       }
-       
+
+        // OpenCC Initialization and Handling
+        function initializeOpenCC() {
+            try {
+                if (typeof OpenCC !== 'undefined') {
+                    converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                    console.log('OpenCC initialized successfully');
+                    ensureLoadingOverlayHidden();
+                    if (designType && designType.value) {
+                        updateFieldsVisibility(designType.value);
+                    }
+                } else {
+                    console.error('OpenCC not defined');
+                    ensureLoadingOverlayHidden();
+                }
+            } catch (error) {
+                console.error('Error initializing OpenCC:', error);
+                ensureLoadingOverlayHidden();
+            }
+        }
+
+        // Handle Chinese input with error handling
+        function handleChineseInput(input) {
+            if (!input) {
+                console.log('No input provided');
+                return;
+            }
+            if (!converter) {
+                console.log('Converter not initialized, trying to initialize...');
+                try {
+                    if (typeof OpenCC !== 'undefined') {
+                        converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                        console.log('Converter initialized on demand');
+                    } else {
+                        console.error('OpenCC not available');
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize converter:', error);
+                    return;
+                }
+            }
+            
+            try {
+                const cursorPosition = input.selectionStart;
+                const originalLength = input.value.length;
+                
+                input.classList.add('converting');
+                
+                let convertedText = converter(input.value);
+                console.log('Conversion result:', convertedText);
+                
+                if (input.id.startsWith('address')) {
+                    convertedText = convertedText.replace(
+                        /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
+                        (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
+                    );
+                }
+                
+                if (convertedText !== input.value) {
+                    input.value = convertedText;
+                    input.setSelectionRange(cursorPosition, cursorPosition);
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                
+                setTimeout(() => input.classList.remove('converting'), 100);
+            } catch (error) {
+                console.error('Error converting text:', error);
+                input.classList.remove('converting');
+            }
+        }
+
         function updateFieldsVisibility(type) {
              const qifuFields = document.getElementById('qifuFields');
              const chaojianFields = document.getElementById('chaojianFields');
@@ -915,7 +553,57 @@
         function containsNumbers(text) {
             return /[0-9]/.test(text);
         }
-        
+
+        // Set up the safety timeout and OpenCC initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Safety timeout
+            hideLoadingOverlayTimeout = setTimeout(() => {
+                console.log('Safety timeout: hiding loading overlay');
+                ensureLoadingOverlayHidden();
+            }, 5000);
+
+            // Load OpenCC
+            const openccScript = document.createElement('script');
+            openccScript.src = "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.min.js";
+            openccScript.onload = initializeOpenCC;
+            openccScript.onerror = function() {
+                console.error('Failed to load OpenCC script');
+                ensureLoadingOverlayHidden();
+            };
+            document.head.appendChild(openccScript);
+
+            // Initialize form state
+            if (designType) {
+                updateFieldsVisibility(designType.value);
+            }
+
+            // Initialize Chinese input handling
+            const chineseInputFields = [
+                'textLeft', 'qifuMiddle', 'textRight',
+                'yangshang1', 'yangshang2', 'chaojianMiddle',
+                'address1', 'address2', 'address3',
+                'yiguLeft', 'yiguRight'
+            ];
+
+            chineseInputFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    let isComposing = false;
+                    field.addEventListener('compositionstart', () => isComposing = true);
+                    field.addEventListener('compositionend', (e) => {
+                        isComposing = false;
+                        handleChineseInput(e.target);
+                    });
+                    field.addEventListener('input', (e) => {
+                        if (!isComposing) handleChineseInput(e.target);
+                    });
+                    field.addEventListener('paste', (e) => {
+                        setTimeout(() => handleChineseInput(e.target), 0);
+                    });
+                }
+            });
+        });
+       
         function containsChinese(text) {
             return /[\u4E00-\u9FFF]/.test(text);
         }
@@ -1092,14 +780,6 @@
                 errorDiv.style.display = 'none';
                 return true;
             }
-        }
-
-        function showLoadingOverlay() {
-            loadingOverlay.style.display = 'flex';
-        }
-
-        function hideLoadingOverlay() {
-            loadingOverlay.style.display = 'none';
         }
 
         function showLoginPage() {
@@ -1510,5 +1190,349 @@ textRight.addEventListener('input', validateLeftRightPair);
 
 })();
 </script>
+   
+    <div id="loadingOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <div id="loginPage" class="w-full max-w-md bg-white rounded-xl shadow-2xl fade-in p-8 space-y-4" style="display: none;">
+        <h2 class="text-3xl font-extrabold text-center text-gray-900">登录</h2>
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">用户名</label>
+                <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
+                <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div class="space-y-2">
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    登录
+                </button>
+                <a href="mailto:softbizalexander@gmail.com" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    联系
+                </a>
+            </div>
+        </form>
+        <div id="loginMessage" class="text-center text-sm"></div>
+    </div>
+
+    <div id="mainPage" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl fade-in p-6 space-y-2" style="display: none;">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">槟城金刚山牌位系统</h2>
+            <button id="logoutBtn" class="px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">
+                退出
+            </button>
+        </div>
+        <p class="text-sm text-gray-600 -mt-1 mb-4">单个/最后一个：点'生成'，其他的都点'添加'</p>
+        <form id="pdfForm" class="space-y-4">
+            <div class="compact-form">
+                <!-- Search and Name fields -->
+                <div class="grid grid-cols-2 gap-4 full-width">
+                    <div>
+                        <div class="label-container mb-1">
+                            <div class="label-left">
+                                <label for="search" class="text-sm font-medium text-gray-700">搜索</label>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle text-gray-500"></i>
+                                    <span class="tooltiptext">
+                                        支持搜索多种内容：<br/>
+                                        - 牌位所有文字内容<br/>
+                                        - 名字记录<br/>
+                                        - 地址信息<br/>
+                                        - 历史记录回顾
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <input id="search" name="search" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入要搜索的名字记录">
+                    </div>
+                    <div>
+                        <div class="label-container mb-1">
+                            <div class="label-left">
+                                <label for="name" class="text-sm font-medium text-gray-700">名字记录</label>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle text-gray-500"></i>
+                                    <span class="tooltiptext">
+                                        重要标识信息：<br/>
+                                        - 用于日后查询和修改<br/>
+                                        - 建议用易记的名字/编号<br/>
+                                        - 可包含中英文和数字
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <input id="name" name="name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入名字记录">
+                    </div>
+                </div>
+
+                <div class="input-group full-width">
+                    <select id="searchResults" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" style="display: none;">
+                        <option value="">选择搜索结果</option>
+                    </select>
+                </div>
+
+                <!-- Design Type Selection -->
+                <div class="input-group full-width">
+                    <div class="label-container mb-1">
+                        <div class="label-left">
+                            <label for="designType" class="text-sm font-medium text-gray-700">牌位类型</label>
+                            <span class="tooltip">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                                <span class="tooltiptext">祈福牌位：为在生者祈福<br/>超荐牌位：为已故者超度</span>
+                            </span>
+                        </div>
+                    </div>
+                    <select id="designType" name="designType" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="祈福牌位">祈福牌位</option>
+                        <option value="超荐牌位">超荐牌位</option>
+                    </select>
+                </div>
+                <!-- 祈福牌位 fields -->
+                <div id="qifuFields" class="grid grid-cols-3 gap-4">
+                    <div class="input-group">
+                        <div class="label-container mb-1">
+                            <div class="label-left">
+                                <label for="textLeft" class="text-sm font-medium text-gray-700">左 1 排名字</label>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle text-gray-500"></i>
+                                    <span class="tooltiptext">
+                                        左右栏说明：<br/>
+                                        - 最多12个字<br/>
+                                        - 需同时填写左右栏<br/>
+                                        - 亦可都留空
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="char-count" id="leftCount">0/12</span>
+                        </div>
+                        <input id="textLeft" name="textLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左 1 排名字">
+                        <div class="error-message" id="textLeftError"></div>
+                    </div>
+                
+                    <div class="input-group">
+                        <div class="label-container mb-1">
+                            <div class="label-left">
+                                <label for="qifuMiddle" class="text-sm font-medium text-gray-700">中间 1-2 排名字</label>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle text-gray-500"></i>
+                                    <span class="tooltiptext">
+                                        中间栏说明：<br/>
+                                        - 必填项，最多24个字<br/>
+                                        - 超过12个字自动分成两栏<br/>
+                                        - 可独立使用
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="char-count" id="qifuMiddleCount">0/24</span>
+                        </div>
+                        <input id="qifuMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入中间 1-2 排名字">
+                        <div class="error-message" id="qifuMiddleError"></div>
+                    </div>
+                
+                    <div class="input-group">
+                        <div class="label-container mb-1">
+                            <div class="label-left">
+                                <label for="textRight" class="text-sm font-medium text-gray-700">右 1 排名字</label>
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle text-gray-500"></i>
+                                    <span class="tooltiptext">
+                                        左右栏说明：<br/>
+                                        - 最多12个字<br/>
+                                        - 需同时填写左右栏<br/>
+                                        - 亦可都留空
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="char-count" id="rightCount">0/12</span>
+                        </div>
+                        <input id="textRight" name="textRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右 1 排名字">
+                        <div class="error-message" id="textRightError"></div>
+                    </div>
+                </div>
+
+                <!-- 超荐牌位 fields -->
+                <div id="chaojianFields" class="address-fields">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yangshang1" class="text-sm font-medium text-gray-700">阳上1</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            阳上1说明：<br/>
+                                            - 最多28个字<br/>
+                                            - 需要填写至少26个字才能启用阳上2<br/>
+                                            - 建议填写完整姓名
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yangshang1Count">0/28</span>
+                            </div>
+                            <input id="yangshang1" name="yangshang1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上1">
+                            <div class="error-message" id="yangshang1Error"></div>
+                        </div>
+                
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yangshang2" class="text-sm font-medium text-gray-700">阳上2</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            阳上2说明：<br/>
+                                            - 需要阳上1填写26个字以上才可启用<br/>
+                                            - 最多28个字<br/>
+                                            - 可选填写，非必填项
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yangshang2Count">0/28</span>
+                            </div>
+                            <input id="yangshang2" name="yangshang2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入阳上2" disabled>
+                            <div class="error-message" id="yangshang2Error"></div>
+                        </div>
+                    </div>
+                
+                    <div class="grid grid-cols-3 gap-4 mt-4">
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yiguLeft" class="text-sm font-medium text-gray-700">左侧已故名字</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            已故者信息：<br/>
+                                            - 仅可输入中文字符<br/>
+                                            - 最多21个字<br/>
+                                            - 左右两栏可独立使用
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yiguLeftCount">0/21</span>
+                            </div>
+                            <input id="yiguLeft" name="yiguLeft" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入左侧已故名字">
+                            <div class="error-message" id="yiguLeftError"></div>
+                        </div>
+                
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="chaojianMiddle" class="text-sm font-medium text-gray-700">回向至</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            回向至说明：<br/>
+                                            - 必填项<br/>
+                                            - 最多12个字<br/>
+                                            - 不可输入数字
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="chaojianMiddleCount">0/12</span>
+                            </div>
+                            <input id="chaojianMiddle" name="textMiddle" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入回向至">
+                            <div class="error-message" id="chaojianMiddleError"></div>
+                        </div>
+                
+                        <div class="input-group">
+                            <div class="label-container mb-1">
+                                <div class="label-left">
+                                    <label for="yiguRight" class="text-sm font-medium text-gray-700">右侧已故名字</label>
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle text-gray-500"></i>
+                                        <span class="tooltiptext">
+                                            已故者信息：<br/>
+                                            - 仅可输入中文字符<br/>
+                                            - 最多21个字<br/>
+                                            - 左右两栏可独立使用
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="char-count" id="yiguRightCount">0/21</span>
+                            </div>
+                            <input id="yiguRight" name="yiguRight" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入右侧已故名字">
+                            <div class="error-message" id="yiguRightError"></div>
+                        </div>
+                    </div>
+
+                   <div class="grid grid-cols-3 gap-4 mt-4">
+                       <div class="input-group">
+                           <div class="label-container mb-1">
+                               <div class="label-left">
+                                   <label for="address1" class="text-sm font-medium text-gray-700">地址1</label>
+                                   <span class="tooltip">
+                                       <i class="fas fa-info-circle text-gray-500"></i>
+                                       <span class="tooltiptext">中文108字/英文163字以内</span>
+                                   </span>
+                               </div>
+                               <span class="char-count" id="address1Count">0/163</span>
+                           </div>
+                           <input id="address1" name="address1" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址1">
+                           <div class="error-message" id="address1Error"></div>
+                       </div>
+
+                       <div class="input-group">
+                           <div class="label-container mb-1">
+                               <div class="label-left">
+                                   <label for="address2" class="text-sm font-medium text-gray-700">地址2</label>
+                                   <span class="tooltip">
+                                       <i class="fas fa-info-circle text-gray-500"></i>
+                                       <span class="tooltiptext">中文108字/英文163字以内</span>
+                                   </span>
+                               </div>
+                               <span class="char-count" id="address2Count">0/163</span>
+                           </div>
+                           <input id="address2" name="address2" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址2">
+                           <div class="error-message" id="address2Error"></div>
+                       </div>
+
+                       <div class="input-group">
+                           <div class="label-container mb-1">
+                               <div class="label-left">
+                                   <label for="address3" class="text-sm font-medium text-gray-700">地址3</label>
+                                   <span class="tooltip">
+                                       <i class="fas fa-info-circle text-gray-500"></i>
+                                       <span class="tooltiptext">中文108字/英文163字以内</span>
+                                   </span>
+                               </div>
+                               <span class="char-count" id="address3Count">0/163</span>
+                           </div>
+                           <input id="address3" name="address3" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="请输入地址3">
+                           <div class="error-message" id="address3Error"></div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Action buttons -->
+           <div class="flex flex-col space-y-3">
+               <div class="grid grid-cols-2 gap-3">
+                   <button type="button" id="addToQueueBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition duration-150 ease-in-out">
+                       <span class="flex items-center">
+                           <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                               <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                           </svg>
+                           <span>添加</span>
+                       </span>
+                   </button>
+                   <button type="button" id="printNowBtn" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out">
+                       <span class="flex items-center">
+                           <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                               <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+                           </svg>
+                           <span>生成</span>
+                       </span>
+                   </button>
+               </div>
+               <a href="mailto:softbizalexander@gmail.com" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 transition duration-150 ease-in-out">
+                   有问题可联系
+               </a>
+           </div>
+       </form>
+       <div id="statusMessage" class="text-center text-sm"></div>
+   </div>
 </body>
 </html>
