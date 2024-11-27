@@ -1036,77 +1036,101 @@
 
        // Modify the submitForm function - replace the existing one
         function submitForm(action) {
-            if (!validateInputs()) {
-                showStatus('请检查输入字数限制', true);
-                return;
-            }
-            setLoading(true);
-            showStatus('');
-        
-            var data = {
-                action: action,
-                token: localStorage.getItem('token'),
-                name: document.getElementById('name').value,
-                designType: document.getElementById('designType').value,
-                useExisting: form.hasAttribute('data-using-existing')
-            };
-        
-            if (designType.value === '超荐牌位') {
-                data.yangshang1 = yangshang1.value || '';
-                data.yangshang2 = yangshang2.value || '';
-                data.textMiddle = chaojianMiddle.value;
-                data.address1 = address1.value || '';
-                data.address2 = address2.value || '';
-                data.address3 = address3.value || '';
-                data.yiguLeft = yiguLeft.value || '';
-                data.yiguRight = yiguRight.value || '';
-            } else {
-                data.textLeft = textLeft.value || '';
-                data.textMiddle = qifuMiddle.value;
-                data.textRight = textRight.value || '';
-            }
-        
-            var queryString = Object.keys(data).map(key => 
-                key + '=' + encodeURIComponent(data[key])
-            ).join('&');
-        
-            jsonp(_0x3c4d + '?' + queryString, function(response) {
-                if (response.success) {
-                    showStatus(response.message);
-                    if (response.pdfBase64) {
-                        try {
-                            var byteCharacters = atob(response.pdfBase64);
-                            var byteNumbers = new Array(byteCharacters.length);
-                            for (var i = 0; i < byteCharacters.length; i++) {
-                                byteNumbers[i] = byteCharacters.charCodeAt(i);
-                            }
-                            var byteArray = new Uint8Array(byteNumbers);
-                            var blob = new Blob([byteArray], {type: 'application/pdf'});
-                            var blobUrl = URL.createObjectURL(blob);
-                            
-                            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                                var link = document.createElement('a');
-                                link.href = blobUrl;
-                                link.download = '祈福牌.pdf';
-                                link.click();
-                            } else {
-                                window.open(blobUrl, '_blank');
-                            }
-                        } catch (error) {
-                            console.error("Error creating PDF blob:", error);
-                            showStatus('创建 PDF 时出错: ' + error.message, true);
-                        }
-                    }
-                } else {
-                    if (response.error === 'Invalid or expired token') {
-                        localStorage.removeItem('token');
-                        showLoginPage();
-                    }
-                    showStatus('发生错误: ' + (response.error || '未知错误'), true);
-                }
-                setLoading(false);
-            });
-        }
+             if (!validateInputs()) {
+                 showStatus('请检查输入字数限制', true);
+                 return;
+             }
+             setLoading(true);
+             showStatus('');
+         
+             // Get the original data if we're using an existing entry
+             var originalData = {};
+             if (form.hasAttribute('data-using-existing')) {
+                 var searchValue = searchResults.value;
+                 if (searchValue) {
+                     var originalEntry = JSON.parse(searchValue);
+                     originalData = {
+                         originalName: originalEntry.name,
+                         originalTextLeft: originalEntry.textLeft,
+                         originalTextMiddle: originalEntry.textMiddle,
+                         originalTextRight: originalEntry.textRight,
+                         originalYangshang1: originalEntry.yangshang1,
+                         originalYangshang2: originalEntry.yangshang2,
+                         originalAddress1: originalEntry.address1,
+                         originalAddress2: originalEntry.address2,
+                         originalAddress3: originalEntry.address3,
+                         originalYiguLeft: originalEntry.yiguLeft,
+                         originalYiguRight: originalEntry.yiguRight,
+                         timestamp: originalEntry.timestamp
+                     };
+                 }
+             }
+         
+             var data = {
+                 action: action,
+                 token: localStorage.getItem('token'),
+                 name: document.getElementById('name').value,
+                 designType: document.getElementById('designType').value,
+                 useExisting: form.hasAttribute('data-using-existing'),
+                 ...originalData  // Include all original data for exact row matching
+             };
+         
+             if (designType.value === '超荐牌位') {
+                 data.yangshang1 = yangshang1.value || '';
+                 data.yangshang2 = yangshang2.value || '';
+                 data.textMiddle = chaojianMiddle.value;
+                 data.address1 = address1.value || '';
+                 data.address2 = address2.value || '';
+                 data.address3 = address3.value || '';
+                 data.yiguLeft = yiguLeft.value || '';
+                 data.yiguRight = yiguRight.value || '';
+             } else {
+                 data.textLeft = textLeft.value || '';
+                 data.textMiddle = qifuMiddle.value;
+                 data.textRight = textRight.value || '';
+             }
+         
+             var queryString = Object.keys(data).map(key => 
+                 key + '=' + encodeURIComponent(data[key])
+             ).join('&');
+         
+             jsonp(_0x3c4d + '?' + queryString, function(response) {
+                 if (response.success) {
+                     showStatus(response.message);
+                     if (response.pdfBase64) {
+                         try {
+                             var byteCharacters = atob(response.pdfBase64);
+                             var byteNumbers = new Array(byteCharacters.length);
+                             for (var i = 0; i < byteCharacters.length; i++) {
+                                 byteNumbers[i] = byteCharacters.charCodeAt(i);
+                             }
+                             var byteArray = new Uint8Array(byteNumbers);
+                             var blob = new Blob([byteArray], {type: 'application/pdf'});
+                             var blobUrl = URL.createObjectURL(blob);
+                             
+                             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                                 var link = document.createElement('a');
+                                 link.href = blobUrl;
+                                 link.download = '祈福牌.pdf';
+                                 link.click();
+                             } else {
+                                 window.open(blobUrl, '_blank');
+                             }
+                         } catch (error) {
+                             console.error("Error creating PDF blob:", error);
+                             showStatus('创建 PDF 时出错: ' + error.message, true);
+                         }
+                     }
+                 } else {
+                     if (response.error === 'Invalid or expired token') {
+                         localStorage.removeItem('token');
+                         showLoginPage();
+                     }
+                     showStatus('发生错误: ' + (response.error || '未知错误'), true);
+                 }
+                 setLoading(false);
+             });
+         }
 
        function fillForm(result) {
            // First clear the form
