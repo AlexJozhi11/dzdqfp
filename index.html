@@ -708,6 +708,21 @@
 
        // Initialize OpenCC
       const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+      const rotatedChars = {
+          "(": "︵", ")": "︶",
+          "（": "︵", "）": "︶",
+          "[": "﹇", "]": "﹈",
+          "［": "﹇", "］": "﹈",
+          "{": "︷", "}": "︸",
+          "｛": "︷", "｝": "︸",
+          "⦅": "︹", "⦆": "︺",
+          "「": "﹁", "」": "﹂",
+          "『": "﹃", "』": "﹄",
+          "〈": "︿", "〉": "﹀",
+          "《": "︽", "》": "︾",
+          "〔": "︹", "〕": "︺",
+          "【": "︻", "】": "︼"
+      };
       
       // Function to handle Chinese conversion
       function handleChineseInput(input) {
