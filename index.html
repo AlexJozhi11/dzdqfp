@@ -706,70 +706,99 @@
         var yiguLeftCount = document.getElementById('yiguLeftCount');
         var yiguRightCount = document.getElementById('yiguRightCount');
 
-       // Initialize OpenCC
-       // Initialize OpenCC with error handling
-       let converter;
-       try {
-           converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-           hideLoadingOverlay(); // Hide loading overlay once OpenCC is initialized
-       } catch (error) {
-           console.error('Error initializing OpenCC:', error);
-           hideLoadingOverlay(); // Ensure loading overlay is hidden even if initialization fails
-       }
-       const rotatedChars = {
-           "(": "︵", ")": "︶",
-           "（": "︵", "）": "︶",
-           "[": "﹇", "]": "﹈",
-           "［": "﹇", "］": "﹈",
-           "{": "︷", "}": "︸",
-           "｛": "︷", "｝": "︸",
-           "⦅": "︹", "⦆": "︺",
-           "「": "﹁", "」": "﹂",
-           "『": "﹃", "』": "﹄",
-           "〈": "︿", "〉": "﹀",
-           "《": "︽", "》": "︾",
-           "〔": "︹", "〕": "︺",
-           "【": "︻", "】": "︼"
-       };
-      
-       // Function to handle Chinese conversion
-          function handleChineseInput(input) {
-              if (!input || !converter) return;
+         // Initialize OpenCC with error handling
+         let converter;
+         try {
+             converter = OpenCC.Converter({ 
+                 from: 'tw',
+                 to: 'cn'
+             });
+             hideLoadingOverlay();
+         } catch (error) {
+             console.error('Error initializing OpenCC:', error);
+             hideLoadingOverlay();
+         }
+         
+         // Function to handle Chinese conversion
+         function handleChineseInput(input) {
+             if (!input || !converter) return;
              
-              try {
-                  const cursorPosition = input.selectionStart;
-                  const originalLength = input.value.length;
+             try {
+                 const cursorPosition = input.selectionStart;
+                 const originalLength = input.value.length;
                  
-                  // Add converting class
-                  input.classList.add('converting');
+                 // Add converting class
+                 input.classList.add('converting');
                  
-                  // Convert text
-                  let convertedText = converter(input.value);
+                 // Convert text
+                 let convertedText = converter(input.value);
                  
-                  // Apply bracket rotation for address fields
-                  if (input.id.startsWith('address')) {
-                      convertedText = convertedText.replace(
-                          /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
-                          (match, open, content, close) => {
-                              return (rotatedChars[open] || open) + content + (rotatedChars[close] || close);
-                          }
-                      );
-                  }
+                 // Apply bracket rotation for address fields
+                 if (input.id.startsWith('address')) {
+                     convertedText = convertedText.replace(
+                         /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
+                         (match, open, content, close) => {
+                             return (rotatedChars[open] || open) + content + (rotatedChars[close] || close);
+                         }
+                     );
+                 }
                  
-                  // Update input value
-                  input.value = convertedText;
+                 // Only update if there are actual changes
+                 if (convertedText !== input.value) {
+                     input.value = convertedText;
+                     
+                     // Adjust cursor position
+                     const lengthDiff = convertedText.length - originalLength;
+                     input.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
+                     
+                     // Trigger input event for validation
+                     input.dispatchEvent(new Event('input', { bubbles: true }));
+                 }
                  
-                  // Adjust cursor position
-                  const lengthDiff = convertedText.length - originalLength;
-                  input.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
+                 // Remove converting class
+                 setTimeout(() => input.classList.remove('converting'), 100);
+             } catch (error) {
+                 console.error('Error converting text:', error);
+                 input.classList.remove('converting');
+             }
+         }
+         
+         // Enhanced event handling for input fields
+         const chineseInputFields = [
+             'textLeft', 'qifuMiddle', 'textRight',
+             'yangshang1', 'yangshang2', 'chaojianMiddle',
+             'address1', 'address2', 'address3',
+             'yiguLeft', 'yiguRight'
+         ];
+         
+         chineseInputFields.forEach(fieldId => {
+             const field = document.getElementById(fieldId);
+             if (field) {
+                 // Handle input in real-time
+                 field.addEventListener('input', function(e) {
+                     // Only convert if there's actual input
+                     if (e.inputType !== 'deleteContentBackward' && e.inputType !== 'deleteContentForward') {
+                         handleChineseInput(this);
+                     }
+                 });
                  
-                  // Remove converting class
-                  setTimeout(() => input.classList.remove('converting'), 100);
-              } catch (error) {
-                  console.error('Error converting text:', error);
-                  input.classList.remove('converting');
-              }
-          }
+                 // Handle paste events
+                 field.addEventListener('paste', function(e) {
+                     // Wait for paste to complete
+                     setTimeout(() => handleChineseInput(this), 0);
+                 });
+                 
+                 // Handle composition end (for IME input)
+                 field.addEventListener('compositionend', function(e) {
+                     handleChineseInput(this);
+                 });
+         
+                 // Handle blur event to ensure conversion
+                 field.addEventListener('blur', function() {
+                     handleChineseInput(this);
+                 });
+             }
+         });
 
         function updateFieldsVisibility(type) {
             if (type === '超荐牌位') {
