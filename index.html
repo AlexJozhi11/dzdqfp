@@ -700,6 +700,35 @@
         var yiguLeft = document.getElementById('yiguLeft');
         var yiguRight = document.getElementById('yiguRight');
 
+        // Initialize Chinese input handling
+        const chineseInputFields = [
+            'textLeft', 'qifuMiddle', 'textRight',
+            'yangshang1', 'yangshang2', 'chaojianMiddle',
+            'address1', 'address2', 'address3',
+            'yiguLeft', 'yiguRight'
+        ];
+      
+        chineseInputFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                let isComposing = false;
+                field.addEventListener('compositionstart', () => isComposing = true);
+                field.addEventListener('compositionend', (e) => {
+                    isComposing = false;
+                    handleChineseInput(e.target);
+                });
+                field.addEventListener('input', (e) => {
+                    if (!isComposing) handleChineseInput(e.target);
+                });
+                field.addEventListener('paste', (e) => {
+                   setTimeout(() => handleChineseInput(e.target), 0);
+                });
+            }
+        });
+
+        // Initialize form state
+        updateFieldsVisibility(designType.value);
+       
         // Container elements
         var textLeftContainer = document.getElementById('textLeftContainer');
         var yangshang1Container = document.getElementById('yangshang1Container');
@@ -722,157 +751,130 @@
         var yiguLeftCount = document.getElementById('yiguLeftCount');
         var yiguRightCount = document.getElementById('yiguRightCount');
 
-         // Initialize OpenCC with error handling
-         let converter;
-         try {
-             converter = OpenCC.Converter({ 
-                 from: 'tw',
-                 to: 'cn'
-             });
-             hideLoadingOverlay();
-         } catch (error) {
-             console.error('Error initializing OpenCC:', error);
-             hideLoadingOverlay();
-         }
+        let converter;
+        const rotatedChars = {
+           "(": "︵", ")": "︶",
+            "（": "︵", "）": "︶",
+            "[": "﹇", "]": "﹈",
+            "［": "﹇", "］": "﹈",
+            "{": "︷", "}": "︸",
+            "｛": "︷", "｝": "︸",
+            "⦅": "︹", "⦆": "︺",
+            "「": "﹁", "」": "﹂",
+            "『": "﹃", "』": "﹄",
+            "〈": "︿", "〉": "﹀",
+            "《": "︽", "》": "︾",
+            "〔": "︹", "〕": "︺",
+            "【": "︻", "】": "︼"
+        };
          
-         // Function to handle Chinese conversion
-         function handleChineseInput(input) {
-             if (!input || !converter) return;
-             
-             try {
-                 const cursorPosition = input.selectionStart;
-                 const originalLength = input.value.length;
-                 
-                 // Add converting class
-                 input.classList.add('converting');
-                 
-                 // Convert text
-                 let convertedText = converter(input.value);
-                 
-                 // Apply bracket rotation for address fields
-                 if (input.id.startsWith('address')) {
-                     convertedText = convertedText.replace(
-                         /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
-                         (match, open, content, close) => {
-                             return (rotatedChars[open] || open) + content + (rotatedChars[close] || close);
-                         }
-                     );
-                 }
-                 
-                 // Only update if there are actual changes
-                 if (convertedText !== input.value) {
-                     input.value = convertedText;
-                     
-                     // Adjust cursor position
-                     const lengthDiff = convertedText.length - originalLength;
-                     input.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
-                     
-                     // Trigger input event for validation
-                     input.dispatchEvent(new Event('input', { bubbles: true }));
-                 }
-                 
-                 // Remove converting class
-                 setTimeout(() => input.classList.remove('converting'), 100);
-             } catch (error) {
-                 console.error('Error converting text:', error);
-                 input.classList.remove('converting');
-             }
-         }
-         
-         // Enhanced event handling for input fields
-         const chineseInputFields = [
-             'textLeft', 'qifuMiddle', 'textRight',
-             'yangshang1', 'yangshang2', 'chaojianMiddle',
-             'address1', 'address2', 'address3',
-             'yiguLeft', 'yiguRight'
-         ];
-         
-         chineseInputFields.forEach(fieldId => {
-             const field = document.getElementById(fieldId);
-             if (field) {
-                 // Handle input in real-time
-                 field.addEventListener('input', function(e) {
-                     // Only convert if there's actual input
-                     if (e.inputType !== 'deleteContentBackward' && e.inputType !== 'deleteContentForward') {
-                         handleChineseInput(this);
-                     }
-                 });
-                 
-                 // Handle paste events
-                 field.addEventListener('paste', function(e) {
-                     // Wait for paste to complete
-                     setTimeout(() => handleChineseInput(this), 0);
-                 });
-                 
-                 // Handle composition end (for IME input)
-                 field.addEventListener('compositionend', function(e) {
-                     handleChineseInput(this);
-                 });
-         
-                 // Handle blur event to ensure conversion
-                 field.addEventListener('blur', function() {
-                     handleChineseInput(this);
-                 });
-             }
-         });
+        // Function to handle Chinese conversion
+        function handleChineseInput(input) {
+            if (!input || !converter) {
+                console.log('Converter not ready or no input');
+                return;
+            }
+          
+            try {
+                const cursorPosition = input.selectionStart;
+                const originalLength = input.value.length;
+              
+                input.classList.add('converting');
+              
+                let convertedText = converter(input.value);
+              
+                if (input.id.startsWith('address')) {
+                    convertedText = convertedText.replace(
+                        /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
+                        (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
+                    );
+                }
+              
+                if (convertedText !== input.value) {
+                    input.value = convertedText;
+                    input.setSelectionRange(cursorPosition, cursorPosition);
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+              
+                setTimeout(() => input.classList.remove('converting'), 100);
+            } catch (error) {
+                console.error('Error converting text:', error);
+                input.classList.remove('converting');
+            }
+        }
 
         function updateFieldsVisibility(type) {
-            if (type === '超荐牌位') {
-                // Hide 祈福牌位 fields
-                qifuFields.style.display = 'none';
-                textLeft.required = false;
-                textRight.required = false;
-                qifuMiddle.required = false;
-                chaojianMiddle.required = true;
-                
-                // Show 超荐牌位 fields
-                chaojianFields.classList.add('active');
-                addressFields.classList.add('active');
-                yangshang1.required = true;
-                textRightContainer.style.display = 'none';
-                
-                // Clear 祈福牌位 fields
-                textLeft.value = '';
-                qifuMiddle.value = '';
-                textRight.value = '';
-                updateCharCount(textLeft, leftCount, 12);
-                updateCharCount(qifuMiddle, qifuMiddleCount, 24);
-                updateCharCount(textRight, rightCount, 12);
-                
-            } else {
-                // Show 祈福牌位 fields
-                qifuFields.style.display = 'grid';
-                textLeft.required = true;
-                textRight.required = true;
-                qifuMiddle.required = true;
-                chaojianMiddle.required = false;
-                
-                chaojianFields.classList.remove('active');
-                addressFields.classList.remove('active');
-                yangshang1.required = false;
-                textRightContainer.style.display = 'block';
-                
-                // Clear 超荐牌位 fields
-                yangshang1.value = '';
-                yangshang2.value = '';
-                chaojianMiddle.value = '';
-                address1.value = '';
-                address2.value = '';
-                address3.value = '';
-                yiguLeft.value = '';
-                yiguRight.value = '';
-                updateCharCount(yangshang1, yangshang1Count, 28);
-                updateCharCount(yangshang2, yangshang2Count, 28);
-                updateCharCount(chaojianMiddle, chaojianMiddleCount, 12);
-                updateCharCount(yiguLeft, yiguLeftCount, 21);
-                updateCharCount(yiguRight, yiguRightCount, 21);
-                updateAddressCharCount(address1, address1Count);
-                updateAddressCharCount(address2, address2Count);
-                updateAddressCharCount(address3, address3Count);
-            }
-            
-            validateInputs();
-        }
+             const qifuFields = document.getElementById('qifuFields');
+             const chaojianFields = document.getElementById('chaojianFields');
+             const textLeft = document.getElementById('textLeft');
+             const textRight = document.getElementById('textRight');
+             const qifuMiddle = document.getElementById('qifuMiddle');
+             const chaojianMiddle = document.getElementById('chaojianMiddle');
+             const yangshang1 = document.getElementById('yangshang1');
+             const addressFields = document.getElementById('addressFields');
+             const textRightContainer = document.getElementById('textRightContainer');
+             
+             if (!qifuFields || !chaojianFields) {
+                 console.error('Required fields not found');
+                 return;
+             }
+         
+             if (type === '超荐牌位') {
+                 // Hide 祈福牌位 fields
+                 qifuFields.style.display = 'none';
+                 textLeft.required = false;
+                 textRight.required = false;
+                 qifuMiddle.required = false;
+                 chaojianMiddle.required = true;
+                 
+                 // Show 超荐牌位 fields
+                 chaojianFields.classList.add('active');
+                 addressFields.classList.add('active');
+                 yangshang1.required = true;
+                 textRightContainer.style.display = 'none';
+                 
+                 // Clear 祈福牌位 fields
+                 textLeft.value = '';
+                 qifuMiddle.value = '';
+                 textRight.value = '';
+                 updateCharCount(textLeft, leftCount, 12);
+                 updateCharCount(qifuMiddle, qifuMiddleCount, 24);
+                 updateCharCount(textRight, rightCount, 12);
+                 
+             } else {
+                 // Show 祈福牌位 fields
+                 qifuFields.style.display = 'grid';
+                 textLeft.required = true;
+                 textRight.required = true;
+                 qifuMiddle.required = true;
+                 chaojianMiddle.required = false;
+                 
+                 chaojianFields.classList.remove('active');
+                 addressFields.classList.remove('active');
+                 yangshang1.required = false;
+                 textRightContainer.style.display = 'block';
+                 
+                 // Clear 超荐牌位 fields
+                 yangshang1.value = '';
+                 yangshang2.value = '';
+                 chaojianMiddle.value = '';
+                 address1.value = '';
+                 address2.value = '';
+                 address3.value = '';
+                 yiguLeft.value = '';
+                 yiguRight.value = '';
+                 updateCharCount(yangshang1, yangshang1Count, 28);
+                 updateCharCount(yangshang2, yangshang2Count, 28);
+                 updateCharCount(chaojianMiddle, chaojianMiddleCount, 12);
+                 updateCharCount(yiguLeft, yiguLeftCount, 21);
+                 updateCharCount(yiguRight, yiguRightCount, 21);
+                 updateAddressCharCount(address1, address1Count);
+                 updateAddressCharCount(address2, address2Count);
+                 updateAddressCharCount(address3, address3Count);
+             }
+             
+             validateInputs();
+         }
 
         function updateCharCount(input, countElement, maxLength) {
             const currentLength = input.value.length;
@@ -1427,9 +1429,6 @@ printNowBtn.addEventListener('click', function() {
 // Other event listeners
 textLeft.addEventListener('input', validateLeftRightPair);
 textRight.addEventListener('input', validateLeftRightPair);
-
-        // Initialize form state
-        updateFieldsVisibility(designType.value);
 
         // Add these new tooltip handlers
         // Create and append backdrop element
