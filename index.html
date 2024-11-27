@@ -1369,7 +1369,7 @@ textRight.addEventListener('input', validateLeftRightPair);
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-        const inputFields = document.querySelectorAll('input[type="text"], textarea');
+        const inputFields = document.querySelectorAll('input[type="text"]:not(#search), textarea');
         
         inputFields.forEach(field => {
             let timeout;
