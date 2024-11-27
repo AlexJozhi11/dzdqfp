@@ -1372,11 +1372,18 @@ textRight.addEventListener('input', validateLeftRightPair);
         const inputFields = document.querySelectorAll('input[type="text"], textarea');
         
         inputFields.forEach(field => {
+            let timeout;
+            
             field.addEventListener('input', function() {
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    this.value = converter(this.value);
+                }, 5000);
+            });
+
+            field.addEventListener('blur', function() {
+                clearTimeout(timeout);
                 this.value = converter(this.value);
-                this.setSelectionRange(start, end);
             });
         });
     });
