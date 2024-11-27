@@ -6,7 +6,23 @@
    <title>槟城金刚山牌位系统</title>
    <script src="https://cdn.tailwindcss.com"></script>
    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-   <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.min.js"></script>
+   <script>
+    function initializeOpenCC() {
+        try {
+            converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+            console.log('OpenCC initialized successfully');
+            hideLoadingOverlay();
+            updateFieldsVisibility(document.getElementById('designType').value);
+        } catch (error) {
+            console.error('Error initializing OpenCC:', error);
+            hideLoadingOverlay();
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.min.js" 
+        onload="initializeOpenCC()" 
+        onerror="console.error('Failed to load OpenCC script'); hideLoadingOverlay();">
+</script>
    <style>
        /* Keep all existing animations */
        @keyframes fadeIn {
