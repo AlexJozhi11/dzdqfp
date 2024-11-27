@@ -1287,11 +1287,16 @@ searchResults.addEventListener('change', function() {
     }
 });
 
-// Clear existing flag when form is manually modified
+// Clear existing flag when name field is modified or when no search result selected
 const formInputs = form.querySelectorAll('input:not(#search), select:not(#searchResults)');
 formInputs.forEach(input => {
     input.addEventListener('input', function() {
-        form.removeAttribute('data-using-existing');
+        // Remove data-using-existing if:
+        // 1. No search result selected, OR
+        // 2. The name field is being modified
+        if (!searchResults.value || this.id === 'name') {
+            form.removeAttribute('data-using-existing');
+        }
     });
 });
         
