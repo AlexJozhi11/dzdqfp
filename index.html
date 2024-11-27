@@ -6,6 +6,7 @@
    <title>槟城金刚山牌位系统</title>
    <script src="https://cdn.tailwindcss.com"></script>
    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.min.js"></script>
    <style>
        /* Keep all existing animations */
        @keyframes fadeIn {
@@ -701,6 +702,65 @@
         var yiguLeftCount = document.getElementById('yiguLeftCount');
         var yiguRightCount = document.getElementById('yiguRightCount');
 
+       // Initialize OpenCC
+      const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+      
+      // Function to handle Chinese conversion
+      function handleChineseInput(input) {
+          if (!input) return;
+          
+          const cursorPosition = input.selectionStart;
+          const originalLength = input.value.length;
+          
+          // Add converting class
+          input.classList.add('converting');
+          
+          // Convert text
+          let convertedText = converter(input.value);
+          
+          // Apply bracket rotation for address fields
+          if (input.id.startsWith('address')) {
+              convertedText = convertedText.replace(
+                  /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
+                  (match, open, content, close) => {
+                      return (rotatedChars[open] || open) + content + (rotatedChars[close] || close);
+                  }
+              );
+          }
+          
+          // Update input value
+          input.value = convertedText;
+          
+          // Adjust cursor position
+          const lengthDiff = convertedText.length - originalLength;
+          input.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
+          
+          // Remove converting class
+          setTimeout(() => input.classList.remove('converting'), 100);
+      }
+      
+      // Add input handlers to all relevant fields
+      const chineseInputFields = [
+          'textLeft', 'qifuMiddle', 'textRight',
+          'yangshang1', 'yangshang2', 'chaojianMiddle',
+          'address1', 'address2', 'address3',
+          'yiguLeft', 'yiguRight'
+      ];
+      
+      chineseInputFields.forEach(fieldId => {
+          const field = document.getElementById(fieldId);
+          if (field) {
+              field.addEventListener('input', function(e) {
+                  handleChineseInput(this);
+              });
+              
+              // Also handle paste events
+              field.addEventListener('paste', function(e) {
+                  setTimeout(() => handleChineseInput(this), 0);
+              });
+          }
+      });
+
         function updateFieldsVisibility(type) {
             if (type === '超荐牌位') {
                 // Hide 祈福牌位 fields
@@ -1364,29 +1424,6 @@ textRight.addEventListener('input', validateLeftRightPair);
         });
 
 })();
-</script>
-<script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/full.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-        const inputFields = document.querySelectorAll('input[type="text"]:not(#search), textarea');
-        
-        inputFields.forEach(field => {
-            let timeout;
-            
-            field.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    this.value = converter(this.value);
-                }, 5000);
-            });
-
-            field.addEventListener('blur', function() {
-                clearTimeout(timeout);
-                this.value = converter(this.value);
-            });
-        });
-    });
 </script>
 </body>
 </html>
