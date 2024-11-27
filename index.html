@@ -707,7 +707,15 @@
         var yiguRightCount = document.getElementById('yiguRightCount');
 
        // Initialize OpenCC
-      const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+      // Initialize OpenCC with error handling
+      let converter;
+      try {
+          converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+          hideLoadingOverlay(); // Hide loading overlay once OpenCC is initialized
+      } catch (error) {
+          console.error('Error initializing OpenCC:', error);
+          hideLoadingOverlay(); // Ensure loading overlay is hidden even if initialization fails
+      }
       const rotatedChars = {
           "(": "︵", ")": "︶",
           "（": "︵", "）": "︶",
