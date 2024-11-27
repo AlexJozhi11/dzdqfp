@@ -397,9 +397,12 @@
         }
 
         function ensureLoadingOverlayHidden() {
-            clearTimeout(hideLoadingOverlayTimeout);
-            hideLoadingOverlay();
-        }
+             clearTimeout(hideLoadingOverlayTimeout);
+             const loadingOverlay = document.getElementById('loadingOverlay');
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'none';
+             }
+         }
 
         // Handle Chinese input with error handling
         function handleChineseInput(input) {
@@ -445,16 +448,36 @@
         }
 
         function showLoginPage() {
-            hideLoadingOverlay();
-            loginPage.style.display = 'block';
-            mainPage.style.display = 'none';
-        }
-
-        function showMainPage() {
-            hideLoadingOverlay();
-            loginPage.style.display = 'none';
-            mainPage.style.display = 'block';
-        }
+             const loginPage = document.getElementById('loginPage');
+             const mainPage = document.getElementById('mainPage');
+             const loadingOverlay = document.getElementById('loadingOverlay');
+         
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'none';
+             }
+             if (loginPage) {
+                 loginPage.style.display = 'block';
+             }
+             if (mainPage) {
+                 mainPage.style.display = 'none';
+             }
+         }
+         
+         function showMainPage() {
+             const loginPage = document.getElementById('loginPage');
+             const mainPage = document.getElementById('mainPage');
+             const loadingOverlay = document.getElementById('loadingOverlay');
+         
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'none';
+             }
+             if (loginPage) {
+                 loginPage.style.display = 'none';
+             }
+             if (mainPage) {
+                 mainPage.style.display = 'block';
+             }
+         }
 
         function validateToken(token) {
             jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
@@ -1191,17 +1214,60 @@
             }
         }
 
-        // Main initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-
-            // Safety timeout to ensure loading overlay is hidden
-            hideLoadingOverlayTimeout = setTimeout(() => {
-                console.log('Safety timeout: hiding loading overlay');
-                if (loadingOverlay) {
-                    loadingOverlay.style.display = 'none';
-                }
-            }, 5000);
+         // Main initialization
+         document.addEventListener('DOMContentLoaded', function() {
+             // Ensure all required DOM elements exist before proceeding
+             const loadingOverlay = document.getElementById('loadingOverlay');
+             const loginPage = document.getElementById('loginPage');
+             const mainPage = document.getElementById('mainPage');
+         
+             if (!loadingOverlay || !loginPage || !mainPage) {
+                 console.error('Required DOM elements not found');
+                 return;
+             }
+         
+             // Safety timeout to ensure loading overlay is hidden
+             hideLoadingOverlayTimeout = setTimeout(() => {
+                 console.log('Safety timeout: hiding loading overlay');
+                 loadingOverlay.style.display = 'none';
+             }, 5000);
+         
+             // Initialize OpenCC with better error handling
+             const openccScript = document.createElement('script');
+             openccScript.src = "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc.min.js";
+             openccScript.onload = () => {
+                 initializeOpenCC();
+                 ensureLoadingOverlayHidden();
+             };
+             openccScript.onerror = (error) => {
+                 console.warn('Failed to load OpenCC script - continuing without conversion:', error);
+                 ensureLoadingOverlayHidden();
+                 // Still proceed with showing login page
+                 showMainOrLoginPage();
+             };
+             document.head.appendChild(openccScript);
+         
+             // Initialize all event listeners
+             initializeEventListeners();
+         
+             // Initialize form visibility
+             if (designType && designType.value) {
+                 updateFieldsVisibility(designType.value);
+             }
+         
+             // Show appropriate page based on token
+             showMainOrLoginPage();
+         });
+         
+         // Add this new function to handle page display
+         function showMainOrLoginPage() {
+             const token = localStorage.getItem('token');
+             if (token) {
+                 validateToken(token);
+             } else {
+                 showLoginPage();
+             }
+         }
 
             // Load OpenCC
             const openccScript = document.createElement('script');
