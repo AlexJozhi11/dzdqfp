@@ -1365,5 +1365,18 @@ textRight.addEventListener('input', validateLeftRightPair);
 
 })();
 </script>
+<script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/full.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+        const inputFields = document.querySelectorAll('input[type="text"], textarea');
+        
+        inputFields.forEach(field => {
+            field.addEventListener('input', function() {
+                this.value = converter(this.value);
+            });
+        });
+    });
+</script>
 </body>
 </html>
