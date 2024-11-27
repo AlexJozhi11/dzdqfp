@@ -4,25 +4,6 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>槟城金刚山牌位系统</title>
-   <script src="https://cdn.tailwindcss.com"></script>
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-   <script>
-    function initializeOpenCC() {
-        try {
-            converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-            console.log('OpenCC initialized successfully');
-            hideLoadingOverlay();
-            updateFieldsVisibility(document.getElementById('designType').value);
-        } catch (error) {
-            console.error('Error initializing OpenCC:', error);
-            hideLoadingOverlay();
-        }
-    }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.min.js" 
-        onload="initializeOpenCC()" 
-        onerror="console.error('Failed to load OpenCC script'); hideLoadingOverlay();">
-</script>
    <style>
        /* Keep all existing animations */
        @keyframes fadeIn {
@@ -320,6 +301,40 @@
    </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script>
+        let hideLoadingOverlayTimeout;
+        function initializeOpenCC() {
+            try {
+                if (typeof OpenCC !== 'undefined') {
+                    converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                    console.log('OpenCC initialized successfully');
+                    clearTimeout(hideLoadingOverlayTimeout);
+                    hideLoadingOverlay();
+                    if (designType) {
+                        updateFieldsVisibility(designType.value);
+                    }
+                } else {
+                    console.error('OpenCC not defined');
+                    hideLoadingOverlay();
+                }
+            } catch (error) {
+                console.error('Error initializing OpenCC:', error);
+                hideLoadingOverlay();
+            }
+        }
+   
+        // Add safety timeout
+        hideLoadingOverlayTimeout = setTimeout(() => {
+            console.error('Timeout waiting for OpenCC');
+            hideLoadingOverlay();
+        }, 5000);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.min.js" 
+            onload="initializeOpenCC()" 
+            onerror="console.error('Failed to load OpenCC script'); hideLoadingOverlay();">
+    </script>
     <div id="loadingOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
     </div>
@@ -768,41 +783,57 @@
             "【": "︻", "】": "︼"
         };
          
-        // Function to handle Chinese conversion
-        function handleChineseInput(input) {
-            if (!input || !converter) {
-                console.log('Converter not ready or no input');
-                return;
-            }
+        // Function to handle Chinese conversion with enhanced error handling
+       function handleChineseInput(input) {
+           if (!input) {
+               console.log('No input provided');
+               return;
+           }
+           if (!converter) {
+               console.log('Converter not initialized, trying to initialize...');
+               try {
+                   if (typeof OpenCC !== 'undefined') {
+                       converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                       console.log('Converter initialized on demand');
+                   } else {
+                       console.error('OpenCC not available');
+                       return;
+                   }
+               } catch (error) {
+                   console.error('Failed to initialize converter:', error);
+                   return;
+               }
+           }
           
-            try {
-                const cursorPosition = input.selectionStart;
-                const originalLength = input.value.length;
+           try {
+               const cursorPosition = input.selectionStart;
+               const originalLength = input.value.length;
               
-                input.classList.add('converting');
+               input.classList.add('converting');
               
-                let convertedText = converter(input.value);
+               let convertedText = converter(input.value);
+               console.log('Conversion result:', convertedText); // Debug log
               
-                if (input.id.startsWith('address')) {
-                    convertedText = convertedText.replace(
-                        /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
-                        (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
-                    );
-                }
+               if (input.id.startsWith('address')) {
+                   convertedText = convertedText.replace(
+                       /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
+                       (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
+                   );
+               }
               
-                if (convertedText !== input.value) {
-                    input.value = convertedText;
-                    input.setSelectionRange(cursorPosition, cursorPosition);
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                }
+               if (convertedText !== input.value) {
+                   input.value = convertedText;
+                   input.setSelectionRange(cursorPosition, cursorPosition);
+                   input.dispatchEvent(new Event('input', { bubbles: true }));
+               }
               
-                setTimeout(() => input.classList.remove('converting'), 100);
-            } catch (error) {
-                console.error('Error converting text:', error);
-                input.classList.remove('converting');
-            }
-        }
-
+               setTimeout(() => input.classList.remove('converting'), 100);
+           } catch (error) {
+               console.error('Error converting text:', error);
+               input.classList.remove('converting');
+           }
+       }
+       
         function updateFieldsVisibility(type) {
              const qifuFields = document.getElementById('qifuFields');
              const chaojianFields = document.getElementById('chaojianFields');
