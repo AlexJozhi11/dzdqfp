@@ -1051,16 +1051,6 @@
                      var originalEntry = JSON.parse(searchValue);
                      originalData = {
                          originalName: originalEntry.name,
-                         originalTextLeft: originalEntry.textLeft,
-                         originalTextMiddle: originalEntry.textMiddle,
-                         originalTextRight: originalEntry.textRight,
-                         originalYangshang1: originalEntry.yangshang1,
-                         originalYangshang2: originalEntry.yangshang2,
-                         originalAddress1: originalEntry.address1,
-                         originalAddress2: originalEntry.address2,
-                         originalAddress3: originalEntry.address3,
-                         originalYiguLeft: originalEntry.yiguLeft,
-                         originalYiguRight: originalEntry.yiguRight,
                          timestamp: originalEntry.timestamp
                      };
                  }
@@ -1072,7 +1062,7 @@
                  name: document.getElementById('name').value,
                  designType: document.getElementById('designType').value,
                  useExisting: form.hasAttribute('data-using-existing'),
-                 ...originalData  // Include all original data for exact row matching
+                 ...originalData  // Include original name and timestamp for exact row matching
              };
          
              if (designType.value === '超荐牌位') {
