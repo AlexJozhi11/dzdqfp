@@ -1373,7 +1373,10 @@ textRight.addEventListener('input', validateLeftRightPair);
         
         inputFields.forEach(field => {
             field.addEventListener('input', function() {
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
                 this.value = converter(this.value);
+                this.setSelectionRange(start, end);
             });
         });
     });
