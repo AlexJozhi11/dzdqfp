@@ -485,35 +485,30 @@
         function jsonp(url, callback) {
              var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
              var timeoutId;
-         
+             
              window[callbackName] = function(data) {
-                 // Clear the timeout
-                 if (timeoutId) clearTimeout(timeoutId);
-                 // Clean up
+                 clearTimeout(timeoutId);
                  delete window[callbackName];
-                 if (script.parentNode) script.parentNode.removeChild(script);
-                 // Execute callback
+                 document.body.removeChild(script);
                  callback(data);
              };
          
              var script = document.createElement('script');
              script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
              
-             // Add error handling
              script.onerror = function() {
-                 if (timeoutId) clearTimeout(timeoutId);
+                 clearTimeout(timeoutId);
                  delete window[callbackName];
-                 if (script.parentNode) script.parentNode.removeChild(script);
-                 callback({ success: false, error: '网络连接错误' });
+                 document.body.removeChild(script);
+                 callback({ success: false, error: '连接错误，请重试' });
              };
-         
-             // Add timeout
+             
              timeoutId = setTimeout(function() {
                  delete window[callbackName];
-                 if (script.parentNode) script.parentNode.removeChild(script);
-                 callback({ success: false, error: '请求超时' });
-             }, 10000); // 10 second timeout
-         
+                 document.body.removeChild(script);
+                 callback({ success: false, error: '请求超时，请重试' });
+             }, 15000);
+             
              document.body.appendChild(script);
          }
 
@@ -973,34 +968,35 @@
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
+                    showLoadingOverlay();
+                    
                     var username = document.getElementById('username')?.value || '';
                     var password = document.getElementById('password')?.value || '';
                     
-                    // Show loading state
-                    const submitButton = loginForm.querySelector('button[type="submit"]');
+                    var submitButton = loginForm.querySelector('button[type="submit"]');
                     if (submitButton) {
                         submitButton.disabled = true;
-                        submitButton.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>登录中...</span></span>';
                     }
                     
                     jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-                        if (response.success) {
+                        if (response.success && response.token) {
                             localStorage.setItem('token', response.token);
                             showMainPage();
                         } else {
+                            hideLoadingOverlay();
                             if (loginMessage) {
-                                loginMessage.textContent = '登录失败: ' + (response.error || '登录失败，请重试');
+                                loginMessage.textContent = response.error || '登录失败，请重试';
                                 loginMessage.className = 'text-center text-sm text-red-600';
                             }
-                            // Reset button state
-                            if (submitButton) {
-                                submitButton.disabled = false;
-                                submitButton.innerHTML = '登录';
-                            }
+                        }
+                        
+                        if (submitButton) {
+                            submitButton.disabled = false;
                         }
                     });
                 });
             }
+           
             // Logout button handler
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function() {
@@ -1253,51 +1249,47 @@
                  return;
              }
          
-             // Safety timeout to ensure loading overlay is hidden
-             hideLoadingOverlayTimeout = setTimeout(() => {
-                 console.log('Safety timeout: hiding loading overlay');
-                 if (loadingOverlay) {
-                     loadingOverlay.style.display = 'none';
-                 }
-             }, 5000);
-         
-             // Function to initialize page
-             function initializePage() {
-                 // Initialize all event listeners
-                 initializeEventListeners();
-         
-                 // Initialize form visibility
-                 if (designType && designType.value) {
-                     updateFieldsVisibility(designType.value);
-                 }
-         
-                 // Show appropriate page based on token
-                 showMainOrLoginPage();
+             // Initialize core functionality first
+             initializeEventListeners();
+             if (designType && designType.value) {
+                 updateFieldsVisibility(designType.value);
              }
          
-             // Initialize OpenCC with better error handling
-             const openccScript = document.createElement('script');
-             openccScript.crossOrigin = "anonymous";
-             openccScript.src = "https://cdnjs.cloudflare.com/ajax/libs/opencc/1.1.3/umd/opencc.min.js";
-             
-             openccScript.onload = () => {
-                 try {
-                     initializeOpenCC();
-                 } catch (error) {
-                     console.warn('Error initializing OpenCC:', error);
-                 }
-                 ensureLoadingOverlayHidden();
-                 initializePage();
-             };
-             
-             openccScript.onerror = (error) => {
-                 console.warn('Failed to load OpenCC script - continuing without conversion:', error);
-                 ensureLoadingOverlayHidden();
-                 // Still proceed with page initialization
-                 initializePage();
-             };
-             
-             document.head.appendChild(openccScript);
+             // Check login status and show appropriate page
+             const token = localStorage.getItem('token');
+             if (token) {
+                 validateToken(token);
+             } else {
+                 hideLoadingOverlay();
+                 showLoginPage();
+             }
+         
+             // Then try to load OpenCC in the background
+             function loadOpenCC() {
+                 const openccScript = document.createElement('script');
+                 openccScript.crossOrigin = "anonymous";
+                 openccScript.src = "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc.min.js";
+                 
+                 openccScript.onload = () => {
+                     try {
+                         if (typeof OpenCC !== 'undefined') {
+                             converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                             console.log('OpenCC initialized successfully');
+                         }
+                     } catch (error) {
+                         console.warn('Error initializing OpenCC:', error);
+                     }
+                 };
+                 
+                 openccScript.onerror = (error) => {
+                     console.warn('Failed to load OpenCC script - continuing without conversion:', error);
+                 };
+                 
+                 document.head.appendChild(openccScript);
+             }
+         
+             // Load OpenCC after core functionality is ready
+             setTimeout(loadOpenCC, 1000);
          });
 
          
@@ -1312,7 +1304,9 @@
          }
 
          function ensureLoadingOverlayHidden() {
-             clearTimeout(hideLoadingOverlayTimeout);
+             if (hideLoadingOverlayTimeout) {
+                 clearTimeout(hideLoadingOverlayTimeout);
+             }
              const loadingOverlay = document.getElementById('loadingOverlay');
              if (loadingOverlay) {
                  loadingOverlay.style.display = 'none';
