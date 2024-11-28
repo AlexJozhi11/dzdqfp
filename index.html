@@ -1221,7 +1221,9 @@
              // Safety timeout to ensure loading overlay is hidden
              hideLoadingOverlayTimeout = setTimeout(() => {
                  console.log('Safety timeout: hiding loading overlay');
-                 loadingOverlay.style.display = 'none';
+                 if (loadingOverlay) {
+                     loadingOverlay.style.display = 'none';
+                 }
              }, 5000);
          
              // Initialize OpenCC with better error handling
@@ -1249,7 +1251,8 @@
          
              // Show appropriate page based on token
              showMainOrLoginPage();
-         });
+         }); // End of DOMContentLoaded
+
          
          // Add this new function to handle page display
          function showMainOrLoginPage() {
