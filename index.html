@@ -482,30 +482,33 @@
         function jsonp(url, callback) {
              var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
              var timeoutId;
-             
+         
              window[callbackName] = function(data) {
                  clearTimeout(timeoutId);
-                 delete window[callbackName];
-                 document.body.removeChild(script);
+                 cleanup();
                  callback(data);
              };
+         
+             function cleanup() {
+                 delete window[callbackName];
+                 if (script.parentNode) script.parentNode.removeChild(script);
+             }
          
              var script = document.createElement('script');
              script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
              
-             script.onerror = function() {
+             script.onerror = function(error) {
                  clearTimeout(timeoutId);
-                 delete window[callbackName];
-                 document.body.removeChild(script);
-                 callback({ success: false, error: '连接错误，请重试' });
+                 cleanup();
+                 console.error('JSONP request failed:', error);
+                 callback({ success: false, error: '网络连接错误，请重试' });
              };
-             
+         
              timeoutId = setTimeout(function() {
-                 delete window[callbackName];
-                 document.body.removeChild(script);
+                 cleanup();
                  callback({ success: false, error: '请求超时，请重试' });
-             }, 15000);
-             
+             }, 10000);
+         
              document.body.appendChild(script);
          }
 
@@ -970,14 +973,25 @@
                     const password = document.getElementById('password')?.value || '';
                     const submitBtn = loginForm.querySelector('button[type="submit"]');
                     
-                    if (submitBtn) {
-                        submitBtn.disabled = true;
+                    if (!username || !password) {
+                        if (loginMessage) {
+                            loginMessage.textContent = '请输入用户名和密码';
+                            loginMessage.className = 'text-center text-sm text-red-600';
+                        }
+                        return;
                     }
                     
+                    // Disable submit button and show loading state
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>登录中...</span></span>';
+                    }
+                    
+                    // Show loading overlay
                     showLoadingOverlay();
                     
-                    jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-                        try {
+                    try {
+                        jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
                             if (response && response.success && response.token) {
                                 localStorage.setItem('token', response.token);
                                 showMainPage();
@@ -987,20 +1001,26 @@
                                     loginMessage.textContent = response.error || '登录失败，请重试';
                                     loginMessage.className = 'text-center text-sm text-red-600';
                                 }
+                                // Reset button
+                                if (submitBtn) {
+                                    submitBtn.disabled = false;
+                                    submitBtn.innerHTML = '登录';
+                                }
                             }
-                        } catch (error) {
-                            console.error('Login error:', error);
-                            hideLoadingOverlay();
-                            if (loginMessage) {
-                                loginMessage.textContent = '登录处理时出错，请重试';
-                                loginMessage.className = 'text-center text-sm text-red-600';
-                            }
-                        } finally {
-                            if (submitBtn) {
-                                submitBtn.disabled = false;
-                            }
+                        });
+                    } catch (error) {
+                        console.error('Login request failed:', error);
+                        hideLoadingOverlay();
+                        if (loginMessage) {
+                            loginMessage.textContent = '登录请求失败，请重试';
+                            loginMessage.className = 'text-center text-sm text-red-600';
                         }
-                    });
+                        // Reset button
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '登录';
+                        }
+                    }
                 });
             }
            
@@ -1246,38 +1266,40 @@
 
          // Main initialization
          document.addEventListener('DOMContentLoaded', function() {
-             // Initialize core login functionality first
-             initializeCore();
-             
-             // Try to load OpenCC separately
-             setTimeout(loadOpenCC, 1000);
-         });
+             // Ensure all required DOM elements exist before proceeding
+             const loadingOverlay = document.getElementById('loadingOverlay');
+             const loginPage = document.getElementById('loginPage');
+             const mainPage = document.getElementById('mainPage');
          
-         function initializeCore() {
-             // Initialize all event listeners
-             initializeEventListeners();
-         
-             // Initialize form visibility if needed
-             if (designType && designType.value) {
-                 updateFieldsVisibility(designType.value);
+             if (!loadingOverlay || !loginPage || !mainPage) {
+                 console.error('Required DOM elements not found');
+                 return;
              }
          
-             // Check token and show appropriate page
+             // Initialize core functionality immediately
+             initializeEventListeners();
+         
+             // Check login status first
              const token = localStorage.getItem('token');
              if (token) {
                  validateToken(token);
              } else {
+                 // Hide loading overlay and show login page
                  hideLoadingOverlay();
                  showLoginPage();
              }
-         }
+         
+             // Try to load OpenCC in background
+             setTimeout(loadOpenCC, 1000);
+         });
          
          function loadOpenCC() {
              try {
                  const script = document.createElement('script');
                  script.crossOrigin = "anonymous";
                  script.type = 'text/javascript';
-                 script.src = 'https://cdn.jsdelivr.net/npm/opencc-js/dist/umd/opencc.js';
+                 // Use the correct CDN URL
+                 script.src = 'https://cdn.jsdelivr.net/npm/opencc-js@latest/dist/browser/opencc.min.js';
                  
                  script.onload = function() {
                      try {
