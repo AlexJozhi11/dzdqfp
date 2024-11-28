@@ -436,6 +436,21 @@
              if (mainPage) {
                  mainPage.style.display = 'none';
              }
+             
+             // Clear any existing login data
+             localStorage.removeItem('token');
+             
+             // Reset login form if it exists
+             const loginForm = document.getElementById('loginForm');
+             if (loginForm) {
+                 loginForm.reset();
+             }
+             
+             // Reset login message
+             const loginMessage = document.getElementById('loginMessage');
+             if (loginMessage) {
+                 loginMessage.textContent = '';
+             }
          }
          
          function showMainPage() {
@@ -460,7 +475,9 @@
                  return;
              }
          
-             jsonp(_0x3c4d + '?action=validateToken&token=' + encodeURIComponent(token), function(response) {
+             const url = _0x3c4d + '?action=validateToken&token=' + encodeURIComponent(token);
+             
+             jsonp(url, function(response) {
                  if (response && response.success) {
                      hideLoadingOverlay();
                      showMainPage();
@@ -969,6 +986,7 @@
                     const username = document.getElementById('username')?.value || '';
                     const password = document.getElementById('password')?.value || '';
                     const submitBtn = loginForm.querySelector('button[type="submit"]');
+                    const loginMessage = document.getElementById('loginMessage');
                     
                     if (!username || !password) {
                         if (loginMessage) {
@@ -987,37 +1005,26 @@
                     // Show loading overlay
                     showLoadingOverlay();
                     
-                    try {
-                        jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-                            if (response && response.success && response.token) {
-                                localStorage.setItem('token', response.token);
-                                showMainPage();
-                            } else {
-                                hideLoadingOverlay();
-                                if (loginMessage) {
-                                    loginMessage.textContent = response.error || '登录失败，请重试';
-                                    loginMessage.className = 'text-center text-sm text-red-600';
-                                }
-                                // Reset button
-                                if (submitBtn) {
-                                    submitBtn.disabled = false;
-                                    submitBtn.innerHTML = '登录';
-                                }
+                    const url = _0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password);
+                    
+                    jsonp(url, function(response) {
+                        if (response && response.success && response.token) {
+                            localStorage.setItem('token', response.token);
+                            hideLoadingOverlay();
+                            showMainPage();
+                        } else {
+                            hideLoadingOverlay();
+                            if (loginMessage) {
+                                loginMessage.textContent = response.error || '登录失败，请重试';
+                                loginMessage.className = 'text-center text-sm text-red-600';
                             }
-                        });
-                    } catch (error) {
-                        console.error('Login request failed:', error);
-                        hideLoadingOverlay();
-                        if (loginMessage) {
-                            loginMessage.textContent = '登录请求失败，请重试';
-                            loginMessage.className = 'text-center text-sm text-red-600';
+                            // Reset button
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = '登录';
+                            }
                         }
-                        // Reset button
-                        if (submitBtn) {
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = '登录';
-                        }
-                    }
+                    });
                 });
             }
            
@@ -1259,9 +1266,10 @@
              // Initialize core functionality immediately
              initializeEventListeners();
          
-             // Check login status and show appropriate page
+             // Check login status first
              const token = localStorage.getItem('token');
              if (token) {
+                 showLoadingOverlay();
                  validateToken(token);
              } else {
                  hideLoadingOverlay();
