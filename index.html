@@ -315,7 +315,6 @@
 
         // Core variables
         let hideLoadingOverlayTimeout;
-        let converter = null; // Initialize as null
        
         // Core DOM Elements
         var loginForm = document.getElementById('loginForm');
@@ -398,25 +397,19 @@
 
         // Handle Chinese input with error handling
         function handleChineseInput(input) {
-             if (!input) {
-                 return;
-             }
+             if (!input) return;
          
              input.classList.add('converting');
              
              try {
-                 if (converter) {
-                     const cursorPosition = input.selectionStart;
-                     let convertedText = converter(input.value);
-                     
-                     if (input.id.startsWith('address')) {
-                         convertedText = convertedText.replace(
-                             /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
-                             (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
-                         );
-                     }
+                 if (input.id.startsWith('address')) {
+                     let convertedText = input.value.replace(
+                         /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
+                         (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
+                     );
                      
                      if (convertedText !== input.value) {
+                         const cursorPosition = input.selectionStart;
                          input.value = convertedText;
                          input.setSelectionRange(cursorPosition, cursorPosition);
                          input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -490,8 +483,12 @@
              };
          
              function cleanup() {
-                 delete window[callbackName];
-                 if (script.parentNode) script.parentNode.removeChild(script);
+                 if (window[callbackName]) {
+                     delete window[callbackName];
+                 }
+                 if (script && script.parentNode) {
+                     script.parentNode.removeChild(script);
+                 }
              }
          
              var script = document.createElement('script');
@@ -511,7 +508,7 @@
          
              document.body.appendChild(script);
          }
-
+       
         function setLoading(isLoading) {
             addToQueueBtn.disabled = isLoading;
             printNowBtn.disabled = isLoading;
@@ -1247,23 +1244,7 @@
             });
         }
 
-        // Initialize OpenCC
-        function initializeOpenCC() {
-             try {
-                 if (typeof OpenCC !== 'undefined') {
-                     converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                     console.log('OpenCC initialized successfully');
-                 } else {
-                     console.warn('OpenCC not defined - continuing without conversion');
-                 }
-             } catch (error) {
-                 console.warn('Error initializing OpenCC:', error);
-             } finally {
-                 // Always ensure loading overlay is hidden
-                 hideLoadingOverlay();
-             }
-         }
-         // Main initialization
+         // Replace the existing DOMContentLoaded handler with this:
          document.addEventListener('DOMContentLoaded', function() {
              // Ensure all required DOM elements exist before proceeding
              const loadingOverlay = document.getElementById('loadingOverlay');
@@ -1278,60 +1259,16 @@
              // Initialize core functionality immediately
              initializeEventListeners();
          
-             // Check login status first
+             // Check login status and show appropriate page
              const token = localStorage.getItem('token');
              if (token) {
                  validateToken(token);
              } else {
-                 // Hide loading overlay and show login page
                  hideLoadingOverlay();
                  showLoginPage();
              }
-         
-             // Try to load OpenCC in background
-             setTimeout(loadOpenCC, 1000);
-         
-             // Add fallback timeout to ensure loading overlay is hidden
-             setTimeout(function() {
-                 if (loadingOverlay.style.display !== 'none') {
-                     console.warn('Forcing loading overlay to hide after timeout');
-                     hideLoadingOverlay();
-                 }
-             }, 5000); // Force hide after 5 seconds if something goes wrong
          });
          
-         function loadOpenCC() {
-             try {
-                 const script = document.createElement('script');
-                 script.crossOrigin = "anonymous";
-                 script.type = 'text/javascript';
-                 script.src = 'https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/data.min.js';
-                 
-                 script.onload = function() {
-                     try {
-                         if (typeof OpenCC !== 'undefined') {
-                             converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                             console.log('OpenCC loaded successfully');
-                         }
-                     } catch (err) {
-                         console.warn('OpenCC initialization failed:', err);
-                     } finally {
-                         hideLoadingOverlay();
-                     }
-                 };
-                 
-                 script.onerror = function(error) {
-                     console.warn('OpenCC script loading failed:', error);
-                     hideLoadingOverlay();
-                 };
-                 
-                 document.head.appendChild(script);
-             } catch (error) {
-                 console.warn('OpenCC loading attempt failed:', error);
-                 hideLoadingOverlay();
-             }
-         }
-       
          // Add this new function to handle page display
          function showMainOrLoginPage() {
              const token = localStorage.getItem('token');
