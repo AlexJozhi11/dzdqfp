@@ -427,30 +427,57 @@
         function showLoginPage() {
              const loginPage = document.getElementById('loginPage');
              const mainPage = document.getElementById('mainPage');
-             
-             if (loginPage) loginPage.style.display = 'block';
-             if (mainPage) mainPage.style.display = 'none';
-             hideLoadingOverlay();
-             
-             // Reset form if exists
-             const loginForm = document.getElementById('loginForm');
-             if (loginForm) loginForm.reset();
-             
-             // Clear any error messages
+             const loadingOverlay = document.getElementById('loadingOverlay');
              const loginMessage = document.getElementById('loginMessage');
+             const loginForm = document.getElementById('loginForm');
+             
+             // Hide loading overlay
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'none';
+             }
+             
+             // Show login page, hide main page
+             if (loginPage) {
+                 loginPage.style.display = 'block';
+             }
+             if (mainPage) {
+                 mainPage.style.display = 'none';
+             }
+             
+             // Reset form and message
+             if (loginForm) {
+                 loginForm.reset();
+                 const submitBtn = loginForm.querySelector('button[type="submit"]');
+                 if (submitBtn) {
+                     submitBtn.disabled = false;
+                     submitBtn.innerHTML = '登录';
+                 }
+                 
+                 const inputs = loginForm.querySelectorAll('input');
+                 inputs.forEach(input => {
+                     input.disabled = false;
+                 });
+             }
+             
              if (loginMessage) {
                  loginMessage.textContent = '';
-                 loginMessage.className = '';
              }
          }
          
          function showMainPage() {
              const loginPage = document.getElementById('loginPage');
              const mainPage = document.getElementById('mainPage');
+             const loadingOverlay = document.getElementById('loadingOverlay');
              
-             if (loginPage) loginPage.style.display = 'none';
-             if (mainPage) mainPage.style.display = 'block';
-             hideLoadingOverlay();
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'none';
+             }
+             if (loginPage) {
+                 loginPage.style.display = 'none';
+             }
+             if (mainPage) {
+                 mainPage.style.display = 'block';
+             }
          }
 
         function validateToken(token) {
@@ -474,37 +501,46 @@
          }
 
         function jsonp(url, callback) {
-             var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-             var timeoutId;
+             const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+             let timeoutId;
+             let script;
+             
+             function cleanup() {
+                 if (window[callbackName]) {
+                     delete window[callbackName];
+                 }
+                 if (script && script.parentNode) {
+                     script.parentNode.removeChild(script);
+                 }
+                 if (timeoutId) {
+                     clearTimeout(timeoutId);
+                 }
+             }
              
              window[callbackName] = function(data) {
-                 clearTimeout(timeoutId);
                  cleanup();
                  callback(data);
              };
              
-             function cleanup() {
-                 delete window[callbackName];
-                 if (script && script.parentNode) {
-                     script.parentNode.removeChild(script);
-                 }
-             }
-             
-             var script = document.createElement('script');
-             url = url.replace('callback=?', 'callback=' + callbackName);
-             script.src = url + (url.indexOf('callback=') === -1 ? 
-                 (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName : '');
+             script = document.createElement('script');
+             script.type = 'text/javascript';
+             script.async = true;
+             script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
              
              script.onerror = function(error) {
-                 clearTimeout(timeoutId);
                  cleanup();
-                 console.error('JSONP request failed:', error);
-                 callback({ success: false, error: '网络连接错误，请重试' });
+                 callback({ 
+                     success: false, 
+                     error: '网络连接错误，请重试'
+                 });
              };
              
              timeoutId = setTimeout(function() {
                  cleanup();
-                 callback({ success: false, error: '请求超时，请重试' });
+                 callback({ 
+                     success: false, 
+                     error: '请求超时，请重试'
+                 });
              }, 10000);
              
              document.body.appendChild(script);
@@ -967,15 +1003,17 @@
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
-                    const username = document.getElementById('username')?.value || '';
-                    const password = document.getElementById('password')?.value || '';
+                    const usernameInput = document.getElementById('username');
+                    const passwordInput = document.getElementById('password');
                     const submitBtn = loginForm.querySelector('button[type="submit"]');
                     const loginMessage = document.getElementById('loginMessage');
                     
-                    // Clear previous error messages
+                    const username = usernameInput?.value?.trim();
+                    const password = passwordInput?.value?.trim();
+                    
+                    // Clear any previous error messages
                     if (loginMessage) {
                         loginMessage.textContent = '';
-                        loginMessage.className = '';
                     }
                     
                     if (!username || !password) {
@@ -986,7 +1024,9 @@
                         return;
                     }
                     
-                    // Disable submit button and show loading state
+                    // Disable form inputs
+                    if (usernameInput) usernameInput.disabled = true;
+                    if (passwordInput) passwordInput.disabled = true;
                     if (submitBtn) {
                         submitBtn.disabled = true;
                         submitBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>登录中...</span></span>';
@@ -995,29 +1035,52 @@
                     // Show loading overlay
                     showLoadingOverlay();
                     
-                    const loginUrl = _0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password);
+                    // Remove any existing token
+                    localStorage.removeItem('token');
                     
-                    jsonp(loginUrl, function(response) {
-                        console.log('Login response:', response); // For debugging
-                        
-                        if (response && response.success && response.token) {
-                            localStorage.setItem('token', response.token);
-                            showMainPage();
-                        } else {
-                            if (loginMessage) {
-                                loginMessage.textContent = response.error || '登录失败，请重试';
-                                loginMessage.className = 'text-center text-sm text-red-600';
+                    // Prepare login URL
+                    const loginUrl = _0x3c4d + '?action=login'
+                        + '&username=' + encodeURIComponent(username)
+                        + '&password=' + encodeURIComponent(password);
+                    
+                    try {
+                        jsonp(loginUrl, function(response) {
+                            if (response && response.success && response.token) {
+                                // Store token and show main page
+                                localStorage.setItem('token', response.token);
+                                hideLoadingOverlay();
+                                showMainPage();
+                            } else {
+                                // Show error message
+                                hideLoadingOverlay();
+                                if (loginMessage) {
+                                    loginMessage.textContent = response.error || '登录失败，请重试';
+                                    loginMessage.className = 'text-center text-sm text-red-600';
+                                }
+                                // Re-enable form inputs
+                                if (usernameInput) usernameInput.disabled = false;
+                                if (passwordInput) passwordInput.disabled = false;
+                                if (submitBtn) {
+                                    submitBtn.disabled = false;
+                                    submitBtn.innerHTML = '登录';
+                                }
                             }
+                        });
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        hideLoadingOverlay();
+                        if (loginMessage) {
+                            loginMessage.textContent = '登录过程出错，请重试';
+                            loginMessage.className = 'text-center text-sm text-red-600';
                         }
-                        
-                        // Reset button state
+                        // Re-enable form inputs
+                        if (usernameInput) usernameInput.disabled = false;
+                        if (passwordInput) passwordInput.disabled = false;
                         if (submitBtn) {
                             submitBtn.disabled = false;
                             submitBtn.innerHTML = '登录';
                         }
-                        
-                        hideLoadingOverlay();
-                    });
+                    }
                 });
             }
            
@@ -1246,23 +1309,15 @@
 
          // Replace the existing DOMContentLoaded handler with this:
          document.addEventListener('DOMContentLoaded', function() {
-             // Ensure all required DOM elements exist before proceeding
-             const loadingOverlay = document.getElementById('loadingOverlay');
-             const loginPage = document.getElementById('loginPage');
-             const mainPage = document.getElementById('mainPage');
-         
-             if (!loadingOverlay || !loginPage || !mainPage) {
-                 console.error('Required DOM elements not found');
-                 return;
-             }
-         
-             // Initialize core functionality immediately
-             initializeEventListeners();
-         
-             // Check login status first
              const token = localStorage.getItem('token');
+             
+             // Always show loading overlay initially
+             showLoadingOverlay();
+             
+             // Initialize event listeners
+             initializeEventListeners();
+             
              if (token) {
-                 showLoadingOverlay();
                  validateToken(token);
              } else {
                  hideLoadingOverlay();
