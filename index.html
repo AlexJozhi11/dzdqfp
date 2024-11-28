@@ -1249,21 +1249,20 @@
 
         // Initialize OpenCC
         function initializeOpenCC() {
-            try {
-                if (typeof OpenCC !== 'undefined') {
-                    converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                    console.log('OpenCC initialized successfully');
-                    ensureLoadingOverlayHidden();
-                } else {
-                    console.warn('OpenCC not defined - continuing without conversion');
-                    ensureLoadingOverlayHidden();
-                }
-            } catch (error) {
-                console.warn('Error initializing OpenCC:', error);
-                ensureLoadingOverlayHidden();
-            }
-        }
-
+             try {
+                 if (typeof OpenCC !== 'undefined') {
+                     converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                     console.log('OpenCC initialized successfully');
+                 } else {
+                     console.warn('OpenCC not defined - continuing without conversion');
+                 }
+             } catch (error) {
+                 console.warn('Error initializing OpenCC:', error);
+             } finally {
+                 // Always ensure loading overlay is hidden
+                 hideLoadingOverlay();
+             }
+         }
          // Main initialization
          document.addEventListener('DOMContentLoaded', function() {
              // Ensure all required DOM elements exist before proceeding
@@ -1291,6 +1290,14 @@
          
              // Try to load OpenCC in background
              setTimeout(loadOpenCC, 1000);
+         
+             // Add fallback timeout to ensure loading overlay is hidden
+             setTimeout(function() {
+                 if (loadingOverlay.style.display !== 'none') {
+                     console.warn('Forcing loading overlay to hide after timeout');
+                     hideLoadingOverlay();
+                 }
+             }, 5000); // Force hide after 5 seconds if something goes wrong
          });
          
          function loadOpenCC() {
@@ -1298,8 +1305,7 @@
                  const script = document.createElement('script');
                  script.crossOrigin = "anonymous";
                  script.type = 'text/javascript';
-                 // Use the correct CDN URL
-                 script.src = 'https://cdn.jsdelivr.net/npm/opencc-js@latest/dist/browser/opencc.min.js';
+                 script.src = 'https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/data.min.js';
                  
                  script.onload = function() {
                      try {
@@ -1309,22 +1315,23 @@
                          }
                      } catch (err) {
                          console.warn('OpenCC initialization failed:', err);
-                         converter = null;
+                     } finally {
+                         hideLoadingOverlay();
                      }
                  };
                  
                  script.onerror = function(error) {
                      console.warn('OpenCC script loading failed:', error);
-                     converter = null;
+                     hideLoadingOverlay();
                  };
                  
                  document.head.appendChild(script);
              } catch (error) {
                  console.warn('OpenCC loading attempt failed:', error);
-                 converter = null;
+                 hideLoadingOverlay();
              }
          }
-
+       
          // Add this new function to handle page display
          function showMainOrLoginPage() {
              const token = localStorage.getItem('token');
