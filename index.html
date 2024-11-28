@@ -384,16 +384,18 @@
 
         // Core utility functions
         function showLoadingOverlay() {
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'flex';
-            }
-        }
-
-        function hideLoadingOverlay() {
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'none';
-            }
-        }
+             const loadingOverlay = document.getElementById('loadingOverlay');
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'flex';
+             }
+         }
+         
+         function hideLoadingOverlay() {
+             const loadingOverlay = document.getElementById('loadingOverlay');
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'none';
+             }
+         }
 
         // Handle Chinese input with error handling
         function handleChineseInput(input) {
@@ -425,91 +427,73 @@
         function showLoginPage() {
              const loginPage = document.getElementById('loginPage');
              const mainPage = document.getElementById('mainPage');
-             const loadingOverlay = document.getElementById('loadingOverlay');
-         
-             if (loadingOverlay) {
-                 loadingOverlay.style.display = 'none';
-             }
-             if (loginPage) {
-                 loginPage.style.display = 'block';
-             }
-             if (mainPage) {
-                 mainPage.style.display = 'none';
-             }
              
-             // Clear any existing login data
-             localStorage.removeItem('token');
+             if (loginPage) loginPage.style.display = 'block';
+             if (mainPage) mainPage.style.display = 'none';
+             hideLoadingOverlay();
              
-             // Reset login form if it exists
+             // Reset form if exists
              const loginForm = document.getElementById('loginForm');
-             if (loginForm) {
-                 loginForm.reset();
-             }
+             if (loginForm) loginForm.reset();
              
-             // Reset login message
+             // Clear any error messages
              const loginMessage = document.getElementById('loginMessage');
              if (loginMessage) {
                  loginMessage.textContent = '';
+                 loginMessage.className = '';
              }
          }
          
          function showMainPage() {
              const loginPage = document.getElementById('loginPage');
              const mainPage = document.getElementById('mainPage');
-             const loadingOverlay = document.getElementById('loadingOverlay');
-         
-             if (loadingOverlay) {
-                 loadingOverlay.style.display = 'none';
-             }
-             if (loginPage) {
-                 loginPage.style.display = 'none';
-             }
-             if (mainPage) {
-                 mainPage.style.display = 'block';
-             }
+             
+             if (loginPage) loginPage.style.display = 'none';
+             if (mainPage) mainPage.style.display = 'block';
+             hideLoadingOverlay();
          }
 
         function validateToken(token) {
              if (!token) {
+                 hideLoadingOverlay();
                  showLoginPage();
                  return;
              }
-         
-             const url = _0x3c4d + '?action=validateToken&token=' + encodeURIComponent(token);
              
-             jsonp(url, function(response) {
+             showLoadingOverlay(); // Show loading while validating
+             
+             jsonp(_0x3c4d + '?action=validateToken&token=' + encodeURIComponent(token), function(response) {
                  if (response && response.success) {
-                     hideLoadingOverlay();
                      showMainPage();
                  } else {
                      localStorage.removeItem('token');
-                     hideLoadingOverlay();
                      showLoginPage();
                  }
+                 hideLoadingOverlay();
              });
          }
 
         function jsonp(url, callback) {
              var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
              var timeoutId;
-         
+             
              window[callbackName] = function(data) {
                  clearTimeout(timeoutId);
                  cleanup();
                  callback(data);
              };
-         
+             
              function cleanup() {
-                 if (window[callbackName]) {
-                     delete window[callbackName];
-                 }
+                 delete window[callbackName];
                  if (script && script.parentNode) {
                      script.parentNode.removeChild(script);
                  }
              }
-         
+             
              var script = document.createElement('script');
-             script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+             url = url.replace('callback=?', 'callback=' + callbackName);
+             script.src = url + (url.indexOf('callback=') === -1 ? 
+                 (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName : '');
              
              script.onerror = function(error) {
                  clearTimeout(timeoutId);
@@ -517,12 +501,12 @@
                  console.error('JSONP request failed:', error);
                  callback({ success: false, error: '网络连接错误，请重试' });
              };
-         
+             
              timeoutId = setTimeout(function() {
                  cleanup();
                  callback({ success: false, error: '请求超时，请重试' });
              }, 10000);
-         
+             
              document.body.appendChild(script);
          }
        
@@ -988,6 +972,12 @@
                     const submitBtn = loginForm.querySelector('button[type="submit"]');
                     const loginMessage = document.getElementById('loginMessage');
                     
+                    // Clear previous error messages
+                    if (loginMessage) {
+                        loginMessage.textContent = '';
+                        loginMessage.className = '';
+                    }
+                    
                     if (!username || !password) {
                         if (loginMessage) {
                             loginMessage.textContent = '请输入用户名和密码';
@@ -1005,25 +995,28 @@
                     // Show loading overlay
                     showLoadingOverlay();
                     
-                    const url = _0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password);
+                    const loginUrl = _0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password);
                     
-                    jsonp(url, function(response) {
+                    jsonp(loginUrl, function(response) {
+                        console.log('Login response:', response); // For debugging
+                        
                         if (response && response.success && response.token) {
                             localStorage.setItem('token', response.token);
-                            hideLoadingOverlay();
                             showMainPage();
                         } else {
-                            hideLoadingOverlay();
                             if (loginMessage) {
                                 loginMessage.textContent = response.error || '登录失败，请重试';
                                 loginMessage.className = 'text-center text-sm text-red-600';
                             }
-                            // Reset button
-                            if (submitBtn) {
-                                submitBtn.disabled = false;
-                                submitBtn.innerHTML = '登录';
-                            }
                         }
+                        
+                        // Reset button state
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '登录';
+                        }
+                        
+                        hideLoadingOverlay();
                     });
                 });
             }
