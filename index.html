@@ -483,16 +483,39 @@
         }
 
         function jsonp(url, callback) {
-            var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-            window[callbackName] = function(data) {
-                delete window[callbackName];
-                document.body.removeChild(script);
-                callback(data);
-            };
-            var script = document.createElement('script');
-            script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-            document.body.appendChild(script);
-        }
+             var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+             var timeoutId;
+         
+             window[callbackName] = function(data) {
+                 // Clear the timeout
+                 if (timeoutId) clearTimeout(timeoutId);
+                 // Clean up
+                 delete window[callbackName];
+                 if (script.parentNode) script.parentNode.removeChild(script);
+                 // Execute callback
+                 callback(data);
+             };
+         
+             var script = document.createElement('script');
+             script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+             
+             // Add error handling
+             script.onerror = function() {
+                 if (timeoutId) clearTimeout(timeoutId);
+                 delete window[callbackName];
+                 if (script.parentNode) script.parentNode.removeChild(script);
+                 callback({ success: false, error: '网络连接错误' });
+             };
+         
+             // Add timeout
+             timeoutId = setTimeout(function() {
+                 delete window[callbackName];
+                 if (script.parentNode) script.parentNode.removeChild(script);
+                 callback({ success: false, error: '请求超时' });
+             }, 10000); // 10 second timeout
+         
+             document.body.appendChild(script);
+         }
 
         function setLoading(isLoading) {
             addToQueueBtn.disabled = isLoading;
@@ -952,20 +975,32 @@
                     e.preventDefault();
                     var username = document.getElementById('username')?.value || '';
                     var password = document.getElementById('password')?.value || '';
+                    
+                    // Show loading state
+                    const submitButton = loginForm.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner fa-spin loading-icon mr-2"></i><span>登录中...</span></span>';
+                    }
+                    
                     jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
                         if (response.success) {
                             localStorage.setItem('token', response.token);
                             showMainPage();
                         } else {
                             if (loginMessage) {
-                                loginMessage.textContent = '登录失败: ' + response.error;
+                                loginMessage.textContent = '登录失败: ' + (response.error || '登录失败，请重试');
                                 loginMessage.className = 'text-center text-sm text-red-600';
+                            }
+                            // Reset button state
+                            if (submitButton) {
+                                submitButton.disabled = false;
+                                submitButton.innerHTML = '登录';
                             }
                         }
                     });
                 });
             }
-
             // Logout button handler
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function() {
@@ -1226,32 +1261,44 @@
                  }
              }, 5000);
          
+             // Function to initialize page
+             function initializePage() {
+                 // Initialize all event listeners
+                 initializeEventListeners();
+         
+                 // Initialize form visibility
+                 if (designType && designType.value) {
+                     updateFieldsVisibility(designType.value);
+                 }
+         
+                 // Show appropriate page based on token
+                 showMainOrLoginPage();
+             }
+         
              // Initialize OpenCC with better error handling
              const openccScript = document.createElement('script');
-             openccScript.src = "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc.min.js";
+             openccScript.crossOrigin = "anonymous";
+             openccScript.src = "https://cdnjs.cloudflare.com/ajax/libs/opencc/1.1.3/umd/opencc.min.js";
+             
              openccScript.onload = () => {
-                 initializeOpenCC();
+                 try {
+                     initializeOpenCC();
+                 } catch (error) {
+                     console.warn('Error initializing OpenCC:', error);
+                 }
                  ensureLoadingOverlayHidden();
+                 initializePage();
              };
+             
              openccScript.onerror = (error) => {
                  console.warn('Failed to load OpenCC script - continuing without conversion:', error);
                  ensureLoadingOverlayHidden();
-                 // Still proceed with showing login page
-                 showMainOrLoginPage();
+                 // Still proceed with page initialization
+                 initializePage();
              };
+             
              document.head.appendChild(openccScript);
-         
-             // Initialize all event listeners
-             initializeEventListeners();
-         
-             // Initialize form visibility
-             if (designType && designType.value) {
-                 updateFieldsVisibility(designType.value);
-             }
-         
-             // Show appropriate page based on token
-             showMainOrLoginPage();
-         }); // End of DOMContentLoaded
+         });
 
          
          // Add this new function to handle page display
