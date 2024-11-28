@@ -396,14 +396,6 @@
             }
         }
 
-        function ensureLoadingOverlayHidden() {
-             clearTimeout(hideLoadingOverlayTimeout);
-             const loadingOverlay = document.getElementById('loadingOverlay');
-             if (loadingOverlay) {
-                 loadingOverlay.style.display = 'none';
-             }
-         }
-
         // Handle Chinese input with error handling
         function handleChineseInput(input) {
             if (!input) {
@@ -1269,33 +1261,13 @@
              }
          }
 
-            // Load OpenCC
-            const openccScript = document.createElement('script');
-            openccScript.src = "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc.min.js";
-            openccScript.onload = initializeOpenCC;
-            openccScript.onerror = function(error) {
-                console.warn('Failed to load OpenCC script - continuing without conversion:', error);
-                ensureLoadingOverlayHidden();
-            };
-            document.head.appendChild(openccScript);
-
-            // Initialize all event listeners
-            initializeEventListeners();
-
-            // Initialize form visibility
-            if (designType && designType.value) {
-                updateFieldsVisibility(designType.value);
-            }
-
-            // Show appropriate page based on token
-            const token = localStorage.getItem('token');
-            if (token) {
-                validateToken(token);
-            } else {
-                showLoginPage();
-            }
-        });
-    })();
+         function ensureLoadingOverlayHidden() {
+             clearTimeout(hideLoadingOverlayTimeout);
+             const loadingOverlay = document.getElementById('loadingOverlay');
+             if (loadingOverlay) {
+                 loadingOverlay.style.display = 'none';
+             }
+         }
     </script>
    
     <div id="loadingOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
