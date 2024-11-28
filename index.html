@@ -315,7 +315,7 @@
 
         // Core variables
         let hideLoadingOverlayTimeout;
-        let converter;
+        let converter = null; // Initialize as null
        
         // Core DOM Elements
         var loginForm = document.getElementById('loginForm');
@@ -398,47 +398,37 @@
 
         // Handle Chinese input with error handling
         function handleChineseInput(input) {
-            if (!input) {
-                console.log('No input provided');
-                return;
-            }
-
-            // If converter is not available, just update the UI without conversion
-            if (!converter) {
-                console.log('No converter available - skipping conversion');
-                input.classList.add('converting');
-                setTimeout(() => input.classList.remove('converting'), 100);
-                return;
-            }
-            
-            try {
-                const cursorPosition = input.selectionStart;
-                
-                input.classList.add('converting');
-                
-                let convertedText = converter(input.value);
-                console.log('Conversion result:', convertedText);
-                
-                if (input.id.startsWith('address')) {
-                    convertedText = convertedText.replace(
-                        /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
-                        (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
-                    );
-                }
-                
-                if (convertedText !== input.value) {
-                    input.value = convertedText;
-                    input.setSelectionRange(cursorPosition, cursorPosition);
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-                
-                setTimeout(() => input.classList.remove('converting'), 100);
-            } catch (error) {
-                console.warn('Error converting text:', error);
-                input.classList.remove('converting');
-            }
-        }
-
+             if (!input) {
+                 return;
+             }
+         
+             input.classList.add('converting');
+             
+             try {
+                 if (converter) {
+                     const cursorPosition = input.selectionStart;
+                     let convertedText = converter(input.value);
+                     
+                     if (input.id.startsWith('address')) {
+                         convertedText = convertedText.replace(
+                             /([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])([\u4e00-\u9fff\s]+)([\(\[\{＜《〈「『【〔］\)\]\}＞》〉」』】〕])/g,
+                             (match, open, content, close) => (rotatedChars[open] || open) + content + (rotatedChars[close] || close)
+                         );
+                     }
+                     
+                     if (convertedText !== input.value) {
+                         input.value = convertedText;
+                         input.setSelectionRange(cursorPosition, cursorPosition);
+                         input.dispatchEvent(new Event('input', { bubbles: true }));
+                     }
+                 }
+             } catch (error) {
+                 console.warn('Text conversion failed:', error);
+             } finally {
+                 setTimeout(() => input.classList.remove('converting'), 100);
+             }
+         }
+       
         function showLoginPage() {
              const loginPage = document.getElementById('loginPage');
              const mainPage = document.getElementById('mainPage');
@@ -472,15 +462,22 @@
          }
 
         function validateToken(token) {
-            jsonp(_0x3c4d + '?action=validateToken&token=' + token, function(response) {
-                if (response.success) {
-                    showMainPage();
-                } else {
-                    localStorage.removeItem('token');
-                    showLoginPage();
-                }
-            });
-        }
+             if (!token) {
+                 showLoginPage();
+                 return;
+             }
+         
+             jsonp(_0x3c4d + '?action=validateToken&token=' + encodeURIComponent(token), function(response) {
+                 if (response && response.success) {
+                     hideLoadingOverlay();
+                     showMainPage();
+                 } else {
+                     localStorage.removeItem('token');
+                     hideLoadingOverlay();
+                     showLoginPage();
+                 }
+             });
+         }
 
         function jsonp(url, callback) {
              var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
@@ -968,30 +965,40 @@
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    showLoadingOverlay();
                     
-                    var username = document.getElementById('username')?.value || '';
-                    var password = document.getElementById('password')?.value || '';
+                    const username = document.getElementById('username')?.value || '';
+                    const password = document.getElementById('password')?.value || '';
+                    const submitBtn = loginForm.querySelector('button[type="submit"]');
                     
-                    var submitButton = loginForm.querySelector('button[type="submit"]');
-                    if (submitButton) {
-                        submitButton.disabled = true;
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
                     }
                     
+                    showLoadingOverlay();
+                    
                     jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-                        if (response.success && response.token) {
-                            localStorage.setItem('token', response.token);
-                            showMainPage();
-                        } else {
+                        try {
+                            if (response && response.success && response.token) {
+                                localStorage.setItem('token', response.token);
+                                showMainPage();
+                            } else {
+                                hideLoadingOverlay();
+                                if (loginMessage) {
+                                    loginMessage.textContent = response.error || '登录失败，请重试';
+                                    loginMessage.className = 'text-center text-sm text-red-600';
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Login error:', error);
                             hideLoadingOverlay();
                             if (loginMessage) {
-                                loginMessage.textContent = response.error || '登录失败，请重试';
+                                loginMessage.textContent = '登录处理时出错，请重试';
                                 loginMessage.className = 'text-center text-sm text-red-600';
                             }
-                        }
-                        
-                        if (submitButton) {
-                            submitButton.disabled = false;
+                        } finally {
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                            }
                         }
                     });
                 });
@@ -1239,23 +1246,23 @@
 
          // Main initialization
          document.addEventListener('DOMContentLoaded', function() {
-             // Ensure all required DOM elements exist before proceeding
-             const loadingOverlay = document.getElementById('loadingOverlay');
-             const loginPage = document.getElementById('loginPage');
-             const mainPage = document.getElementById('mainPage');
+             // Initialize core login functionality first
+             initializeCore();
+             
+             // Try to load OpenCC separately
+             setTimeout(loadOpenCC, 1000);
+         });
          
-             if (!loadingOverlay || !loginPage || !mainPage) {
-                 console.error('Required DOM elements not found');
-                 return;
-             }
-         
-             // Initialize core functionality first
+         function initializeCore() {
+             // Initialize all event listeners
              initializeEventListeners();
+         
+             // Initialize form visibility if needed
              if (designType && designType.value) {
                  updateFieldsVisibility(designType.value);
              }
          
-             // Check login status and show appropriate page
+             // Check token and show appropriate page
              const token = localStorage.getItem('token');
              if (token) {
                  validateToken(token);
@@ -1263,36 +1270,39 @@
                  hideLoadingOverlay();
                  showLoginPage();
              }
+         }
          
-             // Then try to load OpenCC in the background
-             function loadOpenCC() {
-                 const openccScript = document.createElement('script');
-                 openccScript.crossOrigin = "anonymous";
-                 openccScript.src = "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc.min.js";
+         function loadOpenCC() {
+             try {
+                 const script = document.createElement('script');
+                 script.crossOrigin = "anonymous";
+                 script.type = 'text/javascript';
+                 script.src = 'https://cdn.jsdelivr.net/npm/opencc-js/dist/umd/opencc.js';
                  
-                 openccScript.onload = () => {
+                 script.onload = function() {
                      try {
                          if (typeof OpenCC !== 'undefined') {
                              converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                             console.log('OpenCC initialized successfully');
+                             console.log('OpenCC loaded successfully');
                          }
-                     } catch (error) {
-                         console.warn('Error initializing OpenCC:', error);
+                     } catch (err) {
+                         console.warn('OpenCC initialization failed:', err);
+                         converter = null;
                      }
                  };
                  
-                 openccScript.onerror = (error) => {
-                     console.warn('Failed to load OpenCC script - continuing without conversion:', error);
+                 script.onerror = function(error) {
+                     console.warn('OpenCC script loading failed:', error);
+                     converter = null;
                  };
                  
-                 document.head.appendChild(openccScript);
+                 document.head.appendChild(script);
+             } catch (error) {
+                 console.warn('OpenCC loading attempt failed:', error);
+                 converter = null;
              }
-         
-             // Load OpenCC after core functionality is ready
-             setTimeout(loadOpenCC, 1000);
-         });
+         }
 
-         
          // Add this new function to handle page display
          function showMainOrLoginPage() {
              const token = localStorage.getItem('token');
