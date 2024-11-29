@@ -986,19 +986,41 @@
         }
 
         loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-            jsonp(_0x3c4d + '?action=login&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password), function(response) {
-                if (response.success) {
-                    localStorage.setItem('token', response.token);
-                    showMainPage();
-                } else {
-                    loginMessage.textContent = '登录失败: ' + response.error;
-                    loginMessage.className = 'text-center text-sm text-red-600';
-                }
-            });
-        });
+             e.preventDefault();
+             var username = document.getElementById('username').value;
+             var password = document.getElementById('password').value;
+             
+             // Use POST method with JSON body instead of URL parameters
+             const data = new FormData();
+             data.append('action', 'login');
+             data.append('username', username);
+             data.append('password', password);
+         
+             // Create unique callback name
+             const callbackName = 'jsonp_' + Math.random().toString(36).substr(2, 9);
+             window[callbackName] = function(response) {
+                 if (response.success) {
+                     localStorage.setItem('token', response.token);
+                     showMainPage();
+                 } else {
+                     loginMessage.textContent = '登录失败: ' + response.error;
+                     loginMessage.className = 'text-center text-sm text-red-600';
+                 }
+                 // Clean up
+                 delete window[callbackName];
+             };
+         
+             // Add callback to data
+             data.append('callback', callbackName);
+         
+             // Create and append script tag
+             const script = document.createElement('script');
+             script.src = _0x3c4d + '?' + new URLSearchParams(data).toString();
+             document.body.appendChild(script);
+             script.onload = function() {
+                 document.body.removeChild(script);
+             };
+         });
 
         logoutBtn.addEventListener('click', function() {
             localStorage.removeItem('token');
@@ -1023,16 +1045,26 @@
        }
 
        function jsonp(url, callback) {
-           var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-           window[callbackName] = function(data) {
-               delete window[callbackName];
-               document.body.removeChild(script);
-               callback(data);
-           };
-           var script = document.createElement('script');
-           script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-           document.body.appendChild(script);
-       }
+             var callbackName = 'jsonp_callback_' + Math.random().toString(36).substr(2, 9);
+             window[callbackName] = function(data) {
+                 delete window[callbackName];
+                 document.body.removeChild(script);
+                 callback(data);
+             };
+         
+             var script = document.createElement('script');
+             if (url.includes('action=login')) {
+                 // For login, use special handling to avoid exposing credentials in URL
+                 const urlObj = new URL(url);
+                 const params = new URLSearchParams(urlObj.search);
+                 const data = new FormData();
+                 params.forEach((value, key) => data.append(key, value));
+                 script.src = urlObj.origin + urlObj.pathname + '?callback=' + callbackName;
+             } else {
+                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+             }
+             document.body.appendChild(script);
+         }
 
        // Modify the submitForm function - replace the existing one
         function submitForm(action) {
