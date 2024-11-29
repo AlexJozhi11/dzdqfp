@@ -702,62 +702,119 @@
         var yiguRightCount = document.getElementById('yiguRightCount');
 
         function updateFieldsVisibility(type) {
-            if (type === '超荐牌位') {
-                // Hide 祈福牌位 fields
-                qifuFields.style.display = 'none';
-                textLeft.required = false;
-                textRight.required = false;
-                qifuMiddle.required = false;
-                chaojianMiddle.required = true;
-                
-                // Show 超荐牌位 fields
-                chaojianFields.classList.add('active');
-                addressFields.classList.add('active');
-                yangshang1.required = true;
-                textRightContainer.style.display = 'none';
-                
-                // Clear 祈福牌位 fields
-                textLeft.value = '';
-                qifuMiddle.value = '';
-                textRight.value = '';
-                updateCharCount(textLeft, leftCount, 12);
-                updateCharCount(qifuMiddle, qifuMiddleCount, 24);
-                updateCharCount(textRight, rightCount, 12);
-                
-            } else {
-                // Show 祈福牌位 fields
-                qifuFields.style.display = 'grid';
-                textLeft.required = true;
-                textRight.required = true;
-                qifuMiddle.required = true;
-                chaojianMiddle.required = false;
-                
-                chaojianFields.classList.remove('active');
-                addressFields.classList.remove('active');
-                yangshang1.required = false;
-                textRightContainer.style.display = 'block';
-                
-                // Clear 超荐牌位 fields
-                yangshang1.value = '';
-                yangshang2.value = '';
-                chaojianMiddle.value = '';
-                address1.value = '';
-                address2.value = '';
-                address3.value = '';
-                yiguLeft.value = '';
-                yiguRight.value = '';
-                updateCharCount(yangshang1, yangshang1Count, 28);
-                updateCharCount(yangshang2, yangshang2Count, 28);
-                updateCharCount(chaojianMiddle, chaojianMiddleCount, 12);
-                updateCharCount(yiguLeft, yiguLeftCount, 21);
-                updateCharCount(yiguRight, yiguRightCount, 21);
-                updateAddressCharCount(address1, address1Count);
-                updateAddressCharCount(address2, address2Count);
-                updateAddressCharCount(address3, address3Count);
-            }
-            
-            validateInputs();
-        }
+             try {
+                 const qifuFields = document.getElementById('qifuFields');
+                 const chaojianFields = document.getElementById('chaojianFields');
+                 const textLeft = document.getElementById('textLeft');
+                 const textRight = document.getElementById('textRight');
+                 const qifuMiddle = document.getElementById('qifuMiddle');
+                 const chaojianMiddle = document.getElementById('chaojianMiddle');
+                 const yangshang1 = document.getElementById('yangshang1');
+                 const yangshang2 = document.getElementById('yangshang2');
+                 const addressFields = document.getElementById('chaojianFields');
+                 const textRightContainer = document.getElementById('textRightContainer');
+                 const yiguLeft = document.getElementById('yiguLeft');
+                 const yiguRight = document.getElementById('yiguRight');
+                 const address1 = document.getElementById('address1');
+                 const address2 = document.getElementById('address2');
+                 const address3 = document.getElementById('address3');
+         
+                 // Get all counter elements
+                 const leftCount = document.getElementById('leftCount');
+                 const rightCount = document.getElementById('rightCount');
+                 const qifuMiddleCount = document.getElementById('qifuMiddleCount');
+                 const chaojianMiddleCount = document.getElementById('chaojianMiddleCount');
+                 const yangshang1Count = document.getElementById('yangshang1Count');
+                 const yangshang2Count = document.getElementById('yangshang2Count');
+                 const yiguLeftCount = document.getElementById('yiguLeftCount');
+                 const yiguRightCount = document.getElementById('yiguRightCount');
+                 const address1Count = document.getElementById('address1Count');
+                 const address2Count = document.getElementById('address2Count');
+                 const address3Count = document.getElementById('address3Count');
+         
+                 // Guard clause to prevent null reference errors
+                 if (!qifuFields || !chaojianFields) {
+                     console.error('Required DOM elements not found');
+                     return;
+                 }
+         
+                 if (type === '超荐牌位') {
+                     // Hide 祈福牌位 fields
+                     qifuFields.style.display = 'none';
+                     if (textLeft) textLeft.required = false;
+                     if (textRight) textRight.required = false;
+                     if (qifuMiddle) qifuMiddle.required = false;
+                     if (chaojianMiddle) chaojianMiddle.required = true;
+                     
+                     // Show 超荐牌位 fields
+                     chaojianFields.classList.add('active');
+                     if (yangshang1) yangshang1.required = true;
+                     
+                     // Clear 祈福牌位 fields
+                     if (textLeft) {
+                         textLeft.value = '';
+                         if (leftCount) updateCharCount(textLeft, leftCount, 12);
+                     }
+                     if (qifuMiddle) {
+                         qifuMiddle.value = '';
+                         if (qifuMiddleCount) updateCharCount(qifuMiddle, qifuMiddleCount, 24);
+                     }
+                     if (textRight) {
+                         textRight.value = '';
+                         if (rightCount) updateCharCount(textRight, rightCount, 12);
+                     }
+                 } else {
+                     // Show 祈福牌位 fields
+                     qifuFields.style.display = 'grid';
+                     if (textLeft) textLeft.required = true;
+                     if (textRight) textRight.required = true;
+                     if (qifuMiddle) qifuMiddle.required = true;
+                     if (chaojianMiddle) chaojianMiddle.required = false;
+                     
+                     // Hide 超荐牌位 fields
+                     chaojianFields.classList.remove('active');
+                     if (yangshang1) yangshang1.required = false;
+                     
+                     // Clear 超荐牌位 fields
+                     if (yangshang1) {
+                         yangshang1.value = '';
+                         if (yangshang1Count) updateCharCount(yangshang1, yangshang1Count, 28);
+                     }
+                     if (yangshang2) {
+                         yangshang2.value = '';
+                         if (yangshang2Count) updateCharCount(yangshang2, yangshang2Count, 28);
+                     }
+                     if (chaojianMiddle) {
+                         chaojianMiddle.value = '';
+                         if (chaojianMiddleCount) updateCharCount(chaojianMiddle, chaojianMiddleCount, 12);
+                     }
+                     if (address1) {
+                         address1.value = '';
+                         if (address1Count) updateAddressCharCount(address1, address1Count);
+                     }
+                     if (address2) {
+                         address2.value = '';
+                         if (address2Count) updateAddressCharCount(address2, address2Count);
+                     }
+                     if (address3) {
+                         address3.value = '';
+                         if (address3Count) updateAddressCharCount(address3, address3Count);
+                     }
+                     if (yiguLeft) {
+                         yiguLeft.value = '';
+                         if (yiguLeftCount) updateCharCount(yiguLeft, yiguLeftCount, 21);
+                     }
+                     if (yiguRight) {
+                         yiguRight.value = '';
+                         if (yiguRightCount) updateCharCount(yiguRight, yiguRightCount, 21);
+                     }
+                 }
+                 
+                 validateInputs();
+             } catch (error) {
+                 console.error('Error in updateFieldsVisibility:', error);
+             }
+         }
 
         function updateCharCount(input, countElement, maxLength) {
             const currentLength = input.value.length;
